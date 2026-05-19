@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GBG Texture Converter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+   
+   <style>
+        body {
+            font-family: '-apple-system', 'BlinkMacSystemv', 'Arial', 'Hiragino Sans', 'Noto Sans JP', 'Meiryo', sans-serif;
+            background-color: #f2f2f7;
+            color: #000;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .controls {
+            background: #f8f8fa;
+            padding: 20px;
+            border-radius: 24px;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            width: 400px; 
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        label {
+            font-size: 14px;
+        }
+        input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 60px;
+        }
+        input[type="range"] {
+            accent-color: #0071ff;
+        }
+        input[type="radio"], input[type="checkbox"] {
+            accent-color: #0071ff;
+        }
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #0071ff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .preview-area {
+            background: #f8f8fa;
+            padding: 20px;
+            border-radius: 24px;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            flex-grow: 1;
+            max-width: calc(100% - 420px);
+            display: flex;
+            flex-direction: column;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .preview-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .canvas-wrapper {
+            background-position: 0px 0px, 6px 6px;
+            background-size: 12px 12px; 
+            background-image: -webkit-linear-gradient(45deg, transparent 25%, transparent 75%, #f1f1f1 75%, #f1f1f1 100%),-webkit-linear-gradient(45deg, #f1f1f1 25%, #fcfcfc 25%, #fcfcfc 75%, #f1f1f1 75%); background-image: linear-gradient(45deg, #f1f1f1 25%, transparent 25%, transparent 75%, #f1f1f1 75%, #f1f1f1 100%),linear-gradient(45deg, #f1f1f1 25%, #fcfcfc 25%, #fcfcfc 75%, #f1f1f1 75%, #f1f1f1 100%);
+            border: 1px solid #c2beb5;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        .pixel-canvas {
+            image-rendering: pixelated;
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .btn-group button {
+            flex: 1;
+            padding: 12px 10px;
+            min-width: 45%;
+        }
+        .drop-zone {
+            border: 2px dashed #0071ff;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            background-color: #f7f9ff;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .drop-zone.drag-over {
+            background-color: #e0ebff;
+        }
+        .drop-zone p {
+            margin: 0;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+        .drop-zone span {
+            font-size: 12px;
+            color: #888;
+        }
+        #paletteContainer input[type="checkbox"]:not(:checked) {
+            opacity: 0;
+        }
+        .info-panel {
+            background: #fff;
+            padding: 12px 16px;
+            border-radius: 16px;
+            border: 1px solid #e2e4e7;
+            margin-top: 10px;
+            font-size: 13px;
+            line-height: 1.6;
+            text-align: left;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .info-panel div {
+            display: flex;
+            justify-content: flex-start;
+        }
+        .info-panel strong {
+            width: 160px;
+            color: #444;
+        }
+        .info-panel span {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+<h1>GBG Texture Converter</h1>
+
+<div class="container">
+    <div class="controls">
+        <div class="control-group" >
+            <label style="font-weight: bold;">1. 画像を選択</label>
+            <div id="dropZone" class="drop-zone">
+                <p>画像をドロップするか、クリックして選択</p>
+                <span>(png, jpg, webp, heic など)</span>
+                <input type="file" id="imageInput" accept="image/*,.heic,.HEIC" style="display: none;">
+            </div>
+        </div>
+
+        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
+            <label style="font-weight: bold;">2. 画像の調整</label>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px; margin-top: 5px;">
+                <div style="display: flex; align-items: center;">
+                    <label style="width: 85px;">色相:</label>
+                    <input type="range" id="hueRotate" min="0" max="360" value="0" style="flex-grow: 1;">
+                    <span id="hueRotateVal" style="width: 45px; text-align: right;">0°</span>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <label style="width: 85px;">明るさ:</label>
+                    <input type="range" id="brightness" min="0" max="200" value="100" step="5" style="flex-grow: 1;">
+                    <span id="brightnessVal" style="width: 45px; text-align: right;">100%</span>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <label style="width: 85px;">コントラスト:</label>
+                    <input type="range" id="contrast" min="0" max="200" value="100" step="5" style="flex-grow: 1;">
+                    <span id="contrastVal" style="width: 45px; text-align: right;">100%</span>
+                </div>
+                <div style="display: flex; align-items: center; display: none;">
+                    <label style="width: 85px;">ぼかし:</label>
+                    <input type="range" id="blur" min="0" max="10" value="0" step="0.1" style="flex-grow: 1;">
+                    <span id="blurVal" style="width: 45px; text-align: right;">0px</span>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <label style="width: 85px;">彩度:</label>
+                    <input type="range" id="saturate" min="0" max="200" value="100" step="5" style="flex-grow: 1;">
+                    <span id="saturateVal" style="width: 45px; text-align: right;">100%</span>
+                </div>
+                <div style="display: flex; align-items: center; display: none;">
+                    <label style="width: 85px;">セピア:</label>
+                    <input type="range" id="sepia" min="0" max="100" value="0" step="5" style="flex-grow: 1;">
+                    <span id="sepiaVal" style="width: 45px; text-align: right;">0%</span>
+                </div>
+                <button type="button" id="resetAdjustBtn" style="padding: 4px 8px; font-size: 12px; background-color: #e2e4e7; color: #000;  border-radius: 16px; align-self: flex-start;">リセット</button>
+            </div>
+        </div>
+
+        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
+            <label style="font-weight: bold;">3. テクスチャ枚数（1枚 = 64×64マス）</label>
+            <div style="display: flex; gap: 10px; align-items: center; font-size: 14px;">
+                横 (X): <input type="number" id="countX" value="1" step="1" min="1"> 枚
+                縦 (Y): <input type="number" id="countY" value="1" step="1" min="1"> 枚
+            </div>
+        </div>
+
+        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
+            <label style="font-weight: bold;">4. 画像のフィット方法</label>
+            <div class="radio-group">
+                <label><input type="radio" name="fitMode" value="contain" checked> 元の比率を保持（余白を作る）</label>
+                <label><input type="radio" name="fitMode" value="stretch"> キャンバスにフィット（比率を変える）</label>
+            </div>
+        </div>
+
+        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
+            <label style="font-weight: bold;">5. ディザリング設定</label>
+            <div class="radio-group">
+                <span style="font-size: 12px; color: #888; font-weight: bold;">【通常モード】</span>
+                <label><input type="radio" name="ditherMode" value="floyd" checked> 誤差拡散（Floyd Steinberg）</label>
+                <label><input type="radio" name="ditherMode" value="ordered"> 配列（Bayer 4x4）</label>
+                <label><input type="radio" name="ditherMode" value="none"> なし</label>
+                <span style="font-size: 12px; color: #888; font-weight: bold; margin-top: 4px;">【GBG Texture Builder モード】</span>
+                <label><input type="radio" name="ditherMode" value="tb_floyd"> Floyd Steinberg</label>
+                <label><input type="radio" name="ditherMode" value="tb_ordered"> Ordered (8x8)</label>
+                <div style="display: flex; align-items: center;">
+                    <label style="margin: 0;"><input type="radio" name="ditherMode" value="tb_random"> Random</label>
+                    <button type="button" id="reRollBtn" style="margin-left: 10px; padding: 0px 6px; font-size: 12px; background-color: #006B80; border-radius: 4px; display: none;">再生成</button>
+                </div>
+                <label><input type="radio" name="ditherMode" value="tb_none"> None</label>
+            </div>
+        </div>
+
+        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
+            <label style="font-weight: bold;">6. パレット設定</label>
+            <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                <button type="button" id="selectAllBtn" style="padding: 4px 8px; font-size: 12px; border-radius: 16px;">すべて選択</button>
+                <button type="button" id="deselectAllBtn" style="padding: 4px 8px; font-size: 12px; background-color: #e2e4e7; color: #000; border-radius: 16px;">すべて解除</button>
+                <button type="button" id="selectMonoBtn" style="padding: 4px 8px; font-size: 12px; background-color: #e2e4e7; color: #000; border-radius: 16px;">白黒・透明のみ</button>
+            </div>
+            <div id="paletteContainer"></div>
+        </div>
+
+        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
+            <label style="font-weight: bold;">7. 保存設定</label>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                拡大倍率: <input type="number" id="scaleFactor" value="1" min="1" max="20" step="1" style="width: 80px;"> 倍
+            </div>
+            <p style="font-size: 12px; color: #666; margin: 2px 0 0 0;">※拡大倍率はPNG保存時のみ有効です。</p>
+        </div>
+
+        <button id="convertBtn" style="display: none;">変換する</button>
+        
+        <div class="btn-group">
+            <button id="downloadBtn" style="background-color: #e2e4e7; color: #000; font-weight: bold;">PNGで保存(全体)</button>
+            <button id="downloadSplitPngBtn" style="background-color: #e2e4e7; color: #000; font-weight: bold;">PNGで保存(分割)</button>
+            <button id="downloadCsvBtn" style="background-color: #0071ff; font-weight: bold;">CSVで保存(単体)</button>
+            <button id="downloadCombinedCsvBtn" style="background-color: #0071ff; font-weight: bold;">CSVで保存(5枚結合)</button>
+        </div>
+    </div>
+
+    <div class="preview-area">
+        <label style="align-self: flex-start; font-weight: bold; font-size: 16px;">プレビュー</label>
+        
+        <div id="imageInfo" class="info-panel" style="display: none;">
+            <div><strong>ファイル名:</strong> <span id="infoFileName">-</span></div>
+            <div><strong>元の画像サイズ:</strong> <span id="infoOrigSize">-</span></div>
+            <div><strong>変換後画像サイズ:</strong> <span id="infoPreviewSize">-</span></div>
+            <div><strong>保存サイズ (拡大倍率適用):</strong> <span id="infoSaveSize">-</span></div>
+        </div>
+
+        <div class="preview-container">
+            <div class="preview-box">
+                <span style="font-weight: bold; color: #555;">変換前（元の解像度）</span>
+                <div class="canvas-wrapper">
+                    <canvas id="originalCanvas" class="pixel-canvas"></canvas>
+                </div>
+            </div>
+
+            <div class="preview-box">
+                <span style="font-weight: bold; color: #0071ff;">変換後（ドット絵）</span>
+                <div class="canvas-wrapper">
+                    <canvas id="previewCanvas" class="pixel-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <p style="font-size: 12px; color: #666; margin-top: 15px; text-align: center;">
+            ※CSV単体保存時は64×64のブロックごとに自動で分割されて出力されます。
+        </p>
+    </div>
+</div>
+
+<script>
+    const gbgColors = [
+        "ffffffff", "edededff", "d9d9d9ff", "f3e6ffff", "dcb3ffff", "c685ffff", "e6fbffff", "ccf7ffff", "85ebffff", "f7ffe6ff", "e6ffb3ff", "d6ff85ff", "ffe6e6ff", "ffb3b3ff", "ff8585ff",
+        "b5b5b5ff", "909090ff", "6c6c6cff", "8800ffff", "520099ff", "29004dff", "00d5ffff", "00aaccff", "006b80ff", "aaff00ff", "90d900ff", "558000ff", "ff0000ff", "cc0012ff", "800000ff",
+        "484848ff", "303030ff", "000000ff", "bb98d9ff", "846d99ff", "5b5266ff", "98ced9ff", "5a7a80ff", "36484dff", "c4d998ff", "89996cff", "3d4d1fff", "d95757ff", "804040ff", "4d1f1fff",
+        "--------", "--------", "00000000", "fee6ffff", "fbb3ffff", "f985ffff", "e6f2ffff", "b3d6ffff", "85beffff", "ccffd3ff", "99ffaaff", "66ff7eff", "fff0e6ff", "ffd3b3ff", "ffb885ff",
+        "--------", "--------", "--------", "f200ffff", "c200ccff", "7a0080ff", "1080ffff", "005fccff", "003c80ff", "00d924ff", "009919ff", "00590eff", "ff6a00ff", "cc5500ff", "803500ff",
+        "--------", "--------", "--------", "d698d9ff", "7d4080ff", "4b1f4dff", "98b6d9ff", "405e80ff", "1f344dff", "86bf90ff", "598060ff", "1f3323ff", "d9b398ff", "805b40ff", "4d321fff",
+        "--------", "--------", "--------", "ffe6f5ff", "ffb3dfff", "ff85ccff", "e8e6ffff", "d0ccffff", "a199ffff", "e6fff5ff", "b3fff0ff", "85ffe7ff", "fffde6ff", "fffab3ff", "fff785ff",
+        "--------", "--------", "--------", "ff0095ff", "cc0077ff", "80004bff", "1500ffff", "0f00b3ff", "07004dff", "00ffcfff", "00cca3ff", "008066ff", "ffee00ff", "ccbe00ff", "807700ff",
+        "--------", "--------", "--------", "d998beff", "80536dff", "4d1f3aff", "b2aed9ff", "656282ff", "3b3a4dff", "98d9ccff", "6b9990ff", "1f4d43ff", "bfbb86ff", "807e5aff", "4d4b32ff"
+    ];
+
+    let activeColors = new Array(gbgColors.length).fill(true);
+    let tb_averageR = 0, tb_averageG = 0, tb_averageB = 0;
+
+    const paletteContainer = document.getElementById('paletteContainer');
+    paletteContainer.style.display = 'flex';
+    paletteContainer.style.flexDirection = 'column';
+    paletteContainer.style.gap = '2px';
+    paletteContainer.style.width = 'fit-content';
+
+    for (let r = 0; r < 9; r++) {
+        const rowDiv = document.createElement('div');
+        rowDiv.style.display = 'flex';
+        rowDiv.style.gap = '2px';
+        if ((r + 1) % 3 === 0 && r < 8) rowDiv.style.marginBottom = '6px';
+        
+        for (let c = 0; c < 15; c++) {
+            const i = r * 15 + c;
+            const hex = gbgColors[i];
+            const cell = document.createElement('div');
+            cell.style.width = '20px';
+            cell.style.height = '20px';
+            cell.style.display = 'flex';
+            cell.style.alignItems = 'center';
+            cell.style.justifyContent = 'center';
+            
+            if ((c + 1) % 3 === 0 && c < 14) cell.style.marginRight = '6px';
+            
+            if (!hex.startsWith('-')) {
+                cell.style.border = '1px solid #999';
+                cell.style.boxSizing = 'border-box';
+                cell.style.cursor = 'pointer';
+                if (i === 47) {
+                    cell.style.backgroundImage = 'linear-gradient(45deg, #E0E0E0 25%, transparent 25%), linear-gradient(-45deg, #E0E0E0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #E0E0E0 75%), linear-gradient(-45deg, transparent 75%, #E0E0E0 75%)';
+                    cell.style.backgroundSize = '10px 10px';
+                    cell.style.backgroundPosition = '0 0, 0 5px, 5px -5px, -5px 0px';
+                } else {
+                    cell.style.backgroundColor = '#' + hex.substring(0, 6);
+                }
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.checked = true;
+                cb.id = 'color-cb-' + i;
+                cb.style.margin = '0';
+                cb.style.width = '14px';
+                cb.style.height = '14px';
+                cb.style.cursor = 'pointer';
+                cb.addEventListener('change', () => {
+                    updateActiveColors();
+                    processImage();
+                });
+                cell.appendChild(cb);
+
+                cell.addEventListener('click', (e) => {
+                    if (e.target !== cb) {
+                        cb.checked = !cb.checked;
+                        cb.dispatchEvent(new Event('change'));
+                    }
+                });
+            }
+            rowDiv.appendChild(cell);
+        }
+        paletteContainer.appendChild(rowDiv);
+    }
+
+    function updateActiveColors() {
+        tb_averageR = 0; tb_averageG = 0; tb_averageB = 0;
+        let activeRGBs = [];
+
+        for (let i = 0; i < gbgColors.length; i++) {
+            const cb = document.getElementById('color-cb-' + i);
+            if (cb) {
+                activeColors[i] = cb.checked;
+                if (cb.checked && !gbgColors[i].startsWith("-") && i !== 47) {
+                    activeRGBs.push({
+                        r: parseInt(gbgColors[i].substring(0, 2), 16),
+                        g: parseInt(gbgColors[i].substring(2, 4), 16),
+                        b: parseInt(gbgColors[i].substring(4, 6), 16)
+                    });
+                }
+            } else {
+                activeColors[i] = false;
+            }
+        }
+
+        let tb_colorCount = 0;
+        for (let i = 1; i < activeRGBs.length; i++) {
+            for (let j = 0; j < i; j++) {
+                tb_colorCount++;
+                tb_averageR += Math.abs(activeRGBs[i].r - activeRGBs[j].r);
+                tb_averageG += Math.abs(activeRGBs[i].g - activeRGBs[j].g);
+                tb_averageB += Math.abs(activeRGBs[i].b - activeRGBs[j].b);
+            }
+        }
+        if (tb_colorCount > 0) {
+            tb_averageR /= tb_colorCount * 256;
+            tb_averageG /= tb_colorCount * 256;
+            tb_averageB /= tb_colorCount * 256;
+        }
+    }
+    updateActiveColors();
+
+    document.getElementById('selectAllBtn').addEventListener('click', () => {
+        for (let i = 0; i < gbgColors.length; i++) {
+            const cb = document.getElementById('color-cb-' + i);
+            if (cb) cb.checked = true;
+        }
+        updateActiveColors();
+        processImage();
+    });
+
+    document.getElementById('deselectAllBtn').addEventListener('click', () => {
+        for (let i = 0; i < gbgColors.length; i++) {
+            const cb = document.getElementById('color-cb-' + i);
+            if (cb) cb.checked = false;
+        }
+        updateActiveColors();
+        processImage();
+    });
+
+    document.getElementById('selectMonoBtn').addEventListener('click', () => {
+        for (let i = 0; i < gbgColors.length; i++) {
+            const cb = document.getElementById('color-cb-' + i);
+            if (cb) {
+                const hex = gbgColors[i];
+                if (!hex.startsWith("-")) {
+                    const r = parseInt(hex.substring(0, 2), 16);
+                    const g = parseInt(hex.substring(2, 4), 16);
+                    const b = parseInt(hex.substring(4, 6), 16);
+                    const isGray = (r === g && g === b);
+                    const isTrans = (i === 47 || hex === "00000000");
+                    cb.checked = (isGray || isTrans);
+                }
+            }
+        }
+        updateActiveColors();
+        processImage();
+    });
+
+    function getGbgColorIndex(r, g, b, a) {
+        if (a < 128 && activeColors[47]) return 47; 
+        
+        let minDist = Infinity;
+        let closestIdx = 0;
+        let found = false;
+        
+        for (let i = 0; i < gbgColors.length; i++) {
+            if (!activeColors[i] || gbgColors[i].startsWith("-") || i === 47) continue;
+            
+            const hex = gbgColors[i];
+            const pr = parseInt(hex.substring(0, 2), 16);
+            const pg = parseInt(hex.substring(2, 4), 16);
+            const pb = parseInt(hex.substring(4, 6), 16);
+            
+            const dist = (r - pr) ** 2 + (g - pg) ** 2 + (b - pb) ** 2;
+            if (dist < minDist) {
+                minDist = dist;
+                closestIdx = i;
+                found = true;
+            }
+        }
+        return found ? closestIdx : 32;
+    }
+
+    const bayerMatrix = [
+        [ 0,  8,  2, 10 ],
+        [12,  4, 14,  6 ],
+        [ 3, 11,  1,  9 ],
+        [15,  7, 13,  5 ]
+    ];
+
+    const tb_orderMatrix = [
+        [ 0, 32,  8, 40,  2, 34, 10, 42],
+        [48, 16, 56, 24, 50, 18, 58, 26],
+        [12, 44,  4, 36, 14, 46,  6, 38],
+        [60, 28, 52, 20, 62, 30, 54, 22],
+        [ 3, 35, 11, 43,  1, 33,  9, 41],
+        [51, 19, 59, 27, 49, 17, 57, 25],
+        [15, 47,  7, 39, 13, 45,  5, 37],
+        [63, 31, 55, 23, 61, 29, 53, 21]
+    ];
+
+    function getClosestActiveColor(r, g, b) {
+        let minDist = Infinity;
+        let closest = { r: 0, g: 0, b: 0, index: 32 };
+        
+        for (let i = 0; i < gbgColors.length; i++) {
+            if (!activeColors[i] || gbgColors[i].startsWith("-") || i === 47) continue;
+            
+            const hex = gbgColors[i];
+            const pr = parseInt(hex.substring(0, 2), 16);
+            const pg = parseInt(hex.substring(2, 4), 16);
+            const pb = parseInt(hex.substring(4, 6), 16);
+
+            const dist = (r - pr) ** 2 + (g - pg) ** 2 + (b - pb) ** 2;
+            if (dist < minDist) {
+                minDist = dist;
+                closest = { r: pr, g: pg, b: pb, index: i };
+            }
+        }
+        return closest;
+    }
+
+    let currentImage = null;
+    let fileName = "pixelart";
+    const imageInput = document.getElementById('imageInput');
+    const dropZone = document.getElementById('dropZone');
+    const convertBtn = document.getElementById('convertBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+    const downloadSplitPngBtn = document.getElementById('downloadSplitPngBtn');
+    const downloadCombinedCsvBtn = document.getElementById('downloadCombinedCsvBtn');
+    const reRollBtn = document.getElementById('reRollBtn');
+    
+    const brightnessInput = document.getElementById('brightness');
+    const contrastInput = document.getElementById('contrast');
+    const blurInput = document.getElementById('blur');
+    const hueRotateInput = document.getElementById('hueRotate');
+    const saturateInput = document.getElementById('saturate');
+    const sepiaInput = document.getElementById('sepia');
+
+    const brightnessVal = document.getElementById('brightnessVal');
+    const contrastVal = document.getElementById('contrastVal');
+    const blurVal = document.getElementById('blurVal');
+    const hueRotateVal = document.getElementById('hueRotateVal');
+    const saturateVal = document.getElementById('saturateVal');
+    const sepiaVal = document.getElementById('sepiaVal');
+
+    const resetAdjustBtn = document.getElementById('resetAdjustBtn');
+    
+    const originalCanvas = document.getElementById('originalCanvas');
+    const originalCtx = originalCanvas.getContext('2d', { willReadFrequently: true });
+    
+    const previewCanvas = document.getElementById('previewCanvas');
+    const previewCtx = previewCanvas.getContext('2d', { willReadFrequently: true });
+    
+    const offscreenCanvas = document.createElement('canvas');
+    const offCtx = offscreenCanvas.getContext('2d', { willReadFrequently: true });
+
+    function processImage() {
+        if (!currentImage) return;
+
+        let countX = parseInt(document.getElementById('countX').value) || 1;
+        let countY = parseInt(document.getElementById('countY').value) || 1;
+        countX = Math.max(1, countX);
+        countY = Math.max(1, countY);
+        
+        if (document.activeElement !== document.getElementById('countX')) document.getElementById('countX').value = countX;
+        if (document.activeElement !== document.getElementById('countY')) document.getElementById('countY').value = countY;
+
+        const targetX = countX * 64;
+        const targetY = countY * 64;
+
+        const fitMode = document.querySelector('input[name="fitMode"]:checked').value;
+        const ditherMode = document.querySelector('input[name="ditherMode"]:checked').value;
+
+        let origScale = 1;
+        if (currentImage) {
+            origScale = Math.max(currentImage.width / targetX, currentImage.height / targetY);
+            if (origScale < 1) origScale = 1;
+        }
+        const origW = targetX * origScale;
+        const origH = targetY * origScale;
+
+        offscreenCanvas.width = targetX;
+        offscreenCanvas.height = targetY;
+        previewCanvas.width = targetX;
+        previewCanvas.height = targetY;
+        
+        originalCanvas.width = origW;
+        originalCanvas.height = origH;
+        originalCanvas.style.imageRendering = 'auto';
+
+        // ▼ 表示上のサイズ（CSSのwidth）を変換後キャンバスに同期させる
+        const displayWidth = Math.max(250, targetX);
+        originalCanvas.style.width = displayWidth + 'px';
+        previewCanvas.style.width = displayWidth + 'px';
+        originalCanvas.style.height = 'auto';
+        previewCanvas.style.height = 'auto';
+
+        offCtx.clearRect(0, 0, targetX, targetY);
+        originalCtx.clearRect(0, 0, origW, origH);
+
+        const brightness = brightnessInput.value;
+        const contrast = contrastInput.value;
+        const blur = blurInput.value;
+        const hueRotate = hueRotateInput.value;
+        const saturate = saturateInput.value;
+        const sepia = sepiaInput.value;
+        const filterStr = `brightness(${brightness}%) contrast(${contrast}%) blur(${blur}px) hue-rotate(${hueRotate}deg) saturate(${saturate}%) sepia(${sepia}%)`;
+        
+        offCtx.filter = filterStr;
+        originalCtx.filter = filterStr;
+
+        if (fitMode === 'stretch') {
+            offCtx.drawImage(currentImage, 0, 0, targetX, targetY);
+            originalCtx.drawImage(currentImage, 0, 0, origW, origH);
+        } else {
+            const imgRatio = currentImage.width / currentImage.height;
+            const canvasRatio = targetX / targetY;
+            let drawW, drawH, drawX, drawY;
+            let oDrawW, oDrawH, oDrawX, oDrawY;
+
+            if (imgRatio > canvasRatio) {
+                drawW = targetX;
+                drawH = targetX / imgRatio;
+                drawX = 0;
+                drawY = (targetY - drawH) / 2;
+                
+                oDrawW = origW;
+                oDrawH = origW / imgRatio;
+                oDrawX = 0;
+                oDrawY = (origH - oDrawH) / 2;
+            } else {
+                drawH = targetY;
+                drawW = targetY * imgRatio;
+                drawY = 0;
+                drawX = (targetX - drawW) / 2;
+                
+                oDrawH = origH;
+                oDrawW = origH * imgRatio;
+                oDrawY = 0;
+                oDrawX = (origW - oDrawW) / 2;
+            }
+            offCtx.drawImage(currentImage, drawX, drawY, drawW, drawH);
+            originalCtx.drawImage(currentImage, oDrawX, oDrawY, oDrawW, oDrawH);
+        }
+
+        offCtx.filter = 'none';
+        originalCtx.filter = 'none';
+
+        document.getElementById('infoPreviewSize').textContent = `${targetX} × ${targetY} px (${countX}×${countY} 枚分)`;
+        updateSaveSizeDisplay(targetX, targetY);
+
+        const imageData = offCtx.getImageData(0, 0, targetX, targetY);
+        const data = imageData.data;
+
+        for (let y = 0; y < targetY; y++) {
+            for (let x = 0; x < targetX; x++) {
+                const i = (y * targetX + x) * 4;
+                
+                const oldR = data[i];
+                const oldG = data[i + 1];
+                const oldB = data[i + 2];
+                const oldA = data[i + 3];
+
+                if (oldA < 128) {
+                    if (activeColors[47]) {
+                        data[i] = 0; data[i+1] = 0; data[i+2] = 0; data[i+3] = 0;
+                        continue;
+                    }
+                }
+
+                if (ditherMode.startsWith('tb_')) {
+                    let weight = 0;
+                    if (ditherMode === 'tb_ordered') {
+                        weight = tb_orderMatrix[x % 8][y % 8] / 64 - 0.5;
+                    } else if (ditherMode === 'tb_random') {
+                        weight = Math.random() - 0.5;
+                    }
+
+                    let weightR = 1 + weight * tb_averageR;
+                    let weightG = 1 + weight * tb_averageG;
+                    let weightB = 1 + weight * tb_averageB;
+
+                    let clampR = Math.min(Math.max(oldR * weightR, 0), 255);
+                    let clampG = Math.min(Math.max(oldG * weightG, 0), 255);
+                    let clampB = Math.min(Math.max(oldB * weightB, 0), 255);
+
+                    const closest = getClosestActiveColor(clampR, clampG, clampB);
+                    data[i] = closest.r;
+                    data[i + 1] = closest.g;
+                    data[i + 2] = closest.b;
+                    data[i + 3] = 255;
+
+                    if (ditherMode === 'tb_floyd') {
+                        const errR = oldR - closest.r;
+                        const errG = oldG - closest.g;
+                        const errB = oldB - closest.b;
+
+                        const distributeError = (xOff, yOff, ratio) => {
+                            if (x + xOff >= 0 && x + xOff < targetX && y + yOff < targetY) {
+                                const targetXIdx = x + xOff;
+                                const targetYIdx = y + yOff;
+                                const idx = (targetYIdx * targetX + targetXIdx) * 4;
+                                
+                                if (data[idx + 3] >= 128 || !activeColors[47]) {
+                                    data[idx] = Math.min(255, Math.max(0, data[idx] + errR * ratio));
+                                    data[idx + 1] = Math.min(255, Math.max(0, data[idx + 1] + errG * ratio));
+                                    data[idx + 2] = Math.min(255, Math.max(0, data[idx + 2] + errB * ratio));
+                                }
+                            }
+                        };
+
+                        distributeError(1, 0, 7 / 16);
+                        distributeError(-1, 1, 3 / 16);
+                        distributeError(0, 1, 5 / 16);
+                        distributeError(1, 1, 1 / 16);
+                    }
+                } else if (ditherMode === 'ordered') {
+                    const bayerValue = bayerMatrix[y % 4][x % 4];
+                    const threshold = (bayerValue / 16 - 0.5) * 64;
+
+                    const r = Math.min(255, Math.max(0, oldR + threshold));
+                    const g = Math.min(255, Math.max(0, oldG + threshold));
+                    const b = Math.min(255, Math.max(0, oldB + threshold));
+
+                    const closest = getClosestActiveColor(r, g, b);
+                    data[i] = closest.r;
+                    data[i + 1] = closest.g;
+                    data[i + 2] = closest.b;
+                    data[i + 3] = 255;
+
+                } else {
+                    const closest = getClosestActiveColor(oldR, oldG, oldB);
+                    
+                    data[i] = closest.r;
+                    data[i + 1] = closest.g;
+                    data[i + 2] = closest.b;
+                    data[i + 3] = 255;
+
+                    if (ditherMode === 'floyd') {
+                        const errR = oldR - closest.r;
+                        const errG = oldG - closest.g;
+                        const errB = oldB - closest.b;
+
+                        const distributeError = (xOff, yOff, ratio) => {
+                            if (x + xOff >= 0 && x + xOff < targetX && y + yOff < targetY) {
+                                const targetXIdx = x + xOff;
+                                const targetYIdx = y + yOff;
+                                const idx = (targetYIdx * targetX + targetXIdx) * 4;
+                                
+                                if (data[idx + 3] >= 128 || !activeColors[47]) {
+                                    data[idx] = Math.min(255, Math.max(0, data[idx] + errR * ratio));
+                                    data[idx + 1] = Math.min(255, Math.max(0, data[idx + 1] + errG * ratio));
+                                    data[idx + 2] = Math.min(255, Math.max(0, data[idx + 2] + errB * ratio));
+                                }
+                            }
+                        };
+
+                        distributeError(1, 0, 7 / 16);
+                        distributeError(-1, 1, 3 / 16);
+                        distributeError(0, 1, 5 / 16);
+                        distributeError(1, 1, 1 / 16);
+                    }
+                }
+            }
+        }
+
+        offCtx.putImageData(imageData, 0, 0);
+        previewCtx.putImageData(imageData, 0, 0);
+    }
+    
+    async function handleFile(file) {
+        if (!file) return;
+        
+        let currentFile = file;
+        fileName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+        const extension = file.name.split('.').pop().toLowerCase();
+        
+        document.getElementById('imageInfo').style.display = 'block';
+        
+        if (extension === 'heic' || extension === 'heif') {
+            document.getElementById('infoFileName').textContent = `${file.name} (HEICデコード中...)`;
+            document.getElementById('infoOrigSize').textContent = "-";
+            document.getElementById('infoPreviewSize').textContent = "-";
+            document.getElementById('infoSaveSize').textContent = "-";
+            
+            try {
+                const convertedBlob = await heic2any({
+                    blob: file,
+                    toType: "image/jpeg",
+                    quality: 0.9
+                });
+                currentFile = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+            } catch (error) {
+                alert("HEICファイルのデコードに失敗しました。");
+                console.error(error);
+                document.getElementById('infoFileName').textContent = "デコード失敗";
+                return;
+            }
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                currentImage = img;
+                document.getElementById('infoFileName').textContent = file.name;
+                document.getElementById('infoOrigSize').textContent = `${img.naturalWidth} × ${img.naturalHeight} px`;
+                processImage();
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(currentFile);
+    }
+
+    function updateSaveSizeDisplay(targetX, targetY) {
+        if (!currentImage) return;
+        let scale = parseInt(document.getElementById('scaleFactor').value);
+        if (isNaN(scale) || scale < 1) scale = 1;
+
+        const tx = targetX || offscreenCanvas.width;
+        const ty = targetY || offscreenCanvas.height;
+
+        document.getElementById('infoSaveSize').textContent = `${tx * scale} × ${ty * scale} px`;
+    }
+    
+    function updateAdjustments() {
+        brightnessVal.textContent = brightnessInput.value + '%';
+        contrastVal.textContent = contrastInput.value + '%';
+        blurVal.textContent = blurInput.value + 'px';
+        hueRotateVal.textContent = hueRotateInput.value + '°';
+        saturateVal.textContent = saturateInput.value + '%';
+        sepiaVal.textContent = sepiaInput.value + '%';
+        processImage();
+    }
+    brightnessInput.addEventListener('input', updateAdjustments);
+    contrastInput.addEventListener('input', updateAdjustments);
+    blurInput.addEventListener('input', updateAdjustments);
+    hueRotateInput.addEventListener('input', updateAdjustments);
+    saturateInput.addEventListener('input', updateAdjustments);
+    sepiaInput.addEventListener('input', updateAdjustments);
+    
+    resetAdjustBtn.addEventListener('click', () => {
+        brightnessInput.value = 100;
+        contrastInput.value = 100;
+        blurInput.value = 0;
+        hueRotateInput.value = 0;
+        saturateInput.value = 100;
+        sepiaInput.value = 0;
+        updateAdjustments();
+    });
+
+    imageInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+    dropZone.addEventListener('click', () => imageInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length > 0) {
+            imageInput.files = e.dataTransfer.files;
+            handleFile(e.dataTransfer.files[0]);
+        }
+    });
+
+    document.getElementById('countX').addEventListener('change', processImage);
+    document.getElementById('countY').addEventListener('change', processImage);
+    
+    document.querySelectorAll('input[name="fitMode"], input[name="ditherMode"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.name === 'ditherMode') {
+                if (e.target.value === 'tb_random') {
+                    reRollBtn.style.display = 'inline-block';
+                } else {
+                    reRollBtn.style.display = 'none';
+                }
+            }
+            processImage();
+        });
+    });
+
+    document.getElementById('scaleFactor').addEventListener('input', () => updateSaveSizeDisplay());
+    document.getElementById('scaleFactor').addEventListener('change', () => updateSaveSizeDisplay());
+
+    reRollBtn.addEventListener('click', processImage);
+    convertBtn.addEventListener('click', processImage);
+
+    downloadBtn.addEventListener('click', () => {
+        if (!currentImage) {
+            alert("先に画像を選択してください。");
+            return;
+        }
+
+        let scale = parseInt(document.getElementById('scaleFactor').value);
+        if (isNaN(scale) || scale < 1) scale = 1;
+
+        let outputCanvas = offscreenCanvas;
+
+        if (scale > 1) {
+            outputCanvas = document.createElement('canvas');
+            outputCanvas.width = offscreenCanvas.width * scale;
+            outputCanvas.height = offscreenCanvas.height * scale;
+            const outputCtx = outputCanvas.getContext('2d');
+            
+            outputCtx.imageSmoothingEnabled = false;
+            outputCtx.drawImage(offscreenCanvas, 0, 0, outputCanvas.width, outputCanvas.height);
+        }
+
+        const link = document.createElement('a');
+        link.download = `${fileName}_${outputCanvas.width}x${outputCanvas.height}.png`;
+        link.href = outputCanvas.toDataURL('image/png');
+        link.click();
+    });
+
+    downloadSplitPngBtn.addEventListener('click', () => {
+        if (!currentImage) {
+            alert("先に画像を選択してください。");
+            return;
+        }
+
+        let scale = parseInt(document.getElementById('scaleFactor').value);
+        if (isNaN(scale) || scale < 1) scale = 1;
+
+        const width = offscreenCanvas.width;
+        const height = offscreenCanvas.height;
+        const sizeX = width / 64;
+        const sizeY = height / 64;
+
+        let downloadCount = 0;
+
+        for (let v = 0; v < sizeY; v++) {
+            for (let u = 0; u < sizeX; u++) {
+                if (downloadCount > 0 && (downloadCount % 10) === 0) {
+                    alert("OKをクリックして次の画像をダウンロードします。");
+                }
+                downloadCount++;
+
+                const tileCanvas = document.createElement("canvas");
+                tileCanvas.width = 64 * scale;
+                tileCanvas.height = 64 * scale;
+                const tileCtx = tileCanvas.getContext("2d");
+                tileCtx.imageSmoothingEnabled = false;
+
+                tileCtx.drawImage(offscreenCanvas, u * 64, v * 64, 64, 64, 0, 0, 64 * scale, 64 * scale);
+
+                const link = document.createElement("a");
+                if (sizeX === 1 && sizeY === 1) {
+                    link.download = `${fileName}_split.png`;
+                } else {
+                    link.download = `${fileName}_${u + 1}-${v + 1}.png`;
+                }
+                
+                link.href = tileCanvas.toDataURL("image/png");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+    });
+
+    downloadCsvBtn.addEventListener('click', () => {
+        if (!currentImage) {
+            alert("先に画像を選択してください。");
+            return;
+        }
+
+        const width = offscreenCanvas.width;
+        const height = offscreenCanvas.height;
+        const imageData = offCtx.getImageData(0, 0, width, height);
+        
+        const sizeX = width / 64;
+        const sizeY = height / 64;
+        
+        let downloadCount = 0;
+
+        for (let v = 0; v < sizeY; v++) {
+            for (let u = 0; u < sizeX; u++) {
+                
+                if (downloadCount > 0 && (downloadCount % 10) === 0) {
+                    alert("OKをクリックして次の画像をダウンロードします。");
+                }
+                downloadCount++;
+                
+                const grid = new Uint8Array(4097);
+                const colorCount = new Array(gbgColors.length).fill(0);
+                
+                for (let y = 0; y < 64; y++) {
+                    for (let x = 0; x < 64; x++) {
+                        const px = x + u * 64;
+                        const py = y + v * 64;
+                        
+                        const idx = (py * width + px) * 4;
+                        const r = imageData.data[idx];
+                        const g = imageData.data[idx + 1];
+                        const b = imageData.data[idx + 2];
+                        const a = imageData.data[idx + 3];
+                        
+                        const colorIndex = getGbgColorIndex(r, g, b, a);
+                        
+                        grid[x + y * 64 + 1] = colorIndex;
+                        colorCount[colorIndex]++;
+                    }
+                }
+                
+                let maxCount = -1;
+                let maxIndex = 0;
+                for (let i = 0; i < colorCount.length; i++) {
+                    if (i === 47 || gbgColors[i].startsWith("-") || gbgColors[i] === "00000000") continue;
+                    
+                    if (colorCount[i] > maxCount) {
+                        maxCount = colorCount[i];
+                        maxIndex = i;
+                    }
+                }
+                grid[0] = maxIndex;
+                
+                const blob = new Blob(["\ufeff", grid.join(",")], { type: "text/csv" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                
+                if (sizeX === 1 && sizeY === 1) {
+                    link.download = `${fileName}.csv`;
+                } else {
+                    link.download = `${fileName}_${u + 1}-${v + 1}.csv`;
+                }
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
+        }
+    });
+
+    downloadCombinedCsvBtn.addEventListener('click', () => {
+        if (!currentImage) {
+            alert("先に画像を選択してください。");
+            return;
+        }
+
+        const width = offscreenCanvas.width;
+        const height = offscreenCanvas.height;
+        const imageData = offCtx.getImageData(0, 0, width, height);
+
+        const sizeX = width / 64;
+        const sizeY = height / 64;
+
+        let allTilesData = [];
+
+        for (let v = 0; v < sizeY; v++) {
+            for (let u = 0; u < sizeX; u++) {
+                const grid = new Uint8Array(4097);
+                const colorCount = new Array(gbgColors.length).fill(0);
+
+                for (let y = 0; y < 64; y++) {
+                    for (let x = 0; x < 64; x++) {
+                        const px = x + u * 64;
+                        const py = y + v * 64;
+
+                        const idx = (py * width + px) * 4;
+                        const r = imageData.data[idx];
+                        const g = imageData.data[idx + 1];
+                        const b = imageData.data[idx + 2];
+                        const a = imageData.data[idx + 3];
+
+                        const colorIndex = getGbgColorIndex(r, g, b, a);
+
+                        grid[x + y * 64 + 1] = colorIndex;
+                        colorCount[colorIndex]++;
+                    }
+                }
+
+                let maxCount = -1;
+                let maxIndex = 0;
+                for (let i = 0; i < colorCount.length; i++) {
+                    if (i === 47 || gbgColors[i].startsWith("-") || gbgColors[i] === "00000000") continue;
+                    if (colorCount[i] > maxCount) {
+                        maxCount = colorCount[i];
+                        maxIndex = i;
+                    }
+                }
+                grid[0] = maxIndex;
+                allTilesData.push(grid.join(","));
+            }
+        }
+
+        const batchSize = 5;
+        let downloadCount = 0;
+
+        for (let i = 0; i < allTilesData.length; i += batchSize) {
+            if (downloadCount > 0 && (downloadCount % 10) === 0) {
+                alert("OKをクリックして次の画像セットをダウンロードします。");
+            }
+            downloadCount++;
+
+            const batch = allTilesData.slice(i, i + batchSize);
+            const combinedText = batch.join(",\n");
+
+            const blob = new Blob(["\ufeff", combinedText], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+
+            const startIdx = i + 1;
+            const endIdx = Math.min(i + batchSize, allTilesData.length);
+
+            if (startIdx === endIdx) {
+                link.download = `${fileName}_combined_${startIdx}.csv`;
+            } else {
+                link.download = `${fileName}_combined_${startIdx}-${endIdx}.csv`;
+            }
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+    });
+
+</script>
+
+</body>
+</html>
