@@ -33,11 +33,11 @@
             border-radius: 24px;
             border: 2px solid #fff;
             box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            width: 400px; 
+            max-width: 400px; 
             display: flex;
             flex-direction: column;
             gap: 15px;
-            max-height: 85vh;
+            max-height: 85svh;
             overflow-y: auto;
             box-sizing: border-box;
         }
@@ -68,16 +68,20 @@
             font-size: 14px;
         }
         button {
-            background-color: #0071ff;
-            color: white;
+            background-color: #fff;
+            color: #000;
             border: none;
             padding: 10px 15px;
             border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: background-color 0.2s;
         }
         button:hover {
-            opacity: 0.8;
+            opacity: 0.64;
+        }
+        button:active {
+            background-color: #e3e3e3;
         }
         .preview-area {
             background: #f8f8fa;
@@ -112,12 +116,22 @@
             border: 1px solid #c2beb5;
             display: inline-block;
             margin-top: 5px;
+            position: relative; 
         }
         .pixel-canvas {
             image-rendering: pixelated;
             max-width: 100%;
             height: auto;
             display: block;
+        }
+        #gridCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; 
+            image-rendering: pixelated;
         }
         .btn-group {
             display: flex;
@@ -135,7 +149,7 @@
             border-radius: 16px;
             padding: 20px;
             text-align: center;
-            background-color: #f7f9ff;
+            background-color: #f9faff;
             cursor: pointer;
             transition: background-color 0.2s;
         }
@@ -178,11 +192,20 @@
         .info-panel span {
             color: #000;
         }
+
+        /* --- スマホ向けレイアウト調整 --- */
+        @media (max-width: 800px) {
+            .controls, .preview-area {
+                max-width: 100%;
+                max-height: none; 
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
 
-<h1>GBG Texture Converter</h1>
+<h1>GBG Texture Converter ～はじプロドット絵変換ツール～</h1>
 
 <div class="container">
     <div class="controls">
@@ -203,6 +226,12 @@
                     <input type="range" id="hueRotate" min="0" max="360" value="0" style="flex-grow: 1;">
                     <span id="hueRotateVal" style="width: 45px; text-align: right;">0°</span>
                 </div>
+                
+                <div style="display: flex; align-items: center;">
+                    <label style="width: 85px;">彩度:</label>
+                    <input type="range" id="saturate" min="0" max="200" value="100" step="5" style="flex-grow: 1;">
+                    <span id="saturateVal" style="width: 45px; text-align: right;">100%</span>
+                </div>
                 <div style="display: flex; align-items: center;">
                     <label style="width: 85px;">明るさ:</label>
                     <input type="range" id="brightness" min="0" max="200" value="100" step="5" style="flex-grow: 1;">
@@ -218,17 +247,12 @@
                     <input type="range" id="blur" min="0" max="10" value="0" step="0.1" style="flex-grow: 1;">
                     <span id="blurVal" style="width: 45px; text-align: right;">0px</span>
                 </div>
-                <div style="display: flex; align-items: center;">
-                    <label style="width: 85px;">彩度:</label>
-                    <input type="range" id="saturate" min="0" max="200" value="100" step="5" style="flex-grow: 1;">
-                    <span id="saturateVal" style="width: 45px; text-align: right;">100%</span>
-                </div>
                 <div style="display: flex; align-items: center; display: none;">
                     <label style="width: 85px;">セピア:</label>
                     <input type="range" id="sepia" min="0" max="100" value="0" step="5" style="flex-grow: 1;">
                     <span id="sepiaVal" style="width: 45px; text-align: right;">0%</span>
                 </div>
-                <button type="button" id="resetAdjustBtn" style="padding: 4px 8px; font-size: 12px; background-color: #e2e4e7; color: #000;  border-radius: 16px; align-self: flex-start;">リセット</button>
+                <button type="button" id="resetAdjustBtn" style="padding: 4px 8px; font-size: 12px; align-self: flex-start;">リセット</button>
             </div>
         </div>
 
@@ -260,7 +284,7 @@
                 <label><input type="radio" name="ditherMode" value="tb_ordered"> Ordered (8x8)</label>
                 <div style="display: flex; align-items: center;">
                     <label style="margin: 0;"><input type="radio" name="ditherMode" value="tb_random"> Random</label>
-                    <button type="button" id="reRollBtn" style="margin-left: 10px; padding: 0px 6px; font-size: 12px; background-color: #006B80; border-radius: 4px; display: none;">再生成</button>
+                    <button type="button" id="reRollBtn" style="margin-left: 10px; padding: 0px 6px; font-size: 12px; display: none;">再生成</button>
                 </div>
                 <label><input type="radio" name="ditherMode" value="tb_none"> None</label>
             </div>
@@ -270,8 +294,8 @@
             <label style="font-weight: bold;">6. パレット設定</label>
             <div style="display: flex; gap: 10px; margin-bottom: 5px;">
                 <button type="button" id="selectAllBtn" style="padding: 4px 8px; font-size: 12px; border-radius: 16px;">すべて選択</button>
-                <button type="button" id="deselectAllBtn" style="padding: 4px 8px; font-size: 12px; background-color: #e2e4e7; color: #000; border-radius: 16px;">すべて解除</button>
-                <button type="button" id="selectMonoBtn" style="padding: 4px 8px; font-size: 12px; background-color: #e2e4e7; color: #000; border-radius: 16px;">白黒・透明のみ</button>
+                <button type="button" id="deselectAllBtn" style="padding: 4px 8px; font-size: 12px;">すべて解除</button>
+                <button type="button" id="selectMonoBtn" style="padding: 4px 8px; font-size: 12px;">白黒・透明のみ</button>
             </div>
             <div id="paletteContainer"></div>
         </div>
@@ -287,10 +311,10 @@
         <button id="convertBtn" style="display: none;">変換する</button>
         
         <div class="btn-group">
-            <button id="downloadBtn" style="background-color: #e2e4e7; color: #000; font-weight: bold;">PNGで保存(全体)</button>
-            <button id="downloadSplitPngBtn" style="background-color: #e2e4e7; color: #000; font-weight: bold;">PNGで保存(分割)</button>
-            <button id="downloadCsvBtn" style="background-color: #0071ff; font-weight: bold;">CSVで保存(単体)</button>
-            <button id="downloadCombinedCsvBtn" style="background-color: #0071ff; font-weight: bold;">CSVで保存(5枚結合)</button>
+            <button id="downloadBtn">PNGで保存(全体)</button>
+            <button id="downloadSplitPngBtn">PNGで保存(分割)</button>
+            <button id="downloadCsvBtn">CSVで保存(単体)</button>
+            <button id="downloadCombinedCsvBtn">CSVで保存(5枚結合)</button>
         </div>
     </div>
 
@@ -307,15 +331,21 @@
         <div class="preview-container">
             <div class="preview-box">
                 <span style="font-weight: bold; color: #555;">変換前（元の解像度）</span>
-                <div class="canvas-wrapper">
-                    <canvas id="originalCanvas" class="pixel-canvas"></canvas>
+                <div class="canvas-wrapper" title="画像をドラッグ＆ドロップで保存できます">
+                    <img id="originalImg" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="250" height="250" style="image-rendering: auto; max-width: 100%; height: auto; display: block;">
                 </div>
             </div>
 
             <div class="preview-box">
                 <span style="font-weight: bold; color: #0071ff;">変換後（ドット絵）</span>
-                <div class="canvas-wrapper">
-                    <canvas id="previewCanvas" class="pixel-canvas"></canvas>
+                <div class="canvas-wrapper" title="画像をドラッグ＆ドロップで保存できます">
+                    <img id="previewImg" class="pixel-canvas" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="250" height="250">
+                    <canvas id="gridCanvas"></canvas>
+                </div>
+                <div id="gridToggleContainer" style="display: none; margin-top: 10px;">
+                    <label style="font-size: 13px; cursor: pointer; background: #fff; padding: 6px 12px; border-radius: 16px; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <input type="checkbox" id="showGridCb"> 64×64グリッド線を表示
+                    </label>
                 </div>
             </div>
         </div>
@@ -568,14 +598,61 @@
 
     const resetAdjustBtn = document.getElementById('resetAdjustBtn');
     
-    const originalCanvas = document.getElementById('originalCanvas');
-    const originalCtx = originalCanvas.getContext('2d', { willReadFrequently: true });
+    // 両方の画像をimgタグで管理、Canvasはオフスクリーンで生成
+    const originalImg = document.getElementById('originalImg');
+    const previewImg = document.getElementById('previewImg');
     
-    const previewCanvas = document.getElementById('previewCanvas');
-    const previewCtx = previewCanvas.getContext('2d', { willReadFrequently: true });
+    const originalCanvas = document.createElement('canvas');
+    const originalCtx = originalCanvas.getContext('2d', { willReadFrequently: true });
     
     const offscreenCanvas = document.createElement('canvas');
     const offCtx = offscreenCanvas.getContext('2d', { willReadFrequently: true });
+
+    // 変換前ドラッグ時の処理
+    originalImg.addEventListener('dragstart', (e) => {
+        if (!currentImage) return;
+        const dataUrl = originalCanvas.toDataURL('image/png');
+        e.dataTransfer.setData('DownloadURL', `image/png:${fileName}_original.png:${dataUrl}`);
+    });
+
+    // 変換後ドラッグ時の処理
+    previewImg.addEventListener('dragstart', (e) => {
+        if (!currentImage) return;
+        const dataUrl = offscreenCanvas.toDataURL('image/png');
+        e.dataTransfer.setData('DownloadURL', `image/png:${fileName}_preview.png:${dataUrl}`);
+    });
+
+    function drawGrid() {
+        const gridCanvas = document.getElementById('gridCanvas');
+        const showGrid = document.getElementById('showGridCb').checked;
+        const countX = parseInt(document.getElementById('countX').value) || 1;
+        const countY = parseInt(document.getElementById('countY').value) || 1;
+        const targetX = countX * 64;
+        const targetY = countY * 64;
+
+        gridCanvas.width = targetX;
+        gridCanvas.height = targetY;
+        const gCtx = gridCanvas.getContext('2d');
+        gCtx.clearRect(0, 0, targetX, targetY);
+
+        if (showGrid && (countX > 1 || countY > 1)) {
+            gCtx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+            gCtx.lineWidth = 1; 
+
+            gCtx.beginPath();
+            for (let x = 1; x < countX; x++) {
+                gCtx.moveTo(x * 64, 0);
+                gCtx.lineTo(x * 64, targetY);
+            }
+            for (let y = 1; y < countY; y++) {
+                gCtx.moveTo(0, y * 64);
+                gCtx.lineTo(targetX, y * 64);
+            }
+            gCtx.stroke();
+        }
+    }
+
+    document.getElementById('showGridCb').addEventListener('change', drawGrid);
 
     function processImage() {
         if (!currentImage) return;
@@ -591,6 +668,14 @@
         const targetX = countX * 64;
         const targetY = countY * 64;
 
+        const gridToggleContainer = document.getElementById('gridToggleContainer');
+        if (countX > 1 || countY > 1) {
+            gridToggleContainer.style.display = 'block';
+        } else {
+            gridToggleContainer.style.display = 'none';
+            document.getElementById('showGridCb').checked = false;
+        }
+
         const fitMode = document.querySelector('input[name="fitMode"]:checked').value;
         const ditherMode = document.querySelector('input[name="ditherMode"]:checked').value;
 
@@ -604,19 +689,16 @@
 
         offscreenCanvas.width = targetX;
         offscreenCanvas.height = targetY;
-        previewCanvas.width = targetX;
-        previewCanvas.height = targetY;
         
         originalCanvas.width = origW;
         originalCanvas.height = origH;
-        originalCanvas.style.imageRendering = 'auto';
 
-        // ▼ 表示上のサイズ（CSSのwidth）を変換後キャンバスに同期させる
+        // 表示上のサイズ（CSSのwidth）を同期させる（初期値の250pxを上書き）
         const displayWidth = Math.max(250, targetX);
-        originalCanvas.style.width = displayWidth + 'px';
-        previewCanvas.style.width = displayWidth + 'px';
-        originalCanvas.style.height = 'auto';
-        previewCanvas.style.height = 'auto';
+        originalImg.style.width = displayWidth + 'px';
+        previewImg.style.width = displayWidth + 'px';
+        originalImg.style.height = 'auto';
+        previewImg.style.height = 'auto';
 
         offCtx.clearRect(0, 0, targetX, targetY);
         originalCtx.clearRect(0, 0, origW, origH);
@@ -788,7 +870,12 @@
         }
 
         offCtx.putImageData(imageData, 0, 0);
-        previewCtx.putImageData(imageData, 0, 0);
+        
+        // オフスクリーンCanvasの内容をImgタグのsrcにセット
+        previewImg.src = offscreenCanvas.toDataURL('image/png');
+        originalImg.src = originalCanvas.toDataURL('image/png');
+        
+        drawGrid(); 
     }
     
     async function handleFile(file) {
