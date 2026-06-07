@@ -5,103 +5,538 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GBG Texture Converter</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=add,check,close,dark_mode,light_mode,remove" />
     <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
    
-   <style>
+    <style>
+        /* =========================================
+           ベース設定
+        ========================================= */
         body {
-            font-family: '-apple-system', 'BlinkMacSystemv', 'Arial', 'Hiragino Sans', 'Noto Sans JP', 'Meiryo', sans-serif;
+            --slider-fill: #0088ff;
+            --slider-bg: #d1d1d6;
+
+            font-family: '-apple-system', 'BlinkMacSystemv', 'Inter', 'Noto Sans JP', 'Meiryo', sans-serif;
             background-color: #f2f2f7;
             color: #000;
             margin: 0;
             padding: 20px;
+            transition: background-color 0.1s;
         }
-        h1 {
+        html {
+            touch-action: manipulation;
+        }
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        a { color: #0088ff; }
+        
+        /* =========================================
+           パネルレイアウト
+        ========================================= */
+        .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+        .header-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            gap: 10px;
+        }
+        .panel-header h2 {
+            color: #000;
+            margin: 0;
+            font-weight: bold;
             font-size: 28px;
+            line-height: 1.2;
+        }
+        #langToggleBtn {
+            width: auto;
+            min-width: 80px;
+            padding: 10px 16px;
+            margin: 0;
+            font-size: 13px;
+        }
+
+        /* --- タブ切り替えUI --- */
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #ccc;
             margin-bottom: 20px;
         }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            align-items: flex-start;
+        .tab-btn {
+            background: transparent;
+            color: #666;
+            border: none;
+            padding: 10px 20px;
+            width :auto;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            border-radius: 0;
+            transition: color 0.2s;
+            box-shadow: none !important;
         }
-        .controls {
-            background: #f8f8fa;
-            padding: 20px;
+        .tab-btn:hover:not(.active) {
+            color: #333;
+        }
+        .tab-btn.active {
+            color: #0088ff;
+            border-bottom: 3px solid #0088ff;
+            transform: none;
+        }
+        .tab-container .tab-btn:not(:disabled):active {
+            transform: none !important;
+            background-color: transparent !important;
+        }
+        
+        /* タブの表示・非表示 */
+        .tab-content {
+            display: none !important;
+        }
+        .tab-content.active {
+            display: flex !important;
+        }
+        
+        /* 全体を囲う一つの大きなウィンドウ */
+        .panel-body {
+            background: #f9f9fc;
             border-radius: 24px;
             border: 2px solid #fff;
             box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            max-width: 400px; 
+            padding: 20px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        #tab-main {
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        #tab-help {
+            flex-direction: column;
+            max-width: 767px;
+            padding: 30px;
+        }
+
+        .panel-controls {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            max-height: 85svh;
-            overflow-y: auto;
-            box-sizing: border-box;
         }
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+        
+        /* 真ん中の区切り線 */
+        .panel-divider {
+            display: block;
+            width: 1px;
+            background-color: #d1d1d6;
+            align-self: stretch;
         }
-        label {
-            font-size: 14px;
-        }
-        input[type="number"] {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 60px;
-        }
-        input[type="range"] {
-            accent-color: #0071ff;
-        }
-        input[type="radio"], input[type="checkbox"] {
-            accent-color: #0071ff;
-        }
-        .radio-group, .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 14px;
-        }
-        button {
-            background-color: #fff;
-            color: #000;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        button:hover {
-            opacity: 0.64;
-        }
-        button:active {
-            background-color: #e3e3e3;
-        }
-        .preview-area {
-            background: #f8f8fa;
-            padding: 20px;
-            border-radius: 24px;
-            border: 2px solid #fff;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        
+        .panel-preview {
+            box-shadow: none;
+            padding: 0 0 0 10px;
             flex-grow: 1;
             max-width: calc(100% - 420px);
             display: flex;
             flex-direction: column;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
             max-height: 85vh;
             overflow-y: auto;
+        }
+
+        @media (max-width: 767px) {
+    .header-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .header-controls {
+        align-self: flex-end;
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 5px;
+    }
+    #tab-main { flex-direction: column; }
+    /* 以降は元の記述のまま */
+            .panel-divider {
+                width: 100%;
+                height: 1px;
+                margin: 10px 0;
+            }
+            .panel-controls, .panel-preview {
+                max-width: 100%;
+                max-height: none; 
+                width: 100%;
+                padding: 0;
+                overflow-y: visible;
+            }
+        }
+
+        .fieldset {
+            border: none;
+            border-radius: 0;
+            max-width: none;
+            padding: 15px 0 0 0;
+            margin: 5px 0 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .fieldset:first-of-type {
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+        .section-title {
+            margin: 0;
+            font-size: 15px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* =========================================
+           UIパーツ：ボタン
+        ========================================= */
+        button{
+            background-color: #fff;
+            color: #000;
+            padding: 10px 12px;
+            border-radius: 24px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-size: 14px;
+            font-family: inherit;                        
+            box-sizing: border-box;  
+            cursor: pointer;
+            transition: all 0.1s;
+            text-align: center;
+        }
+        @media (hover: hover) { 
+            button:not(:disabled):hover { opacity: 0.7; } 
+        }
+        button:not(:disabled):active {
+           filter: brightness(0.85);
+            transform: scale(1.15);
+        }
+        button:disabled {
+            cursor: not-allowed;
+            box-shadow: none;
+            background-color: #fdfdff;
+            color: #bbb
+        }
+
+        /* =========================================
+           UIパーツ：ドラッグ＆ドロップ
+        ========================================= */
+        .drop-zone {
+            display: block;
+            border: none;
+            border-radius: 24px;
+            padding: 20px 10px;
+            box-sizing: border-box; 
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        .drop-zone.dragover { filter: brightness(0.9); }
+        @media (hover: hover) { .drop-zone:hover { filter: brightness(0.9); } }
+        .drop-zone p {
+            margin: 0;
+            font-weight: bold;
+            color: #333;
+            pointer-events: none;
+            font-size: 14px;
+        }
+        .drop-zone span {
+            font-size: 12px;
+            font-weight: normal;
+            color: #888;
+        }
+
+        /* iOS風トグルスイッチ */
+        .checkbox-label input[type="checkbox"] {
+            -webkit-appearance: none;
+            appearance: none;
+            position: relative;
+            width: 46px;
+            height: 26px;
+            background-color: #e9e9ea;
+            border-radius: 13px;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.2s ease;
+            vertical-align: middle;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .checkbox-label input[type="checkbox"]::after {
+            content: "";
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background-color: #fff;
+            top: 2px;
+            left: 2px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+        }
+        .checkbox-label input[type="checkbox"]:checked {
+            background-color: #34c759;
+        }
+        .checkbox-label input[type="checkbox"]:checked::after {
+            transform: translateX(20px);
+        }
+
+        /* =========================================
+           UIパーツ：プルダウン（セレクトボックス）
+        ========================================= */
+        .styled-select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-family: inherit;
+            width: 100%;
+            border-radius: 24px;
+            max-width: 300px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            color: #333;
+            cursor: pointer;
+            outline: none;
+        }
+        .styled-select:focus {
+            border-color: #0088ff;
+            box-shadow: 0 0 0 2px rgba(0, 113, 255, 0.2);
+        }  
+        
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            user-select: none;
+        }
+        .custom-select-trigger {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            border-radius: 24px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .custom-select-trigger:after {
+            content: "▼";
+            font-size: 10px;
+            color: #888;
+            transition: transform 0.2s;
+        }
+        .custom-select-wrapper.open .custom-select-trigger:after {
+            transform: rotate(180deg);
+        }
+        .custom-options {
+            position: absolute;
+            display: block;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 6px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 100;
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 6px;
             box-sizing: border-box;
         }
+        .custom-select-wrapper.open .custom-options {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+        .custom-option {
+            padding: 9px 14px 9px 32px;
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #333;
+            transition: background 0.15s;
+            position: relative;
+        }
+        .custom-option::before {
+            content: "check";
+            font-family: 'Material Symbols Outlined';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            font-size: 18px;
+            font-weight: normal;
+        }
+        .custom-option.selected::before {
+            opacity: 1;
+        }
+        .custom-option:hover {
+            background-color: #f5f5f5;
+        }
+        .custom-option.selected {
+            color: #000000; 
+            background-color: #eaeaea;
+        }
+
+        /* =========================================
+           UIパーツ：スライダー関連
+        ========================================= */
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .slider-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            color: #333;
+            font-size: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            user-select: none;
+            transition: all 0.1s;
+            flex-shrink: 0;
+        }
+        @media (hover: hover) { .slider-btn:hover { background-color: #f2f2f7; } }
+        .slider-btn:active { filter: brightness(0.85); transform: scale(1.15); }
+
+        .gbg-slider-container { width: 100%; margin: 5px 0 15px 0; }
+        
+        .gbg-slider-wrapper {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .val-display {
+            display: inline-block;
+            padding: 4px 12px;
+            background-color: #e9e9ea;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            min-width: 24px;
+            text-align: center;
+            transition: background-color 0.1s;
+            user-select: none;
+        }
+        @media (hover: hover) { .val-display:hover { background-color: #d1d1d6; } }
+        .val-display:active { background-color: #c0c2c8; }
+
+        .gbg-slider-track {
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 5px;
+            border-radius: 5px;
+            background: #d1d1d6;
+            pointer-events: none;
+            box-sizing: border-box;
+        }
+        .gbg-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 24px;
+            background: transparent;
+            outline: none;
+            cursor: pointer;
+            margin: 0;
+            z-index: 1;
+        }
+        .gbg-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 1px solid #eee;
+            border-radius: 28px;
+            background-color: #fff;          
+            box-sizing: border-box;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.1s;
+        }
+        .gbg-slider:active::-webkit-slider-thumb { filter: brightness(0.85); transform: scale(1.1); }
+
+        /* =========================================
+           UIパーツ：カラーパレット
+        ========================================= */
+        .palette-btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .palette-table { border-collapse: collapse; margin: 0 auto; }
+        .palette-table tr { display: flex; justify-content: center;}
+        .palette-table th { display: block; width: 36px; height: 36px; padding: 0; box-sizing: border-box; }
+        .color-cell { border: 1px solid #999; border-radius: 24px; overflow: hidden; transition: all 0.2s; cursor: pointer; }
+        .color-cell:active { filter: brightness(0.7); transform: scale(0.85);}
+        .color-cell input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 100%; height: 100%; margin: 0; cursor: pointer; outline: none; background-color: transparent; }
+        .color-cell input[type="checkbox"]:checked {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 12l5 5L20 6' fill='none' stroke='black' stroke-width='5.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M4 12l5 5L20 6' fill='none' stroke='rgb(0 255 161)' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-size: 64%; background-position: center; background-repeat: no-repeat;    
+        }
+
+        /* =========================================
+           プレビュー＆キャンバス
+        ========================================= */
         .preview-container {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
+            width: 100%;
             margin-top: 10px;
         }
         .preview-box {
@@ -109,14 +544,22 @@
             flex-direction: column;
             align-items: center;
         }
+        .preview-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
         .canvas-wrapper {
             background-position: 0px 0px, 6px 6px;
             background-size: 12px 12px; 
-            background-image: -webkit-linear-gradient(45deg, transparent 25%, transparent 75%, #f1f1f1 75%, #f1f1f1 100%),-webkit-linear-gradient(45deg, #f1f1f1 25%, #fcfcfc 25%, #fcfcfc 75%, #f1f1f1 75%); background-image: linear-gradient(45deg, #f1f1f1 25%, transparent 25%, transparent 75%, #f1f1f1 75%, #f1f1f1 100%),linear-gradient(45deg, #f1f1f1 25%, #fcfcfc 25%, #fcfcfc 75%, #f1f1f1 75%, #f1f1f1 100%);
-            border: 1px solid #c2beb5;
+            background-image: linear-gradient(45deg, #f1f1f1 25%, transparent 25%, transparent 75%, #f1f1f1 75%, #f1f1f1 100%), linear-gradient(45deg, #f1f1f1 25%, #fcfcfc 25%, #fcfcfc 75%, #f1f1f1 75%, #f1f1f1 100%);
+            border: 1px solid #b2b2b2;
             display: inline-block;
-            margin-top: 5px;
             position: relative; 
+            max-width: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
         }
         .pixel-canvas {
             image-rendering: pixelated;
@@ -133,6 +576,132 @@
             pointer-events: none; 
             image-rendering: pixelated;
         }
+        
+        #seamlessGrid {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            line-height: 0;
+        }
+        .seamless-item {
+            width: 100%;
+            height: auto;
+            display: block;
+            image-rendering: pixelated;
+        }
+
+        .info-panel {
+            background: #fff;
+            padding: 12px 16px;
+            border-radius: 16px;
+            border: 1px solid #e2e4e7;
+            font-size: 13px;
+            line-height: 1.6;
+            text-align: left;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            color: #000;
+        }
+        .info-panel div { display: flex; justify-content: flex-start; }
+        .info-panel strong { width: 160px; color: #444; font-weight: bold; }
+        
+        .hint-box {
+            font-size: 13px;
+            line-height: 1.5;
+            background-color: #fff;
+            border: 1px solid #e2e4e7;
+            padding: 8px 12px;
+            border-radius: 16px;
+            display: inline-block;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* =========================================
+           モーダル（テンキー ＆ パレット ＆ アラート）
+        ========================================= */
+        .numpad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .numpad-modal {
+            background-color: #f8f8fa;
+            border-radius: 24px;
+            box-sizing: border-box;
+            animation: numpadPop 0.15s ease-out;
+            max-width: 95vw;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        @keyframes numpadPop {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .numpad-header {
+            padding: 15px 20px;
+            color: #000;
+            text-align: center;
+        }
+        .numpad-header h3 { margin: 0; font-size: 16px; font-weight: bold; }
+        .numpad-body {
+            padding: 2px 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        #numpad-display {
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-sizing: border-box;
+            padding: 12px;
+            font-size: 18px;
+            color: #000;
+            text-align: right;
+            outline: none;
+            font-family: inherit;
+        }
+        #numpad-display.is-initial { color: #888 !important; }
+        
+        .numpad-grid {
+            display: grid;
+            grid-template-columns: 60px 60px 60px 100px;
+            gap: 10px;
+        }
+        .num-btn {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            font-size: 18px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 0;
+            user-select: none;
+            font-family: inherit;
+            transition: background-color 0.1s;
+        }
+        .num-btn.round-btn { width: 60px; height: 60px; border-radius: 30px; }
+        .num-btn.rect-btn { width: 100px; height: 60px; border-radius: 24px; font-size: 14px; }
+        @media (hover: hover) { .num-btn:hover { background-color: #f2f2f7; } }
+        .num-btn:active { background-color: #e3e3e3; }
+        
         .btn-group {
             display: flex;
             flex-wrap: wrap;
@@ -144,219 +713,998 @@
             padding: 12px 10px;
             min-width: 45%;
         }
-        .drop-zone {
-            border: 2px dashed #0071ff;
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            background-color: #f9faff;
-            cursor: pointer;
-            transition: background-color 0.2s;
+
+        /* =========================================
+           ダークモード用スタイル
+        ========================================= */
+        body.dark-mode {
+            --slider-fill: #0091ff;
+            --slider-bg: #333;
+
+            background-color: #000;
+            color: #e0e0e0;
         }
-        .drop-zone.drag-over {
-            background-color: #e0ebff;
+        body.dark-mode .panel-body {
+            background: #111;
+            border-color: #2b2b2b;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
         }
-        .drop-zone p {
-            margin: 0;
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
+        body.dark-mode .panel-header h2 { color: #e0e0e0; }
+        body.dark-mode .panel-header h2 span { color: #aaa !important; }
+        body.dark-mode .section-title,
+        body.dark-mode .info-panel,
+        body.dark-mode .numpad-header h3,
+        body.dark-mode #numpad-display,
+        body.dark-mode .num-btn,
+        body.dark-mode .custom-select-trigger,
+        body.dark-mode .custom-option,
+        body.dark-mode button,
+        body.dark-mode .drop-zone p {
+            color: #f4f4f4;
         }
-        .drop-zone span {
-            font-size: 12px;
-            color: #888;
+        body.dark-mode .tab-btn { color: #888; background-color: #000; border-bottom-color: #000;}
+        body.dark-mode .tab-btn:hover:not(.active) { color: #bbb; }
+        body.dark-mode .tab-btn.active {
+            color: #0091ff;
+            border-bottom-color: #0091ff;
         }
-        #paletteContainer input[type="checkbox"]:not(:checked) {
-            opacity: 0;
+        body.dark-mode a { color: #0091ff; }
+        
+        body.dark-mode button,
+        body.dark-mode .drop-zone,
+        body.dark-mode .custom-select-trigger,
+        body.dark-mode .custom-options,
+        body.dark-mode .slider-btn,
+        body.dark-mode .num-btn,
+        body.dark-mode #numpad-display,
+        body.dark-mode .info-panel,
+        body.dark-mode .hint-box {
+            background-color: #333;
+            border-color: #444;
         }
-        .info-panel {
-            background: #fff;
-            padding: 12px 16px;
-            border-radius: 16px;
-            border: 1px solid #e2e4e7;
-            margin-top: 10px;
-            font-size: 13px;
-            line-height: 1.6;
-            text-align: left;
-            width: 100%;
-            box-sizing: border-box;
+        
+        body.dark-mode .hint-box {
+            color: #aaa;
         }
-        .info-panel div {
-            display: flex;
-            justify-content: flex-start;
+        
+        body.dark-mode button:disabled {
+            background-color: #222;
+            color: #666;
         }
-        .info-panel strong {
-            width: 160px;
-            color: #444;
-        }
-        .info-panel span {
-            color: #000;
+        
+        body.dark-mode .info-panel {
+            color: #e0e0e0;
         }
 
-        /* --- スマホ向けレイアウト調整 --- */
-        @media (max-width: 800px) {
-            .controls, .preview-area {
-                max-width: 100%;
-                max-height: none; 
-                width: 100%;
-            }
+        body.dark-mode .header-controls span {
+    color: #e0e0e0;
+}
+        
+        body.dark-mode .drop-zone span { color: #aaa; }
+        body.dark-mode .drop-zone.dragover { background-color: #1a3a5f; }
+        @media (hover: hover) { body.dark-mode .drop-zone:hover { background-color: #1a3a5f; } }
+        
+        body.dark-mode .val-display { background-color: #333; color: #e0e0e0; }
+        @media (hover: hover) { body.dark-mode .val-display:hover { background-color: #444; } }
+        body.dark-mode .gbg-slider-track { background-color: #000; }
+        body.dark-mode .gbg-slider::-webkit-slider-thumb { background-color: #e0e0e0; border-color: #666; }
+        
+        body.dark-mode .numpad-modal,
+        body.dark-mode .palette-table { background-color: #1e1e1e; }
+        body.dark-mode #numpad-display.is-initial { color: #777 !important; }
+        @media (hover: hover) { body.dark-mode .num-btn:hover, body.dark-mode .slider-btn:hover { background-color: #3a3a3a; } }
+        
+        body.dark-mode .color-cell { border-color: #555; }
+        body.dark-mode .preview-label { color: #bbb; }
+        body.dark-mode .preview-box:nth-child(2) .preview-label { color: #4da3ff; }
+        
+        body.dark-mode .panel-divider { background-color: #444; }
+        body.dark-mode .tab-container { border-bottom-color: #444; }
+        body.dark-mode .fieldset { border-top-color: #444; }
+        
+        body.dark-mode .checkbox-label input[type="checkbox"] { background-color: #444; }
+        body.dark-mode .checkbox-label input[type="checkbox"]:checked { background-color: #34c759; }
+        
+        body.dark-mode .custom-option:hover { background-color: #3a3a3a; }
+        body.dark-mode .custom-option.selected { background-color: #555; color: #fff; }
+        
+        body.dark-mode .canvas-wrapper {
+            background-image: linear-gradient(45deg, #2a2a2a 25%, transparent 25%, transparent 75%, #2a2a2a 75%, #2a2a2a 100%), linear-gradient(45deg, #2a2a2a 25%, #333 25%, #333 75%, #2a2a2a 75%, #2a2a2a 100%);
+            border-color: #444;
         }
+        body.dark-mode .info-panel strong { color: #ccc; }
+        body.dark-mode #custom-alert-message { color: #e0e0e0 !important; }
     </style>
 </head>
-<body>
+<body ontouchstart="">
 
-<h1>GBG Texture Converter ～はじプロドット絵変換ツール～</h1>
-
-<div class="container">
-    <div class="controls">
-        <div class="control-group" >
-            <label style="font-weight: bold;">1. 画像を選択</label>
-            <div id="dropZone" class="drop-zone">
-                <p>画像をドロップするか、クリックして選択</p>
-                <span>(png, jpg, webp, heic など)</span>
-                <input type="file" id="imageInput" accept="image/*,.heic,.HEIC" style="display: none;">
+<div class="panel-header">
+    <div class="header-title-row">
+        <h2 data-i18n="title">GBG Texture Converter<br><span style='font-size: 0.6em; font-weight: normal; color: #666;'>～はじプロドット絵変換ツール～</span></h2>
+        <div class="header-controls">
+            <span data-i18n="themeLabel" style="font-size: 14px; font-weight: bold; white-space: nowrap;">テーマ</span>
+            <div style="width: 130px;">
+                <select id="themeSelect" class="styled-select">
+                    <option value="system" data-i18n="themeSys">システム</option>
+                    <option value="light" data-i18n="themeLight">ライト</option>
+                    <option value="dark" data-i18n="themeDark">ダーク</option>
+                </select>
             </div>
-        </div>
-
-        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
-            <label style="font-weight: bold;">2. 画像の調整</label>
-            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px; margin-top: 5px;">
-                <div style="display: flex; align-items: center;">
-                    <label style="width: 85px;">色相:</label>
-                    <input type="range" id="hueRotate" min="0" max="360" value="0" style="flex-grow: 1;">
-                    <span id="hueRotateVal" style="width: 45px; text-align: right;">0°</span>
-                </div>
-                
-                <div style="display: flex; align-items: center;">
-                    <label style="width: 85px;">彩度:</label>
-                    <input type="range" id="saturate" min="0" max="200" value="100" step="5" style="flex-grow: 1;">
-                    <span id="saturateVal" style="width: 45px; text-align: right;">100%</span>
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <label style="width: 85px;">明るさ:</label>
-                    <input type="range" id="brightness" min="0" max="200" value="100" step="5" style="flex-grow: 1;">
-                    <span id="brightnessVal" style="width: 45px; text-align: right;">100%</span>
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <label style="width: 85px;">コントラスト:</label>
-                    <input type="range" id="contrast" min="0" max="200" value="100" step="5" style="flex-grow: 1;">
-                    <span id="contrastVal" style="width: 45px; text-align: right;">100%</span>
-                </div>
-                <div style="display: flex; align-items: center; display: none;">
-                    <label style="width: 85px;">ぼかし:</label>
-                    <input type="range" id="blur" min="0" max="10" value="0" step="0.1" style="flex-grow: 1;">
-                    <span id="blurVal" style="width: 45px; text-align: right;">0px</span>
-                </div>
-                <div style="display: flex; align-items: center; display: none;">
-                    <label style="width: 85px;">セピア:</label>
-                    <input type="range" id="sepia" min="0" max="100" value="0" step="5" style="flex-grow: 1;">
-                    <span id="sepiaVal" style="width: 45px; text-align: right;">0%</span>
-                </div>
-                <button type="button" id="resetAdjustBtn" style="padding: 4px 8px; font-size: 12px; align-self: flex-start;">リセット</button>
-            </div>
-        </div>
-
-        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
-            <label style="font-weight: bold;">3. テクスチャ枚数（1枚 = 64×64マス）</label>
-            <div style="display: flex; gap: 10px; align-items: center; font-size: 14px;">
-                横 (X): <input type="number" id="countX" value="1" step="1" min="1"> 枚
-                縦 (Y): <input type="number" id="countY" value="1" step="1" min="1"> 枚
-            </div>
-        </div>
-
-        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
-            <label style="font-weight: bold;">4. 画像のフィット方法</label>
-            <div class="radio-group">
-                <label><input type="radio" name="fitMode" value="contain" checked> 元の比率を保持（余白を作る）</label>
-                <label><input type="radio" name="fitMode" value="stretch"> キャンバスにフィット（比率を変える）</label>
-            </div>
-        </div>
-
-        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
-            <label style="font-weight: bold;">5. ディザリング設定</label>
-            <div class="radio-group">
-                <span style="font-size: 12px; color: #888; font-weight: bold;">【通常モード】</span>
-                <label><input type="radio" name="ditherMode" value="floyd" checked> 誤差拡散（Floyd Steinberg）</label>
-                <label><input type="radio" name="ditherMode" value="ordered"> 配列（Bayer 4x4）</label>
-                <label><input type="radio" name="ditherMode" value="none"> なし</label>
-                <span style="font-size: 12px; color: #888; font-weight: bold; margin-top: 4px;">【GBG Texture Builder モード】</span>
-                <label><input type="radio" name="ditherMode" value="tb_floyd"> Floyd Steinberg</label>
-                <label><input type="radio" name="ditherMode" value="tb_ordered"> Ordered (8x8)</label>
-                <div style="display: flex; align-items: center;">
-                    <label style="margin: 0;"><input type="radio" name="ditherMode" value="tb_random"> Random</label>
-                    <button type="button" id="reRollBtn" style="margin-left: 10px; padding: 0px 6px; font-size: 12px; display: none;">再生成</button>
-                </div>
-                <label><input type="radio" name="ditherMode" value="tb_none"> None</label>
-            </div>
-        </div>
-
-        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
-            <label style="font-weight: bold;">6. パレット設定</label>
-            <div style="display: flex; gap: 10px; margin-bottom: 5px;">
-                <button type="button" id="selectAllBtn" style="padding: 4px 8px; font-size: 12px; border-radius: 16px;">すべて選択</button>
-                <button type="button" id="deselectAllBtn" style="padding: 4px 8px; font-size: 12px;">すべて解除</button>
-                <button type="button" id="selectMonoBtn" style="padding: 4px 8px; font-size: 12px;">白黒・透明のみ</button>
-            </div>
-            <div id="paletteContainer"></div>
-        </div>
-
-        <div class="control-group" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 15px;">
-            <label style="font-weight: bold;">7. 保存設定</label>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                拡大倍率: <input type="number" id="scaleFactor" value="1" min="1" max="20" step="1" style="width: 80px;"> 倍
-            </div>
-            <p style="font-size: 12px; color: #666; margin: 2px 0 0 0;">※拡大倍率はPNG保存時のみ有効です。</p>
-        </div>
-
-        <button id="convertBtn" style="display: none;">変換する</button>
-        
-        <div class="btn-group">
-            <button id="downloadBtn">PNGで保存(全体)</button>
-            <button id="downloadSplitPngBtn">PNGで保存(分割)</button>
-            <button id="downloadCsvBtn">CSVで保存(単体)</button>
-            <button id="downloadCombinedCsvBtn">CSVで保存(5枚結合)</button>
+            <button id="langToggleBtn" data-i18n="langBtn">English</button>
         </div>
     </div>
+</div>
+    <div class="tab-container">
+        <button class="tab-btn active" data-target="tab-main" data-i18n="tabMain">メインツール</button>
+        <button class="tab-btn" data-target="tab-help" data-i18n="tabHelp">使い方・ヘルプ</button>
+    </div>
 
-    <div class="preview-area">
-        <label style="align-self: flex-start; font-weight: bold; font-size: 16px;">プレビュー</label>
+<div class="panel-body tab-content active" id="tab-main">
+    <div class="panel-controls">
+        
+        <fieldset class="fieldset">
+            <h3 class="section-title" data-i18n="selImg">1. 画像を選択</h3>
+            <label id="dropZone" class="drop-zone">
+                <p data-i18n="drop">画像をドロップするか、クリックして選択</p>
+                <span data-i18n="imgHint">(png, jpg, webp, heic など)</span>
+                <input type="file" id="imageInput" accept="image/*,.heic,.HEIC" style="display: none;">
+            </label>
+        </fieldset>
+
+       <fieldset class="fieldset">
+            <h3 class="section-title" data-i18n="imgAdj">2. 画像の調整</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                
+                <div class="gbg-slider-container">
+                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                        <span data-i18n="hue">色相</span>
+                        <span><span id="val-hueRotate" class="val-display">0</span>°</span>
+                    </p>
+                    <div class="slider-row">
+                        <button type="button" id="dec-hueRotate" class="material-symbols-outlined slider-btn">remove</button>
+                        <div class="gbg-slider-wrapper">
+                            <div class="gbg-slider-track" id="track-hueRotate"></div>
+                            <input type="range" id="hueRotate" class="gbg-slider" min="0" max="360" value="0">
+                        </div>
+                        <button type="button" id="inc-hueRotate" class="material-symbols-outlined slider-btn">add</button>
+                    </div>
+                </div>
+
+                <div class="gbg-slider-container">
+                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                        <span data-i18n="sat">彩度</span>
+                        <span><span id="val-saturate" class="val-display">100</span>%</span>
+                    </p>
+                    <div class="slider-row">
+                        <button type="button" id="dec-saturate" class="material-symbols-outlined slider-btn">remove</button>
+                        <div class="gbg-slider-wrapper">
+                            <div class="gbg-slider-track" id="track-saturate"></div>
+                            <input type="range" id="saturate" class="gbg-slider" min="0" max="200" value="100">
+                        </div>
+                        <button type="button" id="inc-saturate" class="material-symbols-outlined slider-btn">add</button>
+                    </div>
+                </div>
+
+                <div class="gbg-slider-container">
+                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                        <span data-i18n="bri">明るさ</span>
+                        <span><span id="val-brightness" class="val-display">100</span>%</span>
+                    </p>
+                    <div class="slider-row">
+                        <button type="button" id="dec-brightness" class="material-symbols-outlined slider-btn">remove</button>
+                        <div class="gbg-slider-wrapper">
+                            <div class="gbg-slider-track" id="track-brightness"></div>
+                            <input type="range" id="brightness" class="gbg-slider" min="0" max="200" value="100">
+                        </div>
+                        <button type="button" id="inc-brightness" class="material-symbols-outlined slider-btn">add</button>
+                    </div>
+                </div>
+
+                <div class="gbg-slider-container">
+                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                        <span data-i18n="con">コントラスト</span>
+                        <span><span id="val-contrast" class="val-display">100</span>%</span>
+                    </p>
+                    <div class="slider-row">
+                        <button type="button" id="dec-contrast" class="material-symbols-outlined slider-btn">remove</button>
+                        <div class="gbg-slider-wrapper">
+                            <div class="gbg-slider-track" id="track-contrast"></div>
+                            <input type="range" id="contrast" class="gbg-slider" min="0" max="200" value="100">
+                        </div>
+                        <button type="button" id="inc-contrast" class="material-symbols-outlined slider-btn">add</button>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 8px; margin-bottom: 5px; align-items: center;">
+                    <button type="button" id="resetAdjustBtn" data-i18n="reset">リセット</button>
+                </div>
+                <div class="hint-box" data-i18n="adjHint">
+                    色合いや明るさなどを調整できます<br>
+                    スライダーの操作中は変換前の画像にのみプレビュー反映されます
+                </div> 
+
+                <div style="margin-top: 15px;">
+                    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: bold;" data-i18n="filterModeTitle">フィルター方式</p>
+                    <select id="filterModeSelect" class="styled-select">
+                        <option value="css" data-i18n="filterCss" selected>CSS (高速・標準)</option>
+                        <option value="js" data-i18n="filterJs">JS (Safari等で反映されない場合)</option>
+                    </select>
+                </div>
+                <div class="hint-box" data-i18n="filterHint">
+                    基本的には「CSS」でOKです<br>SafariやiOSのブラウザではCSSフィルターがドット絵に反映されないことがありますが、その場合は「JS」を選ぶと反映されるようになります
+                </div> 
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+            <h3 class="section-title" data-i18n="palSet">3. パレット設定</h3>
+            <div style="margin-top: 5px;">
+                <button type="button" id="openPaletteBtn" data-i18n="palBtn">パレット設定 ▼</button>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+            <h3 class="section-title" data-i18n="fitMode">4. 画像のフィット方法</h3>
+            <div style="margin-top: 10px;">
+                <select id="fitModeSelect" class="styled-select">
+                    <option value="contain" data-i18n="fitCon" selected>元の比率を保持（余白を作る）</option>
+                    <option value="stretch" data-i18n="fitStr">キャンバスにフィット（比率を変える）</option>
+                </select>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+            <p class="section-title" data-i18n="texCount">5. テクスチャ枚数 <span style="font-size: 12px; font-weight: normal; color: #666;" data-i18n="texSub">(1枚 = 64×64ドット)</span></p>
+            <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 10px;">
+                <div class="gbg-slider-container" style="margin: 0;">
+                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                        <span>X (ヨコ)</span>
+                        <span><span id="val-countX" class="val-display" title="タップして数字入力">1</span><span >枚</span></span>
+                    </p>
+                    <div class="slider-row">
+                        <button type="button" id="dec-countX" class="material-symbols-outlined slider-btn">remove</button>
+                        <div class="gbg-slider-wrapper">
+                            <div class="gbg-slider-track" id="track-countX"></div>
+                            <input type="range" id="countX" class="gbg-slider" min="1" max="16" value="1">
+                        </div>
+                        <button type="button" id="inc-countX" class="material-symbols-outlined slider-btn">add</button>
+                    </div>
+                </div>
+                <div class="gbg-slider-container" style="margin: 0;">
+                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                        <span>Y (タテ)</span>
+                        <span><span id="val-countY" class="val-display" title="タップして数字入力">1</span><span >枚</span></span>
+                    </p>
+                    <div class="slider-row">
+                        <button type="button" id="dec-countY" class="material-symbols-outlined slider-btn">remove</button>
+                        <div class="gbg-slider-wrapper">
+                            <div class="gbg-slider-track" id="track-countY"></div>
+                            <input type="range" id="countY" class="gbg-slider" min="1" max="16" value="1">
+                        </div>
+                        <button type="button" id="inc-countY" class="material-symbols-outlined slider-btn">add</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+            <h3 class="section-title" data-i18n="dither">6. ディザリング設定</h3>
+            <div style="margin-top: 10px;">
+                <select id="ditherModeSelect" class="styled-select">
+                    <option value="floyd_mirror" data-i18n="dFloydMirror" selected>誤差拡散(端補正)</option>
+                    <option value="floyd" data-i18n="dFloyd">誤差拡散</option>
+                    <option value="ordered" data-i18n="dOrd4">配列 (4x4)</option>
+                    <option value="tb_ordered" data-i18n="dOrd8">配列 (8x8)</option>
+                    <option value="tb_random" data-i18n="dRand">ランダム</option>
+                    <option value="none" data-i18n="dNone">なし</option>
+                </select>
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <label class="checkbox-label">
+                    <span data-i18n="checkerAlpha">市松模様で半透明にする</span>
+                    <input type="checkbox" id="checkerAlphaCb">
+                </label>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+            <h3 class="section-title" data-i18n="scale">7. 保存時の拡大倍率</h3>
+            <div class="gbg-slider-container" style="margin-top: 10px;">
+                <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: flex-end;">
+                    <span><span id="val-scaleFactor" class="val-display" title="タップして数字入力">1</span><span data-i18n="scaleUnit">倍</span></span>
+                </p>
+                <div class="slider-row">
+                    <button type="button" id="dec-scaleFactor" class="material-symbols-outlined slider-btn">remove</button>
+                    <div class="gbg-slider-wrapper">
+                        <div class="gbg-slider-track" id="track-scaleFactor"></div>
+                        <input type="range" id="scaleFactor" class="gbg-slider" min="1" max="16" value="1">
+                    </div>
+                    <button type="button" id="inc-scaleFactor" class="material-symbols-outlined slider-btn">add</button>
+                </div>
+            </div>
+            <div class="hint-box" data-i18n="scaleHint"></div> 
+        </fieldset>
+        
+       <fieldset class="fieldset">
+       <h3 class="section-title" data-i18n="save">8. 保存</h3>
+        <div class="btn-group" style="margin-top: 15px;">
+            <button id="downloadBtn" data-i18n="dlPngAll">PNGで保存(全体)</button>
+            <button id="downloadSplitPngBtn" data-i18n="dlPngSplit">PNGで保存(分割)</button>
+            <button id="downloadCsvBtn" data-i18n="dlCsvSingle">CSVで保存(単体)</button>
+            <button id="downloadCombinedCsvBtn" data-i18n="dlCsvComb">CSVで保存(5枚結合)</button>
+            <div class="hint-box" data-i18n="saveHint"></div>
+        </div>      
+    </div>
+</fieldset>
+    <div class="panel-divider"></div>
+
+    <div class="panel-preview">
+        <label style="align-self: flex-start; font-weight: bold; font-size: 16px; margin-bottom: 10px;">プレビュー</label>
         
         <div id="imageInfo" class="info-panel" style="display: none;">
-            <div><strong>ファイル名:</strong> <span id="infoFileName">-</span></div>
-            <div><strong>元の画像サイズ:</strong> <span id="infoOrigSize">-</span></div>
-            <div><strong>変換後画像サイズ:</strong> <span id="infoPreviewSize">-</span></div>
-            <div><strong>保存サイズ (拡大倍率適用):</strong> <span id="infoSaveSize">-</span></div>
+            <div><strong data-i18n="fileInfo">ファイル名:</strong> <span id="infoFileName" style="word-break: break-all;">-</span></div>
+            <div><strong data-i18n="origSize">元の画像サイズ:</strong> <span id="infoOrigSize">-</span></div>
+            <div><strong data-i18n="convSize">変換後画像サイズ:</strong> <span id="infoPreviewSize">-</span></div>
+            <div><strong data-i18n="saveSize">保存サイズ:</strong> <span id="infoSaveSize">-</span></div>
         </div>
 
         <div class="preview-container">
             <div class="preview-box">
-                <span style="font-weight: bold; color: #555;">変換前（元の解像度）</span>
+                <div class="preview-label" data-i18n="prevBefore">変換前（元の画像）</div>
                 <div class="canvas-wrapper" title="画像をドラッグ＆ドロップで保存できます">
                     <img id="originalImg" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="250" height="250" style="image-rendering: auto; max-width: 100%; height: auto; display: block;">
                 </div>
             </div>
 
             <div class="preview-box">
-                <span style="font-weight: bold; color: #0071ff;">変換後（ドット絵）</span>
-                <div class="canvas-wrapper" title="画像をドラッグ＆ドロップで保存できます">
+                <div class="preview-label" style="color: #0088ff;" data-i18n="prevAfter">変換後（ドット絵）</div>
+                <div class="canvas-wrapper" id="previewWrapper" title="画像をドラッグ＆ドロップで保存できます">
                     <img id="previewImg" class="pixel-canvas" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="250" height="250">
+                    
+                    <div id="seamlessGrid">
+                        <img class="pixel-canvas seamless-item" draggable="false" src="">
+                        <img class="pixel-canvas seamless-item" draggable="false" src="">
+                        <img class="pixel-canvas seamless-item" draggable="false" src="">
+                        <img class="pixel-canvas seamless-item" draggable="false" src="">
+                    </div>
+
                     <canvas id="gridCanvas"></canvas>
                 </div>
-                <div id="gridToggleContainer" style="display: none; margin-top: 10px;">
-                    <label style="font-size: 13px; cursor: pointer; background: #fff; padding: 6px 12px; border-radius: 16px; border: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                        <input type="checkbox" id="showGridCb"> 64×64グリッド線を表示
+                
+                <div id="gridToggleContainer" style="display: none; margin-top: 15px; width: 100%;">
+                    <label class="checkbox-label" style="margin-bottom: 10px; display: block;">
+                        <span data-i18n="showGrid">グリッド線を表示</span>
+                        <input type="checkbox" id="showGridCb">
+                    </label>
+                    <label class="checkbox-label" style="display: block;">
+                        <span data-i18n="seamlessCheck">シームレス確認 (2x2)</span>
+                        <input type="checkbox" id="seamlessCb">
                     </label>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <p style="font-size: 12px; color: #666; margin-top: 15px; text-align: center;">
-            ※CSV単体保存時は64×64のブロックごとに自動で分割されて出力されます。
-        </p>
+<div class="panel-body tab-content" id="tab-help">
+    <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 0;" data-i18n="aboutTitle">このツールについて</h3>
+    <ol style="line-height: 1.8; font-size: 15px; padding-left: 5px;" data-i18n="aboutText">      
+    <p style="font-size: 16px; margin-top: 0;">
+        このツールは、画像を「はじめてゲームプログラミング（はじプロ）」のテクスチャノードン風のドット絵に変換するためのツールです。
+        ドット絵のサイズやカラーパレットはテクスチャノードンの仕様に準拠しています。<br>
+        変換したドット絵は、PNG形式で画像として保存したり、CSV形式で保存してドット絵を<a href="https://note.com/yossy_kun/n/n5658e55dce01" target="_blank">自動描画ツール</a>ではじプロに取り込んだりできます。
+    </p>
+    <p><strong>やること</strong><br>
+        ・ダークモードの色修正<br>
+        ・チェックボックスの見た目修正<br>
+        ・テキスト書いたりする<br>
+        ・その他細かいとこの見た目修正<br>
+        ・画像調整cssフィルターとjsフィルター選べるようにする<br>
+        ・色の差激しいバグ直す
+        ・トグルと文字の左右の位置
+        <br><br>
+    <strong>既知のバグ</strong><br>
+        Safariやその他のiOSのブラウザで、変換後のドット絵に画像調整が反映されない。<br><br>
+       <strong>作者</strong><br>
+        YOSSYくん<br> 
+        <a href="https://x.com/yossy_kun_" target="_blank">https://x.com/yossy_kun_</a><br><br>
+        ※このツールの大部分はGeminiが作成しています。<br>
+        ※良識の範囲内でご使用ください。<br>
+           ※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。</p>       
+    </ol>
+</div>
+
+<div id="palette-overlay" class="numpad-overlay" style="display: none;">
+    <div class="numpad-modal" style="max-width: 95vw;">
+        <div class="numpad-header" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; box-sizing: border-box;">
+            <button type="button" id="paletteCancelBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%;"><span class="material-symbols-outlined">close</span></button>
+            <h3 data-i18n="palSet" style="margin: 0; text-align: center; font-size: 16px; font-weight: bold;">パレット設定</h3>
+            <button type="button" id="paletteOkBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; border: none; background-color: #0088ff; color: #fff;"><span class="material-symbols-outlined">check</span></button>
+        </div>
+        <div class="numpad-body">
+            <div class="palette-btn-group">
+                <button type="button" id="selectAllBtn" data-i18n="palAll">すべて選択</button>
+                <button type="button" id="deselectAllBtn" data-i18n="palClear">すべて解除</button>
+                <button type="button" id="selectMonoBtn" data-i18n="palMono">白黒・透明のみ</button>
+            </div>
+            
+            <div style="overflow-x: auto; max-width: 100%;">
+                <div id="paletteContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="numpad-overlay" class="numpad-overlay" style="display: none;">
+    <div class="numpad-modal">
+        <div class="numpad-header">
+            <h3 id="numpad-title" data-i18n="npTitle">数の入力</h3>
+        </div>
+        <div class="numpad-body">
+            <input type="text" id="numpad-display">
+            <div class="numpad-grid">
+                <button type="button" class="num-btn round-btn" data-val="7">7</button>
+                <button type="button" class="num-btn round-btn" data-val="8">8</button>
+                <button type="button" class="num-btn round-btn" data-val="9">9</button>
+                <button type="button" class="num-btn rect-btn" id="np-back" data-i18n="npBack">←ひとつ消す</button>
+
+                <button type="button" class="num-btn round-btn" data-val="4">4</button>
+                <button type="button" class="num-btn round-btn" data-val="5">5</button>
+                <button type="button" class="num-btn round-btn" data-val="6">6</button>
+                <button type="button" class="num-btn rect-btn" id="np-clear" data-i18n="npClear">ぜんぶ消す</button>
+
+                <button type="button" class="num-btn round-btn" data-val="1">1</button>
+                <button type="button" class="num-btn round-btn" data-val="2">2</button>
+                <button type="button" class="num-btn round-btn" data-val="3">3</button>
+                <button type="button" class="num-btn rect-btn" id="np-cancel" data-i18n="cancel">キャンセル</button>
+
+                <button type="button" class="num-btn round-btn" id="np-sign">+/-</button>
+                <button type="button" class="num-btn round-btn" data-val="0">0</button>
+                <button type="button" class="num-btn round-btn" data-val=".">.</button>
+                <button type="button" class="num-btn rect-btn" id="np-ok" data-i18n="ok" style="background-color: #0088ff; color: #fff;">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="custom-alert-overlay" class="numpad-overlay" style="display: none;">
+    <div class="numpad-modal" style="min-width: 280px; max-width: 95vw;">
+        <div class="numpad-body" style="text-align: center; gap: 20px; padding: 16px;">
+            <p id="custom-alert-message" style="color: #000; margin: 10px 0; font-size: 15px; white-space: pre-wrap; word-break: break-all;"></p>
+            <button type="button" id="custom-alert-ok" class="gbg-btn" style="width: 120px; font-size: 14px; padding: 10px; background-color: #0088ff; color: #fff;" data-i18n="ok">OK</button>
+        </div>
     </div>
 </div>
 
 <script>
+    // =========================================
+    // テーマ（ダーク/ライトモード）設定
+    // =========================================
+    const themeSelect = document.getElementById('themeSelect');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    function applyTheme(theme) {
+        let isDark = false;
+        if (theme === 'dark') {
+            isDark = true;
+        } else if (theme === 'light') {
+            isDark = false;
+        } else {
+            isDark = prefersDark.matches; // system
+        }
+        
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    const savedTheme = localStorage.getItem('gbg-theme') || 'system';
+    
+    if (themeSelect) {
+        themeSelect.value = savedTheme;
+        Array.from(themeSelect.options).forEach(opt => {
+            if (opt.value === savedTheme) opt.selected = true;
+        });
+    }
+    applyTheme(savedTheme);
+
+    themeSelect.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        localStorage.setItem('gbg-theme', theme);
+        applyTheme(theme);
+    });
+
+    prefersDark.addEventListener('change', (e) => {
+        if (themeSelect.value === 'system') {
+            applyTheme('system');
+        }
+    });
+    
+    // =========================================
+    // 国際化 (i18n) 設定
+    // =========================================
+    const i18n = {
+        ja: {
+            title: "GBG Texture Converter <br><span style='font-size: 0.65em; font-weight: normal;'>～はじプロドット絵変換ツール～</span>",
+            themeLabel: "テーマ", // 追加
+            themeSys: "システム",
+            themeLight: "ライト",
+            themeDark: "ダーク",
+            langBtn: "English",
+            tabMain: "変換ツール",
+            tabHelp: "このツールについて",
+            selImg: "1. 画像を選択",
+            drop: "画像をドロップするか、クリックして選択",
+            imgHint: "(png, jpg, heic, svg など)",
+            imgAdj: "2. 画像の調整",
+            hue: "色相",
+            sat: "彩度",
+            bri: "明るさ",
+            con: "コントラスト",
+            reset: "リセット",
+            adjHint: "色合いや明るさなどを調整できます<br>スライダーの操作中は変換前の画像にのみプレビュー反映されます",
+            filterModeTitle: "フィルター方式",
+            filterCss: "CSS (高速・標準)",
+            filterJs: "JS (Safari等で反映されない場合)",
+            filterHint: "基本的には「CSS」でOKです<br>SafariやiOSのブラウザではCSSフィルターがドット絵に反映されないことがありますが、その場合は「JS」を選ぶと反映されるようになります",
+            palSet: "3. パレット設定",
+            palBtn: "パレット設定を開く",
+            fitMode: "4. 画像のフィット方法",
+            fitCon: "元の比率を保持（余白を作る）",
+            fitStr: "キャンバスにフィット（比率を変える）",
+            texCount: "5. テクスチャ枚数",
+            texSub: "(1枚 = 64×64ドット)",
+            dither: "6. ディザリング設定",
+            dFloyd: "誤差拡散",
+            dFloydMirror: "誤差拡散(端補正)", 
+            dOrd4: "配列 (4x4)",
+            dOrd8: "配列 (8x8)",
+            dRand: "ランダム",
+            dNone: "なし",
+            checkerAlpha: "市松模様で半透明にする",
+            scale: "7. 保存時の拡大倍率",
+            scaleUnit: "倍",
+            scaleHint: "拡大倍率はPNG保存時のみ有効です",
+            save: "8. テクスチャの保存",
+            dlPngAll: "PNGで保存(全体)",
+            dlPngSplit: "PNGで保存(分割)",
+            dlCsvSingle: "CSVで保存(単体)",
+            dlCsvComb: "CSVで保存(5枚結合)",
+            saveHint : "ドット絵を画像として保存したいときはPNG、自動描画ツールで使いたいときはCSVを選んでください",
+            fileInfo: "ファイル名:",
+            origSize: "元の画像サイズ:",
+            convSize: "変換後画像サイズ:",
+            saveSize: "保存サイズ:",
+            prevBefore: "変換前（元の画像）",
+            prevAfter: "変換後（ドット絵）",
+            showGrid: "64×64グリッド線を表示",
+            seamlessCheck: "シームレス確認 (2x2)",
+            aboutTitle: "このツールについて",
+            aboutText: "<p style='font-size: 15px; margin-top: 0;'>このツールは、画像を「はじめてゲームプログラミング（はじプロ）」のテクスチャノードンと同じ仕様のドット絵に変換するためのツールです。ドット絵のサイズやカラーパレットはテクスチャノードンの仕様に準拠しています。<br>変換したドット絵は、PNG形式で画像として保存したり、CSV形式で保存してドット絵を<a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>自動描画ツール</a>ではじプロに取り込んだりできます。</p><p><strong>やること</strong><br>・テキスト書いたりする<br>・その他細かいとこの見た目修正<br><br><strong>既知の不具合</strong><br>現在既知の不具合はありません。やったね<br>画像調整のフィルター方式でJSを選んだ場合、変換前と変換後で若干色味が変わることがありますが、仕様です。<br><br><strong>作者</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Githubリポジトリ</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>※このツールの大部分はGeminiが作成しています。<br>※良識の範囲内でご使用ください。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。</p>",
+            palAll: "すべて選択",
+            palClear: "すべて解除",
+            palMono: "白黒・透明",
+            cancel: "キャンセル",
+            ok: "OK",
+            npTitle: "数の入力",
+            npBack: "←ひとつ消す",
+            npClear: "ぜんぶ消す",
+            msgDecoding: " (HEICデコード中...)",
+            msgDecodeFail: "デコード失敗",
+            msgNextImg: "OKをクリックして次の画像をダウンロードします。",
+            msgNextFile: "OKをクリックして次のファイルをダウンロードします。",
+            msgSheets: "枚分"
+        },
+        en: {
+            // visibility: hidden; を使って、見えない状態で改行と高さを確保します
+            title: "GBG Texture Converter <br><span style='font-size: 0.65em; font-weight: normal; visibility: hidden;'>～はじプロドット絵変換ツール～</span>",
+            themeLabel: "Theme", // 追加
+            themeSys: "System",
+            themeLight: "Light",
+            themeDark: "Dark",
+            langBtn: "日本語",
+            tabMain: "Conversion",
+            tabHelp: " About",
+            selImg: "1. Select Image",
+            drop: "Drag & drop an image here or click to browse",
+            imgHint: "(Supports JPG, PNG, HEIC, SVG, etc.)",
+            imgAdj: "2. Image Adjustments",
+            hue: "Hue",
+            sat: "Saturation",
+            bri: "Brightness",
+            con: "Contrast",
+            reset: "Reset",
+            adjHint: "Sliders preview on the original image while moving.",
+            filterModeTitle: "Filter Engine (iOS/Safari Fix)",
+            filterCss: "CSS (Fast, Standard)",
+            filterJs: "JS (Fallback for Safari)",
+            palSet: "3. Palette Settings",
+            palBtn: "Palette Settings ▼",
+            fitMode: "4. Image Fit Mode",
+            fitCon: "Scale Proportionally (Add Padding)",
+            fitStr: "Scale to Fit (Stretch)",
+            texCount: "5. Number of Textures",
+            texSub: "(1 Texture = 64x64 pixels)",
+            dither: "6. Dithering Settings",
+            dFloyd: "Floyd Steinberg",
+            dFloydMirror: "Floyd (Mirrored Edge)",
+            dOrd4: "Ordered (4x4)",
+            dOrd8: "Ordered (8x8)",
+            dRand: "Random",
+            dNone: "None",
+            checkerAlpha: "Checkerboard Transparency",
+            scale: "7. Export Scale",
+            scaleUnit: "x",
+            scaleHint: "* Only applies to PNG exports.",
+            save: "8. Save Textures",
+            dlPngAll: "Save as PNG (Full)",
+            dlPngSplit: "Save as PNG (Split)",
+            dlCsvSingle: "Save as CSV (Single)",
+            dlCsvComb: "Save as CSV (Combined 5)",
+            fileInfo: "File Name:",
+            origSize: "Original Size:",
+            convSize: "Converted Size:",
+            saveSize: "Export Size:",
+            prevBefore: "Before (Original)",
+            prevAfter: "After (Pixel Art)",
+            showGrid: "Show 64x64 Grid Lines",
+            seamlessCheck: "Seamless Check (2x2)",
+            aboutTitle: "About this tool",
+            aboutText: "<p style='font-size: 15px; margin-top: 0;'>This tool is designed to create pixel art tailored to the exact specifications of the Texture Nodon in Game Builder Garage (GBG). The canvas sizes and color palettes match the in-game limitations perfectly.<br>Converted pixel art can be saved as PNG images, or as CSV files which can be imported into GBG using the <a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>Automatic Drawing Tool</a>.</p><p><strong>Known Issues</strong><br>・Image adjustments may not render correctly on the pixel canvas when using Safari or other iOS browsers.<br><br><strong>Author</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br>* Most of this code was generated by Gemini.<br>* Please use this tool responsibly.<br>* This is an unofficial, fan-made tool and is not affiliated with Nintendo Co., Ltd.</p>",
+            palAll: "Select All",
+            palClear: "Deselect All",
+            palMono: "Monochrome",
+            cancel: "Cancel",
+            ok: "OK",
+            npTitle: "Number Input",
+            npBack: "Backspace",
+            npClear: "Delete All",
+            msgDecoding: " (Decoding HEIC...)",
+            msgDecodeFail: "Decode Failed",
+            msgNextImg: "Click OK to download the next image.",
+            msgNextFile: "Click OK to download the next file.",
+            msgSheets: "sheets"
+        }
+    };
+
+    let currentLang = 'ja';
+
+    const savedLang = localStorage.getItem('gbg-lang');
+    if (savedLang) {
+        currentLang = savedLang;
+    } else {
+        const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+        currentLang = browserLang.startsWith('ja') ? 'ja' : 'en';
+    }
+    
+    function t(key) {
+        return i18n[currentLang][key] || key;
+    }
+
+    function updateLanguage() {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (i18n[currentLang][key]) {
+                el.innerHTML = i18n[currentLang][key];
+            }
+        });
+        document.documentElement.lang = currentLang;
+        
+        const langBtn = document.getElementById('langToggleBtn');
+        if (langBtn) {
+            langBtn.textContent = currentLang === 'ja' ? 'English' : '日本語';
+        }
+
+        if (currentImage) {
+            updatePreviewSizeDisplay();
+        }
+    }
+
+    document.getElementById('langToggleBtn').addEventListener('click', () => {
+        currentLang = currentLang === 'ja' ? 'en' : 'ja';
+        localStorage.setItem('gbg-lang', currentLang);
+        updateLanguage();
+    });
+
+    let currentImage = null; let fileName = "pixelart";
+
+    updateLanguage();
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".styled-select").forEach(select => {
+            select.style.display = "none";
+            
+            const wrapper = document.createElement("div");
+            wrapper.className = "custom-select-wrapper";
+            select.parentNode.insertBefore(wrapper, select);
+            wrapper.appendChild(select);
+            
+            const trigger = document.createElement("div");
+            trigger.className = "custom-select-trigger";
+            wrapper.appendChild(trigger);
+            
+            const optionsContainer = document.createElement("div");
+            optionsContainer.className = "custom-options";
+            wrapper.appendChild(optionsContainer);
+            
+            const rebuildOptions = () => {
+                trigger.textContent = select.options[select.selectedIndex]?.text || "";
+                optionsContainer.innerHTML = "";
+                Array.from(select.options).forEach(option => {
+                    const customOption = document.createElement("div");
+                    customOption.className = "custom-option";
+                    customOption.textContent = option.text;
+                    customOption.dataset.value = option.value;
+                    if (option.selected) customOption.classList.add("selected");
+                    
+                    customOption.addEventListener("click", () => {
+                        optionsContainer.querySelectorAll(".custom-option").forEach(o => o.classList.remove("selected"));
+                        customOption.classList.add("selected");
+                        trigger.textContent = option.text;
+                        select.value = option.value;
+                        select.dispatchEvent(new Event("change"));
+                        wrapper.classList.remove("open");
+                    });
+                    optionsContainer.appendChild(customOption);
+                });
+            };
+            
+            rebuildOptions();
+            
+            trigger.addEventListener("click", (e) => {
+                e.stopPropagation();
+                document.querySelectorAll(".custom-select-wrapper").forEach(w => {
+                    if (w !== wrapper) w.classList.remove("open");
+                });
+                wrapper.classList.toggle("open");
+            });
+            
+            const observer = new MutationObserver(() => { rebuildOptions(); });
+            observer.observe(select, { childList: true, characterData: true, subtree: true });
+        });
+        
+        window.addEventListener("click", () => {
+            document.querySelectorAll(".custom-select-wrapper").forEach(w => w.classList.remove("open"));
+        });
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            const target = e.currentTarget; 
+            target.classList.add('active');
+            const targetId = target.getAttribute('data-target');
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+
+    function showCustomAlert(message) {
+        return new Promise(resolve => {
+            const overlay = document.getElementById('custom-alert-overlay');
+            document.getElementById('custom-alert-message').textContent = message;
+            overlay.style.display = 'flex';
+            
+            const okBtn = document.getElementById('custom-alert-ok');
+            const handler = () => {
+                okBtn.removeEventListener('click', handler);
+                overlay.style.display = 'none';
+                resolve();
+            };
+            okBtn.addEventListener('click', handler);
+        });
+    }
+
+    function addHoldSupport(btnId, actionFn, onStopFn) {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        let timerId, intervalId;
+        let isHolding = false;
+        const stop = () => { 
+            clearTimeout(timerId); clearInterval(intervalId); 
+            if (isHolding) {
+                isHolding = false;
+                if (onStopFn) onStopFn();
+            }
+        };
+        const start = (e) => {
+            if (e.type === 'touchstart' && e.cancelable) e.preventDefault();
+            stop(); 
+            isHolding = true;
+            actionFn();
+            timerId = setTimeout(() => { intervalId = setInterval(actionFn, 33.33); }, 400); 
+        };
+        btn.addEventListener('mousedown', start);
+        btn.addEventListener('touchstart', start, { passive: false });
+        btn.addEventListener('mouseup', stop);
+        btn.addEventListener('mouseleave', stop);
+        btn.addEventListener('touchend', stop);
+        btn.addEventListener('touchcancel', stop);
+        btn.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
+
+    let currentTargetInput = null;
+    let numpadMin = 0; let numpadMax = 100;
+    let isFirstInput = false;
+    const numpadOverlay = document.getElementById("numpad-overlay");
+    const numpadDisplay = document.getElementById("numpad-display");
+
+    function setInitialValue(val) { numpadDisplay.value = val; numpadDisplay.classList.add("is-initial"); isFirstInput = true; }
+    function clearInitialState() { numpadDisplay.classList.remove("is-initial"); isFirstInput = false; }
+
+    function openNumpad(input, min, max, titleTextKey) {
+        currentTargetInput = input; numpadMin = min; numpadMax = max;
+        document.getElementById("numpad-title").textContent = t(titleTextKey) || t("npTitle");
+        setInitialValue(input.value);
+        numpadOverlay.style.display = "flex";
+        setTimeout(() => numpadDisplay.focus(), 50);
+    }
+    function closeNumpad() { numpadOverlay.style.display = "none"; currentTargetInput = null; }
+    
+    numpadOverlay.addEventListener("click", (e) => { if (e.target === numpadOverlay) closeNumpad(); });
+
+    function handleInputChar(char) {
+        if (isFirstInput) { numpadDisplay.value = ""; clearInitialState(); }
+        let cur = numpadDisplay.value;
+        if (/[0-9]/.test(char) && (cur.match(/[0-9]/g) || []).length >= 8) return;
+        if (char === ".") {
+            if (!cur.includes(".")) numpadDisplay.value = (cur === "" || cur === "-") ? cur + "0." : cur + ".";
+        } else {
+            numpadDisplay.value = (cur === "0" || cur === "") ? char : cur + char;
+        }
+    }
+
+    document.querySelectorAll(".numpad-grid .round-btn[data-val]").forEach(btn => {
+        btn.addEventListener("click", () => handleInputChar(btn.getAttribute("data-val")));
+    });
+
+    document.getElementById("np-back").addEventListener("click", () => {
+        if (isFirstInput) clearInitialState();
+        let cur = numpadDisplay.value;
+        
+        if (cur === "-" || cur.length <= 1) {
+            numpadDisplay.value = "";
+        } else {
+            numpadDisplay.value = cur.slice(0, -1);
+            if (numpadDisplay.value === "-") {
+                numpadDisplay.value = "";
+            }
+        }
+    });
+    document.getElementById("np-clear").addEventListener("click", () => setInitialValue("0"));
+    document.getElementById("np-sign").addEventListener("click", () => {
+        if (isFirstInput) clearInitialState();
+        let cur = numpadDisplay.value;
+        if (cur === "0" || cur === "") { numpadDisplay.value = "-"; return; }
+        if (cur === "-") { setInitialValue("0"); return; }
+        numpadDisplay.value = cur.startsWith("-") ? cur.slice(1) : "-" + cur;
+    });
+    document.getElementById("np-cancel").addEventListener("click", closeNumpad);
+    document.getElementById("np-ok").addEventListener("click", () => {
+        if (currentTargetInput) {
+            let val = parseFloat(numpadDisplay.value);
+            if (isNaN(val)) val = numpadMin;
+            val = Math.floor(val);
+            if (val < numpadMin) val = numpadMin;
+            if (val > numpadMax) val = numpadMax;
+            currentTargetInput.value = val;
+            currentTargetInput.dispatchEvent(new Event("change"));
+            currentTargetInput.dispatchEvent(new Event("input"));
+        }
+        closeNumpad();
+    });
+
+    numpadDisplay.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { e.preventDefault(); document.getElementById("np-ok").click(); return; }
+        if (e.key === "Escape") { e.preventDefault(); document.getElementById("np-cancel").click(); return; }
+        if (e.key === "Backspace") { e.preventDefault(); document.getElementById("np-back").click(); return; }
+        if (e.key === "Delete") { e.preventDefault(); document.getElementById("np-clear").click(); return; }
+        if (/^[0-9.]$/.test(e.key)) { e.preventDefault(); handleInputChar(e.key); return; }
+        if (e.key === "-") { e.preventDefault(); document.getElementById("np-sign").click(); return; }
+        
+        if (!e.ctrlKey && !e.altKey && !e.metaKey && e.key.length === 1) {
+            e.preventDefault();
+        }
+    });
+
+    function initgbgSlider(sliderId, valId, trackId, decId, incId) {
+        const slider = document.getElementById(sliderId);
+        const valDisplay = document.getElementById(valId);
+        const track = document.getElementById(trackId);
+        
+        const updateSlider = () => {
+            const val = parseFloat(slider.value);
+            const min = parseFloat(slider.min) || 0; const max = parseFloat(slider.max) || 100;
+            if (valDisplay) valDisplay.textContent = val;
+            const percent = ((val - min) / (max - min)) * 100;
+            track.style.background = `linear-gradient(to right, var(--slider-fill) 0%, var(--slider-fill) ${percent}%, var(--slider-bg) ${percent}%, var(--slider-bg) 100%)`;
+        };
+        const stepSlider = (delta) => {
+            let val = parseInt(slider.value, 10);
+            const min = parseInt(slider.min, 10) || 0; const max = parseInt(slider.max, 10) || 100;
+            val += delta;
+            if (val < min) val = min; if (val > max) val = max;
+            slider.value = val;
+            slider.dispatchEvent(new Event('input')); 
+        };
+
+        addHoldSupport(decId, () => stepSlider(-1), () => slider.dispatchEvent(new Event('change')));
+        addHoldSupport(incId, () => stepSlider(1), () => slider.dispatchEvent(new Event('change')));
+
+        slider.addEventListener('input', updateSlider);
+        slider.addEventListener('change', updateSlider);
+        updateSlider();
+    }
+
+    const allSliders = [
+        { id: "countX", min: 1, max: 16, titleKey: "texCount" },
+        { id: "countY", min: 1, max: 16, titleKey: "texCount" },
+        { id: "scaleFactor", min: 1, max: 16, titleKey: "scale" },
+        { id: "hueRotate", min: 0, max: 360, titleKey: "hue" },
+        { id: "saturate", min: 0, max: 200, titleKey: "sat" },
+        { id: "brightness", min: 0, max: 200, titleKey: "bri" },
+        { id: "contrast", min: 0, max: 200, titleKey: "con" }
+    ];
+
+    allSliders.forEach(s => {
+        initgbgSlider(s.id, `val-${s.id}`, `track-${s.id}`, `dec-${s.id}`, `inc-${s.id}`);
+        const valDisplay = document.getElementById(`val-${s.id}`);
+        if (valDisplay) {
+            valDisplay.addEventListener("click", () => {
+                openNumpad(document.getElementById(s.id), s.min, s.max, s.titleKey);
+            });
+        }
+    });
+
+    ['hueRotate', 'saturate', 'brightness', 'contrast'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            if (currentImage) {
+                const brightness = document.getElementById('brightness').value;
+                const contrast = document.getElementById('contrast').value;
+                const hueRotate = document.getElementById('hueRotate').value;
+                const saturate = document.getElementById('saturate').value;
+                originalImg.style.filter = `brightness(${brightness}%) contrast(${contrast}%) hue-rotate(${hueRotate}deg) saturate(${saturate}%)`;
+            }
+        });
+        document.getElementById(id).addEventListener('change', () => {
+            processImage();
+        });
+    });
+
+    document.getElementById('resetAdjustBtn').addEventListener('click', () => {
+        document.getElementById('hueRotate').value = 0;
+        document.getElementById('saturate').value = 100;
+        document.getElementById('brightness').value = 100;
+        document.getElementById('contrast').value = 100;
+        ['hueRotate', 'saturate', 'brightness', 'contrast'].forEach(id => {
+            document.getElementById(id).dispatchEvent(new Event('input'));
+        });
+        processImage(); 
+    });
+
+    document.getElementById('filterModeSelect').addEventListener('change', processImage);
+
+    function updateDownloadButtons() {
+        const cx = parseInt(document.getElementById('countX').value) || 1;
+        const cy = parseInt(document.getElementById('countY').value) || 1;
+        const isOneByOne = (cx === 1 && cy === 1);
+        
+        const hasImage = currentImage !== null;
+
+        document.getElementById('downloadBtn').disabled = !hasImage;
+        document.getElementById('downloadCsvBtn').disabled = !hasImage;
+
+        document.getElementById('downloadSplitPngBtn').disabled = !hasImage || isOneByOne;
+        document.getElementById('downloadCombinedCsvBtn').disabled = !hasImage || isOneByOne;
+    }
+    
+    updateDownloadButtons();
+
     const gbgColors = [
         "ffffffff", "edededff", "d9d9d9ff", "f3e6ffff", "dcb3ffff", "c685ffff", "e6fbffff", "ccf7ffff", "85ebffff", "f7ffe6ff", "e6ffb3ff", "d6ff85ff", "ffe6e6ff", "ffb3b3ff", "ff8585ff",
         "b5b5b5ff", "909090ff", "6c6c6cff", "8800ffff", "520099ff", "29004dff", "00d5ffff", "00aaccff", "006b80ff", "aaff00ff", "90d900ff", "558000ff", "ff0000ff", "cc0012ff", "800000ff",
@@ -372,71 +1720,49 @@
     let activeColors = new Array(gbgColors.length).fill(true);
     let tb_averageR = 0, tb_averageG = 0, tb_averageB = 0;
 
+    const paletteOverlay = document.getElementById('palette-overlay');
     const paletteContainer = document.getElementById('paletteContainer');
-    paletteContainer.style.display = 'flex';
-    paletteContainer.style.flexDirection = 'column';
-    paletteContainer.style.gap = '2px';
-    paletteContainer.style.width = 'fit-content';
+    const table = document.createElement('table');
+    table.className = 'palette-table';
+    paletteContainer.appendChild(table);
 
     for (let r = 0; r < 9; r++) {
-        const rowDiv = document.createElement('div');
-        rowDiv.style.display = 'flex';
-        rowDiv.style.gap = '2px';
-        if ((r + 1) % 3 === 0 && r < 8) rowDiv.style.marginBottom = '6px';
-        
+        const tr = document.createElement('tr');
+        tr.style.marginBottom = (r % 3 === 2 && r !== 8) ? '15px' : '5px';
+
         for (let c = 0; c < 15; c++) {
             const i = r * 15 + c;
             const hex = gbgColors[i];
-            const cell = document.createElement('div');
-            cell.style.width = '20px';
-            cell.style.height = '20px';
-            cell.style.display = 'flex';
-            cell.style.alignItems = 'center';
-            cell.style.justifyContent = 'center';
-            
-            if ((c + 1) % 3 === 0 && c < 14) cell.style.marginRight = '6px';
+            const th = document.createElement('th');
+            th.className = 'color-cell';
+            th.style.marginRight = (c % 3 === 2 && c !== 14) ? '15px' : '5px';
             
             if (!hex.startsWith('-')) {
-                cell.style.border = '1px solid #999';
-                cell.style.boxSizing = 'border-box';
-                cell.style.cursor = 'pointer';
                 if (i === 47) {
-                    cell.style.backgroundImage = 'linear-gradient(45deg, #E0E0E0 25%, transparent 25%), linear-gradient(-45deg, #E0E0E0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #E0E0E0 75%), linear-gradient(-45deg, transparent 75%, #E0E0E0 75%)';
-                    cell.style.backgroundSize = '10px 10px';
-                    cell.style.backgroundPosition = '0 0, 0 5px, 5px -5px, -5px 0px';
+                    th.style.backgroundImage = 'linear-gradient(45deg, #E0E0E0 25%, transparent 25%), linear-gradient(-45deg, #E0E0E0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #E0E0E0 75%), linear-gradient(-45deg, transparent 75%, #E0E0E0 75%)';
+                    th.style.backgroundSize = '10px 10px';
+                    th.style.backgroundPosition = '0 0, 0 5px, 5px -5px, -5px 0px';
+                    th.style.backgroundColor = '#fff';
+                    th.title = 'Transparent'; 
                 } else {
-                    cell.style.backgroundColor = '#' + hex.substring(0, 6);
+                    th.style.backgroundColor = '#' + hex.substring(0, 6);
+                    th.title = '#' + hex.substring(0, 6).toUpperCase();
                 }
                 const cb = document.createElement('input');
-                cb.type = 'checkbox';
-                cb.checked = true;
-                cb.id = 'color-cb-' + i;
-                cb.style.margin = '0';
-                cb.style.width = '14px';
-                cb.style.height = '14px';
-                cb.style.cursor = 'pointer';
-                cb.addEventListener('change', () => {
-                    updateActiveColors();
-                    processImage();
-                });
-                cell.appendChild(cb);
-
-                cell.addEventListener('click', (e) => {
-                    if (e.target !== cb) {
-                        cb.checked = !cb.checked;
-                        cb.dispatchEvent(new Event('change'));
-                    }
-                });
+                cb.type = 'checkbox'; cb.checked = true; cb.id = 'color-cb-' + i;
+                th.appendChild(cb);
+            } else {
+                th.style.border = "none"; th.style.boxShadow = "none";
+                th.style.cursor = "default";
             }
-            rowDiv.appendChild(cell);
+            tr.appendChild(th);
         }
-        paletteContainer.appendChild(rowDiv);
+        table.appendChild(tr);
     }
 
     function updateActiveColors() {
         tb_averageR = 0; tb_averageG = 0; tb_averageB = 0;
         let activeRGBs = [];
-
         for (let i = 0; i < gbgColors.length; i++) {
             const cb = document.getElementById('color-cb-' + i);
             if (cb) {
@@ -448,11 +1774,8 @@
                         b: parseInt(gbgColors[i].substring(4, 6), 16)
                     });
                 }
-            } else {
-                activeColors[i] = false;
-            }
+            } else { activeColors[i] = false; }
         }
-
         let tb_colorCount = 0;
         for (let i = 1; i < activeRGBs.length; i++) {
             for (let j = 0; j < i; j++) {
@@ -463,407 +1786,460 @@
             }
         }
         if (tb_colorCount > 0) {
-            tb_averageR /= tb_colorCount * 256;
-            tb_averageG /= tb_colorCount * 256;
-            tb_averageB /= tb_colorCount * 256;
+            tb_averageR /= tb_colorCount * 256; tb_averageG /= tb_colorCount * 256; tb_averageB /= tb_colorCount * 256;
         }
     }
     updateActiveColors();
 
+    let backupPaletteState = [];
+    document.getElementById('openPaletteBtn').addEventListener('click', () => {
+        backupPaletteState = [];
+        for (let i = 0; i < gbgColors.length; i++) {
+            const cb = document.getElementById('color-cb-' + i);
+            if (cb) backupPaletteState[i] = cb.checked;
+        }
+        paletteOverlay.style.display = 'flex';
+    });
+    document.getElementById('paletteCancelBtn').addEventListener('click', () => {
+        for (let i = 0; i < gbgColors.length; i++) {
+            const cb = document.getElementById('color-cb-' + i);
+            if (cb && backupPaletteState[i] !== undefined) { cb.checked = backupPaletteState[i]; }
+        }
+        paletteOverlay.style.display = 'none';
+    });
+    document.getElementById('paletteOkBtn').addEventListener('click', () => {
+        updateActiveColors(); processImage(); paletteOverlay.style.display = 'none';
+    });
+    paletteOverlay.addEventListener('click', (e) => {
+        if (e.target === paletteOverlay) document.getElementById('paletteCancelBtn').click();
+    });
+
     document.getElementById('selectAllBtn').addEventListener('click', () => {
-        for (let i = 0; i < gbgColors.length; i++) {
-            const cb = document.getElementById('color-cb-' + i);
-            if (cb) cb.checked = true;
-        }
-        updateActiveColors();
-        processImage();
+        for (let i = 0; i < gbgColors.length; i++) { const cb = document.getElementById('color-cb-' + i); if (cb) cb.checked = true; }
     });
-
     document.getElementById('deselectAllBtn').addEventListener('click', () => {
-        for (let i = 0; i < gbgColors.length; i++) {
-            const cb = document.getElementById('color-cb-' + i);
-            if (cb) cb.checked = false;
-        }
-        updateActiveColors();
-        processImage();
+        for (let i = 0; i < gbgColors.length; i++) { const cb = document.getElementById('color-cb-' + i); if (cb) cb.checked = false; }
     });
-
     document.getElementById('selectMonoBtn').addEventListener('click', () => {
         for (let i = 0; i < gbgColors.length; i++) {
             const cb = document.getElementById('color-cb-' + i);
-            if (cb) {
+            if (cb && !gbgColors[i].startsWith("-")) {
                 const hex = gbgColors[i];
-                if (!hex.startsWith("-")) {
-                    const r = parseInt(hex.substring(0, 2), 16);
-                    const g = parseInt(hex.substring(2, 4), 16);
-                    const b = parseInt(hex.substring(4, 6), 16);
-                    const isGray = (r === g && g === b);
-                    const isTrans = (i === 47 || hex === "00000000");
-                    cb.checked = (isGray || isTrans);
-                }
+                const r = parseInt(hex.substring(0, 2), 16); const g = parseInt(hex.substring(2, 4), 16); const b = parseInt(hex.substring(4, 6), 16);
+                cb.checked = ((r === g && g === b) || i === 47 || hex === "00000000");
             }
         }
-        updateActiveColors();
-        processImage();
     });
 
-    function getGbgColorIndex(r, g, b, a) {
-        if (a < 128 && activeColors[47]) return 47; 
-        
-        let minDist = Infinity;
-        let closestIdx = 0;
-        let found = false;
-        
-        for (let i = 0; i < gbgColors.length; i++) {
-            if (!activeColors[i] || gbgColors[i].startsWith("-") || i === 47) continue;
-            
-            const hex = gbgColors[i];
-            const pr = parseInt(hex.substring(0, 2), 16);
-            const pg = parseInt(hex.substring(2, 4), 16);
-            const pb = parseInt(hex.substring(4, 6), 16);
-            
-            const dist = (r - pr) ** 2 + (g - pg) ** 2 + (b - pb) ** 2;
-            if (dist < minDist) {
-                minDist = dist;
-                closestIdx = i;
-                found = true;
-            }
-        }
-        return found ? closestIdx : 32;
-    }
-
-    const bayerMatrix = [
-        [ 0,  8,  2, 10 ],
-        [12,  4, 14,  6 ],
-        [ 3, 11,  1,  9 ],
-        [15,  7, 13,  5 ]
-    ];
-
+    const bayerMatrix = [ [ 0, 8, 2, 10 ], [12, 4, 14, 6 ], [ 3, 11, 1, 9 ], [15, 7, 13, 5 ] ];
     const tb_orderMatrix = [
-        [ 0, 32,  8, 40,  2, 34, 10, 42],
-        [48, 16, 56, 24, 50, 18, 58, 26],
-        [12, 44,  4, 36, 14, 46,  6, 38],
-        [60, 28, 52, 20, 62, 30, 54, 22],
-        [ 3, 35, 11, 43,  1, 33,  9, 41],
-        [51, 19, 59, 27, 49, 17, 57, 25],
-        [15, 47,  7, 39, 13, 45,  5, 37],
-        [63, 31, 55, 23, 61, 29, 53, 21]
+        [ 0, 32, 8, 40, 2, 34, 10, 42], [48, 16, 56, 24, 50, 18, 58, 26], [12, 44, 4, 36, 14, 46, 6, 38], [60, 28, 52, 20, 62, 30, 54, 22],
+        [ 3, 35, 11, 43, 1, 33, 9, 41], [51, 19, 59, 27, 49, 17, 57, 25], [15, 47, 7, 39, 13, 45, 5, 37], [63, 31, 55, 23, 61, 29, 53, 21]
     ];
 
     function getClosestActiveColor(r, g, b) {
-        let minDist = Infinity;
-        let closest = { r: 0, g: 0, b: 0, index: 32 };
-        
+        let minDist = Infinity; let closest = { r: 0, g: 0, b: 0, index: 32 };
         for (let i = 0; i < gbgColors.length; i++) {
             if (!activeColors[i] || gbgColors[i].startsWith("-") || i === 47) continue;
-            
             const hex = gbgColors[i];
-            const pr = parseInt(hex.substring(0, 2), 16);
-            const pg = parseInt(hex.substring(2, 4), 16);
-            const pb = parseInt(hex.substring(4, 6), 16);
-
+            const pr = parseInt(hex.substring(0, 2), 16), pg = parseInt(hex.substring(2, 4), 16), pb = parseInt(hex.substring(4, 6), 16);
             const dist = (r - pr) ** 2 + (g - pg) ** 2 + (b - pb) ** 2;
-            if (dist < minDist) {
-                minDist = dist;
-                closest = { r: pr, g: pg, b: pb, index: i };
-            }
+            if (dist < minDist) { minDist = dist; closest = { r: pr, g: pg, b: pb, index: i }; }
         }
         return closest;
     }
-
-    let currentImage = null;
-    let fileName = "pixelart";
-    const imageInput = document.getElementById('imageInput');
-    const dropZone = document.getElementById('dropZone');
-    const convertBtn = document.getElementById('convertBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const downloadCsvBtn = document.getElementById('downloadCsvBtn');
-    const downloadSplitPngBtn = document.getElementById('downloadSplitPngBtn');
-    const downloadCombinedCsvBtn = document.getElementById('downloadCombinedCsvBtn');
-    const reRollBtn = document.getElementById('reRollBtn');
     
-    const brightnessInput = document.getElementById('brightness');
-    const contrastInput = document.getElementById('contrast');
-    const blurInput = document.getElementById('blur');
-    const hueRotateInput = document.getElementById('hueRotate');
-    const saturateInput = document.getElementById('saturate');
-    const sepiaInput = document.getElementById('sepia');
+    function getGbgColorIndex(r, g, b, a) {
+        if (a < 128 && activeColors[47]) return 47;
+        return getClosestActiveColor(r,g,b).index;
+    }
 
-    const brightnessVal = document.getElementById('brightnessVal');
-    const contrastVal = document.getElementById('contrastVal');
-    const blurVal = document.getElementById('blurVal');
-    const hueRotateVal = document.getElementById('hueRotateVal');
-    const saturateVal = document.getElementById('saturateVal');
-    const sepiaVal = document.getElementById('sepiaVal');
-
-    const resetAdjustBtn = document.getElementById('resetAdjustBtn');
+    const originalImg = document.getElementById('originalImg'); const previewImg = document.getElementById('previewImg');
     
-    // 両方の画像をimgタグで管理、Canvasはオフスクリーンで生成
-    const originalImg = document.getElementById('originalImg');
-    const previewImg = document.getElementById('previewImg');
-    
-    const originalCanvas = document.createElement('canvas');
+    const originalCanvas = document.createElement('canvas'); 
+    originalCanvas.style.position = 'fixed';
+    originalCanvas.style.top = '-9999px';
+    originalCanvas.style.left = '-9999px';
+    originalCanvas.style.opacity = '0';
+    originalCanvas.style.pointerEvents = 'none';
+    document.body.appendChild(originalCanvas);
     const originalCtx = originalCanvas.getContext('2d', { willReadFrequently: true });
     
-    const offscreenCanvas = document.createElement('canvas');
+    const offscreenCanvas = document.createElement('canvas'); 
+    offscreenCanvas.style.position = 'fixed';
+    offscreenCanvas.style.top = '-9999px';
+    offscreenCanvas.style.left = '-9999px';
+    offscreenCanvas.style.opacity = '0';
+    offscreenCanvas.style.pointerEvents = 'none';
+    document.body.appendChild(offscreenCanvas);
     const offCtx = offscreenCanvas.getContext('2d', { willReadFrequently: true });
-
-    // 変換前ドラッグ時の処理
-    originalImg.addEventListener('dragstart', (e) => {
-        if (!currentImage) return;
-        const dataUrl = originalCanvas.toDataURL('image/png');
-        e.dataTransfer.setData('DownloadURL', `image/png:${fileName}_original.png:${dataUrl}`);
-    });
-
-    // 変換後ドラッグ時の処理
-    previewImg.addEventListener('dragstart', (e) => {
-        if (!currentImage) return;
-        const dataUrl = offscreenCanvas.toDataURL('image/png');
-        e.dataTransfer.setData('DownloadURL', `image/png:${fileName}_preview.png:${dataUrl}`);
-    });
+    
+    originalImg.addEventListener('dragstart', (e) => { if (currentImage) e.dataTransfer.setData('DownloadURL', `image/png:${fileName}_original.png:${originalCanvas.toDataURL('image/png')}`); });
+    previewImg.addEventListener('dragstart', (e) => { if (currentImage) e.dataTransfer.setData('DownloadURL', `image/png:${fileName}_preview.png:${offscreenCanvas.toDataURL('image/png')}`); });
 
     function drawGrid() {
         const gridCanvas = document.getElementById('gridCanvas');
         const showGrid = document.getElementById('showGridCb').checked;
-        const countX = parseInt(document.getElementById('countX').value) || 1;
-        const countY = parseInt(document.getElementById('countY').value) || 1;
-        const targetX = countX * 64;
-        const targetY = countY * 64;
+        const isSeamless = document.getElementById('seamlessCb') && document.getElementById('seamlessCb').checked;
+        
+        let countX = parseInt(document.getElementById('countX').value) || 1;
+        let countY = parseInt(document.getElementById('countY').value) || 1;
+        
+        if (isSeamless) {
+            countX *= 2;
+            countY *= 2;
+        }
 
-        gridCanvas.width = targetX;
-        gridCanvas.height = targetY;
+        gridCanvas.width = countX * 64; 
+        gridCanvas.height = countY * 64;
         const gCtx = gridCanvas.getContext('2d');
-        gCtx.clearRect(0, 0, targetX, targetY);
-
+        gCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+        
         if (showGrid && (countX > 1 || countY > 1)) {
-            gCtx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
-            gCtx.lineWidth = 1; 
-
-            gCtx.beginPath();
-            for (let x = 1; x < countX; x++) {
-                gCtx.moveTo(x * 64, 0);
-                gCtx.lineTo(x * 64, targetY);
-            }
-            for (let y = 1; y < countY; y++) {
-                gCtx.moveTo(0, y * 64);
-                gCtx.lineTo(targetX, y * 64);
-            }
+            gCtx.strokeStyle = 'rgba(0, 0, 0, 0.7)'; gCtx.lineWidth = 1; gCtx.beginPath();
+            for (let x = 1; x < countX; x++) { gCtx.moveTo(x * 64, 0); gCtx.lineTo(x * 64, gridCanvas.height); }
+            for (let y = 1; y < countY; y++) { gCtx.moveTo(0, y * 64); gCtx.lineTo(gridCanvas.width, y * 64); }
             gCtx.stroke();
         }
     }
-
+    
     document.getElementById('showGridCb').addEventListener('change', drawGrid);
+    document.getElementById('seamlessCb').addEventListener('change', () => {
+        const isSeamless = document.getElementById('seamlessCb').checked;
+        const targetX = (parseInt(document.getElementById('countX').value) || 1) * 64;
+        const displayWidth = Math.max(250, targetX);
+        
+        if (isSeamless) {
+            previewImg.style.display = 'none';
+            document.getElementById('seamlessGrid').style.display = 'grid';
+            document.getElementById('seamlessGrid').style.width = displayWidth + 'px';
+        } else {
+            previewImg.style.display = 'block';
+            previewImg.style.width = displayWidth + 'px';
+            document.getElementById('seamlessGrid').style.display = 'none';
+        }
+        drawGrid();
+    });
+
+    function updatePreviewSizeDisplay() {
+        let countX = Math.max(1, parseInt(document.getElementById('countX').value) || 1);
+        let countY = Math.max(1, parseInt(document.getElementById('countY').value) || 1);
+        const targetX = countX * 64; const targetY = countY * 64;
+        document.getElementById('infoPreviewSize').textContent = `${targetX} × ${targetY} px (${countX}×${countY} ${t('msgSheets')})`;
+    }
+
+    function applyJSFilter(imageData, hueRot, sat, bri, con) {
+        const data = imageData.data;
+        const brightness = bri / 100;
+        const contrast = con / 100;
+        const saturation = sat / 100;
+        const hue = hueRot; 
+
+        const cosA = Math.cos(hue * Math.PI / 180);
+        const sinA = Math.sin(hue * Math.PI / 180);
+        
+        const a00 = 0.213 + cosA * 0.787 - sinA * 0.213;
+        const a01 = 0.715 - cosA * 0.715 - sinA * 0.715;
+        const a02 = 0.072 - cosA * 0.072 + sinA * 0.928;
+        const a10 = 0.213 - cosA * 0.213 + sinA * 0.143;
+        const a11 = 0.715 + cosA * 0.285 + sinA * 0.140;
+        const a12 = 0.072 - cosA * 0.072 - sinA * 0.283;
+        const a20 = 0.213 - cosA * 0.213 - sinA * 0.787;
+        const a21 = 0.715 - cosA * 0.715 + sinA * 0.715;
+        const a22 = 0.072 + cosA * 0.928 + sinA * 0.072;
+
+        for (let i = 0; i < data.length; i += 4) {
+            let r = data[i];
+            let g = data[i+1];
+            let b = data[i+2];
+
+            if (hue !== 0) {
+                let hr = r * a00 + g * a01 + b * a02;
+                let hg = r * a10 + g * a11 + b * a12;
+                let hb = r * a20 + g * a21 + b * a22;
+                r = hr; g = hg; b = hb;
+            }
+
+            if (saturation !== 1) {
+                let lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+                r = lum + saturation * (r - lum);
+                g = lum + saturation * (g - lum);
+                b = lum + saturation * (b - lum);
+            }
+
+            if (brightness !== 1) {
+                r *= brightness; g *= brightness; b *= brightness;
+            }
+
+            if (contrast !== 1) {
+                r = (r - 128) * contrast + 128;
+                g = (g - 128) * contrast + 128;
+                b = (b - 128) * contrast + 128;
+            }
+
+            data[i] = Math.min(255, Math.max(0, r));
+            data[i+1] = Math.min(255, Math.max(0, g));
+            data[i+2] = Math.min(255, Math.max(0, b));
+        }
+    }
 
     function processImage() {
         if (!currentImage) return;
-
-        let countX = parseInt(document.getElementById('countX').value) || 1;
-        let countY = parseInt(document.getElementById('countY').value) || 1;
-        countX = Math.max(1, countX);
-        countY = Math.max(1, countY);
         
-        if (document.activeElement !== document.getElementById('countX')) document.getElementById('countX').value = countX;
-        if (document.activeElement !== document.getElementById('countY')) document.getElementById('countY').value = countY;
-
-        const targetX = countX * 64;
-        const targetY = countY * 64;
+        let countX = Math.max(1, parseInt(document.getElementById('countX').value) || 1);
+        let countY = Math.max(1, parseInt(document.getElementById('countY').value) || 1);
+        const targetX = countX * 64; const targetY = countY * 64;
 
         const gridToggleContainer = document.getElementById('gridToggleContainer');
-        if (countX > 1 || countY > 1) {
-            gridToggleContainer.style.display = 'block';
-        } else {
-            gridToggleContainer.style.display = 'none';
-            document.getElementById('showGridCb').checked = false;
-        }
+        gridToggleContainer.style.display = 'block';
 
-        const fitMode = document.querySelector('input[name="fitMode"]:checked').value;
-        const ditherMode = document.querySelector('input[name="ditherMode"]:checked').value;
+        const fitModeSelect = document.getElementById('fitModeSelect');
+        const fitMode = fitModeSelect ? fitModeSelect.value : 'contain';
+        const ditherModeSelect = document.getElementById('ditherModeSelect');
+        const ditherMode = ditherModeSelect ? ditherModeSelect.value : 'floyd_mirror';
 
-        let origScale = 1;
-        if (currentImage) {
-            origScale = Math.max(currentImage.width / targetX, currentImage.height / targetY);
-            if (origScale < 1) origScale = 1;
-        }
-        const origW = targetX * origScale;
-        const origH = targetY * origScale;
+        let origScale = Math.max(1, Math.max(currentImage.width / targetX, currentImage.height / targetY));
+        const origW = Math.round(targetX * origScale); 
+        const origH = Math.round(targetY * origScale);
 
-        offscreenCanvas.width = targetX;
-        offscreenCanvas.height = targetY;
-        
-        originalCanvas.width = origW;
-        originalCanvas.height = origH;
+        offscreenCanvas.width = targetX; offscreenCanvas.height = targetY;
+        originalCanvas.width = origW; originalCanvas.height = origH;
 
-        // 表示上のサイズ（CSSのwidth）を同期させる（初期値の250pxを上書き）
         const displayWidth = Math.max(250, targetX);
-        originalImg.style.width = displayWidth + 'px';
-        previewImg.style.width = displayWidth + 'px';
-        originalImg.style.height = 'auto';
-        previewImg.style.height = 'auto';
-
-        offCtx.clearRect(0, 0, targetX, targetY);
-        originalCtx.clearRect(0, 0, origW, origH);
-
-        const brightness = brightnessInput.value;
-        const contrast = contrastInput.value;
-        const blur = blurInput.value;
-        const hueRotate = hueRotateInput.value;
-        const saturate = saturateInput.value;
-        const sepia = sepiaInput.value;
-        const filterStr = `brightness(${brightness}%) contrast(${contrast}%) blur(${blur}px) hue-rotate(${hueRotate}deg) saturate(${saturate}%) sepia(${sepia}%)`;
+        const isSeamless = document.getElementById('seamlessCb') && document.getElementById('seamlessCb').checked;
         
-        offCtx.filter = filterStr;
-        originalCtx.filter = filterStr;
+        originalImg.style.width = displayWidth + 'px';
+        originalImg.style.height = 'auto'; 
+        
+        if (isSeamless) {
+            previewImg.style.display = 'none';
+            document.getElementById('seamlessGrid').style.display = 'grid';
+            document.getElementById('seamlessGrid').style.width = displayWidth + 'px';
+        } else {
+            previewImg.style.display = 'block';
+            previewImg.style.width = displayWidth + 'px';
+            previewImg.style.height = 'auto';
+            document.getElementById('seamlessGrid').style.display = 'none';
+        }
+
+        const brightness = document.getElementById('brightness').value;
+        const contrast = document.getElementById('contrast').value;
+        const hueRotate = document.getElementById('hueRotate').value;
+        const saturate = document.getElementById('saturate').value;
+        const filterStr = `brightness(${brightness}%) contrast(${contrast}%) hue-rotate(${hueRotate}deg) saturate(${saturate}%)`;
+        
+        const filterMode = document.getElementById('filterModeSelect').value;
+
+        const workCanvas = document.createElement('canvas');
+        workCanvas.width = origW; 
+        workCanvas.height = origH;
+        const workCtx = workCanvas.getContext('2d', { willReadFrequently: true });
+
+        if (filterMode === 'css') {
+            workCtx.filter = filterStr;
+        } else {
+            workCtx.filter = 'none';
+        }
+        originalCtx.filter = 'none';
 
         if (fitMode === 'stretch') {
-            offCtx.drawImage(currentImage, 0, 0, targetX, targetY);
+            workCtx.drawImage(currentImage, 0, 0, origW, origH);
             originalCtx.drawImage(currentImage, 0, 0, origW, origH);
         } else {
-            const imgRatio = currentImage.width / currentImage.height;
-            const canvasRatio = targetX / targetY;
-            let drawW, drawH, drawX, drawY;
+            const imgRatio = currentImage.width / currentImage.height; const canvasRatio = targetX / targetY;
             let oDrawW, oDrawH, oDrawX, oDrawY;
-
             if (imgRatio > canvasRatio) {
-                drawW = targetX;
-                drawH = targetX / imgRatio;
-                drawX = 0;
-                drawY = (targetY - drawH) / 2;
-                
-                oDrawW = origW;
-                oDrawH = origW / imgRatio;
-                oDrawX = 0;
-                oDrawY = (origH - oDrawH) / 2;
+                oDrawW = origW; oDrawH = origW / imgRatio; oDrawX = 0; oDrawY = (origH - oDrawH) / 2;
             } else {
-                drawH = targetY;
-                drawW = targetY * imgRatio;
-                drawY = 0;
-                drawX = (targetX - drawW) / 2;
-                
-                oDrawH = origH;
-                oDrawW = origH * imgRatio;
-                oDrawY = 0;
-                oDrawX = (origW - oDrawW) / 2;
+                oDrawH = origH; oDrawW = origH * imgRatio; oDrawY = 0; oDrawX = (origW - oDrawW) / 2;
             }
-            offCtx.drawImage(currentImage, drawX, drawY, drawW, drawH);
+            workCtx.drawImage(currentImage, oDrawX, oDrawY, oDrawW, oDrawH); 
             originalCtx.drawImage(currentImage, oDrawX, oDrawY, oDrawW, oDrawH);
         }
 
-        offCtx.filter = 'none';
-        originalCtx.filter = 'none';
+        if (filterMode === 'js') {
+            const workImageData = workCtx.getImageData(0, 0, origW, origH);
+            applyJSFilter(workImageData, parseFloat(hueRotate), parseFloat(saturate), parseFloat(brightness), parseFloat(contrast));
+            workCtx.putImageData(workImageData, 0, 0);
+        }
 
-        document.getElementById('infoPreviewSize').textContent = `${targetX} × ${targetY} px (${countX}×${countY} 枚分)`;
-        updateSaveSizeDisplay(targetX, targetY);
+        updatePreviewSizeDisplay();
+        updateSaveSizeDisplay();
 
-        const imageData = offCtx.getImageData(0, 0, targetX, targetY);
+        const workData = workCtx.getImageData(0, 0, origW, origH).data;
+        const imageData = new ImageData(targetX, targetY);
         const data = imageData.data;
+        
+        const ratioX = origW / targetX;
+        const ratioY = origH / targetY;
 
         for (let y = 0; y < targetY; y++) {
             for (let x = 0; x < targetX; x++) {
-                const i = (y * targetX + x) * 4;
-                
-                const oldR = data[i];
-                const oldG = data[i + 1];
-                const oldB = data[i + 2];
-                const oldA = data[i + 3];
+                const startX = Math.floor(x * ratioX);
+                const endX = Math.max(startX + 1, Math.floor((x + 1) * ratioX));
+                const startY = Math.floor(y * ratioY);
+                const endY = Math.max(startY + 1, Math.floor((y + 1) * ratioY));
 
-                if (oldA < 128) {
-                    if (activeColors[47]) {
-                        data[i] = 0; data[i+1] = 0; data[i+2] = 0; data[i+3] = 0;
-                        continue;
+                let r = 0, g = 0, b = 0, a = 0, count = 0;
+
+                for (let sy = startY; sy < endY; sy++) {
+                    for (let sx = startX; sx < endX; sx++) {
+                        const idx = (sy * origW + sx) * 4;
+                        const alpha = workData[idx + 3] / 255;
+                        r += workData[idx] * alpha;
+                        g += workData[idx + 1] * alpha;
+                        b += workData[idx + 2] * alpha;
+                        a += workData[idx + 3];
+                        count++;
                     }
                 }
 
-                if (ditherMode.startsWith('tb_')) {
-                    let weight = 0;
-                    if (ditherMode === 'tb_ordered') {
-                        weight = tb_orderMatrix[x % 8][y % 8] / 64 - 0.5;
-                    } else if (ditherMode === 'tb_random') {
-                        weight = Math.random() - 0.5;
-                    }
-
-                    let weightR = 1 + weight * tb_averageR;
-                    let weightG = 1 + weight * tb_averageG;
-                    let weightB = 1 + weight * tb_averageB;
-
-                    let clampR = Math.min(Math.max(oldR * weightR, 0), 255);
-                    let clampG = Math.min(Math.max(oldG * weightG, 0), 255);
-                    let clampB = Math.min(Math.max(oldB * weightB, 0), 255);
-
-                    const closest = getClosestActiveColor(clampR, clampG, clampB);
-                    data[i] = closest.r;
-                    data[i + 1] = closest.g;
-                    data[i + 2] = closest.b;
-                    data[i + 3] = 255;
-
-                    if (ditherMode === 'tb_floyd') {
-                        const errR = oldR - closest.r;
-                        const errG = oldG - closest.g;
-                        const errB = oldB - closest.b;
-
-                        const distributeError = (xOff, yOff, ratio) => {
-                            if (x + xOff >= 0 && x + xOff < targetX && y + yOff < targetY) {
-                                const targetXIdx = x + xOff;
-                                const targetYIdx = y + yOff;
-                                const idx = (targetYIdx * targetX + targetXIdx) * 4;
-                                
-                                if (data[idx + 3] >= 128 || !activeColors[47]) {
-                                    data[idx] = Math.min(255, Math.max(0, data[idx] + errR * ratio));
-                                    data[idx + 1] = Math.min(255, Math.max(0, data[idx + 1] + errG * ratio));
-                                    data[idx + 2] = Math.min(255, Math.max(0, data[idx + 2] + errB * ratio));
-                                }
-                            }
-                        };
-
-                        distributeError(1, 0, 7 / 16);
-                        distributeError(-1, 1, 3 / 16);
-                        distributeError(0, 1, 5 / 16);
-                        distributeError(1, 1, 1 / 16);
-                    }
-                } else if (ditherMode === 'ordered') {
-                    const bayerValue = bayerMatrix[y % 4][x % 4];
-                    const threshold = (bayerValue / 16 - 0.5) * 64;
-
-                    const r = Math.min(255, Math.max(0, oldR + threshold));
-                    const g = Math.min(255, Math.max(0, oldG + threshold));
-                    const b = Math.min(255, Math.max(0, oldB + threshold));
-
-                    const closest = getClosestActiveColor(r, g, b);
-                    data[i] = closest.r;
-                    data[i + 1] = closest.g;
-                    data[i + 2] = closest.b;
-                    data[i + 3] = 255;
-
+                const dstIdx = (y * targetX + x) * 4;
+                if (count > 0 && a > 0) {
+                    const avgA = a / count;
+                    data[dstIdx] = Math.min(255, Math.round((r / count) / (avgA / 255)));
+                    data[dstIdx + 1] = Math.min(255, Math.round((g / count) / (avgA / 255)));
+                    data[dstIdx + 2] = Math.min(255, Math.round((b / count) / (avgA / 255)));
+                    data[dstIdx + 3] = Math.round(avgA);
                 } else {
+                    data[dstIdx] = 0; data[dstIdx+1] = 0; data[dstIdx+2] = 0; data[dstIdx+3] = 0;
+                }
+            }
+        }
+
+        if (ditherMode === 'floyd_mirror') {
+            const padX = Math.min(targetX, 128);
+            const padY = Math.min(targetY, 128);
+            const fullW = targetX + padX;
+            const fullH = targetY + padY;
+            
+            const paddedData = new Float32Array(fullW * fullH * 4);
+
+            for (let y = 0; y < fullH; y++) {
+                let origY = (y < padY) ? (padY - 1 - y) : (y - padY);
+                for (let x = 0; x < fullW; x++) {
+                    let origX = (x < padX) ? (padX - 1 - x) : (x - padX);
+                    let origIdx = (origY * targetX + origX) * 4;
+                    let padIdx = (y * fullW + x) * 4;
+                    paddedData[padIdx] = data[origIdx];
+                    paddedData[padIdx+1] = data[origIdx+1];
+                    paddedData[padIdx+2] = data[origIdx+2];
+                    paddedData[padIdx+3] = data[origIdx+3];
+                }
+            }
+
+            for (let y = 0; y < fullH; y++) {
+                for (let x = 0; x < fullW; x++) {
+                    const idx = (y * fullW + x) * 4;
+                    const oldA = paddedData[idx+3];
+
+                    if (oldA < 128 && activeColors[47]) {
+                        paddedData[idx] = 0; paddedData[idx+1] = 0; paddedData[idx+2] = 0; paddedData[idx+3] = 0;
+                        continue;
+                    }
+
+                    const oldR = paddedData[idx], oldG = paddedData[idx+1], oldB = paddedData[idx+2];
                     const closest = getClosestActiveColor(oldR, oldG, oldB);
-                    
-                    data[i] = closest.r;
-                    data[i + 1] = closest.g;
-                    data[i + 2] = closest.b;
-                    data[i + 3] = 255;
 
-                    if (ditherMode === 'floyd') {
-                        const errR = oldR - closest.r;
-                        const errG = oldG - closest.g;
-                        const errB = oldB - closest.b;
+                    paddedData[idx] = closest.r;
+                    paddedData[idx+1] = closest.g;
+                    paddedData[idx+2] = closest.b;
+                    paddedData[idx+3] = 255;
 
-                        const distributeError = (xOff, yOff, ratio) => {
-                            if (x + xOff >= 0 && x + xOff < targetX && y + yOff < targetY) {
-                                const targetXIdx = x + xOff;
-                                const targetYIdx = y + yOff;
-                                const idx = (targetYIdx * targetX + targetXIdx) * 4;
-                                
-                                if (data[idx + 3] >= 128 || !activeColors[47]) {
-                                    data[idx] = Math.min(255, Math.max(0, data[idx] + errR * ratio));
-                                    data[idx + 1] = Math.min(255, Math.max(0, data[idx + 1] + errG * ratio));
-                                    data[idx + 2] = Math.min(255, Math.max(0, data[idx + 2] + errB * ratio));
-                                }
+                    const errR = oldR - closest.r;
+                    const errG = oldG - closest.g;
+                    const errB = oldB - closest.b;
+
+                    const dist = (xO, yO, rt) => {
+                        if (x + xO >= 0 && x + xO < fullW && y + yO < fullH) {
+                            const tIdx = ((y + yO) * fullW + x + xO) * 4;
+                            if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
+                                paddedData[tIdx] += errR * rt;
+                                paddedData[tIdx+1] += errG * rt;
+                                paddedData[tIdx+2] += errB * rt;
                             }
-                        };
+                        }
+                    };
+                    dist(1, 0, 7/16); dist(-1, 1, 3/16); dist(0, 1, 5/16); dist(1, 1, 1/16);
+                }
+            }
 
-                        distributeError(1, 0, 7 / 16);
-                        distributeError(-1, 1, 3 / 16);
-                        distributeError(0, 1, 5 / 16);
-                        distributeError(1, 1, 1 / 16);
+            for (let y = 0; y < targetY; y++) {
+                for (let x = 0; x < targetX; x++) {
+                    let origIdx = (y * targetX + x) * 4;
+                    let padIdx = ((y + padY) * fullW + (x + padX)) * 4;
+                    data[origIdx] = paddedData[padIdx];
+                    data[origIdx+1] = paddedData[padIdx+1];
+                    data[origIdx+2] = paddedData[padIdx+2];
+                    data[origIdx+3] = paddedData[padIdx+3];
+                }
+            }
+
+        } else {
+            for (let y = 0; y < targetY; y++) {
+                for (let x = 0; x < targetX; x++) {
+                    const i = (y * targetX + x) * 4;
+                    const oldR = data[i], oldG = data[i+1], oldB = data[i+2], oldA = data[i+3];
+
+                    if (oldA < 128) {
+                        if (activeColors[47]) { data[i]=0; data[i+1]=0; data[i+2]=0; data[i+3]=0; continue; }
+                    }
+
+                    if (ditherMode.startsWith('tb_')) {
+                        let weight = 0;
+                        if (ditherMode === 'tb_ordered') weight = tb_orderMatrix[x%8][y%8] / 64 - 0.5;
+                        else if (ditherMode === 'tb_random') weight = Math.random() - 0.5;
+                        let clampR = Math.min(Math.max(oldR * (1 + weight * tb_averageR), 0), 255);
+                        let clampG = Math.min(Math.max(oldG * (1 + weight * tb_averageG), 0), 255);
+                        let clampB = Math.min(Math.max(oldB * (1 + weight * tb_averageB), 0), 255);
+                        const closest = getClosestActiveColor(clampR, clampG, clampB);
+                        data[i] = closest.r; data[i+1] = closest.g; data[i+2] = closest.b; data[i+3] = 255;
+                        
+                        if (ditherMode === 'tb_floyd') {
+                            const errR = oldR - closest.r, errG = oldG - closest.g, errB = oldB - closest.b;
+                            const dist = (xO, yO, rt) => {
+                                if (x+xO>=0 && x+xO<targetX && y+yO<targetY) {
+                                    const idx = ((y+yO)*targetX + x+xO)*4;
+                                    if (data[idx+3]>=128 || !activeColors[47]) {
+                                        data[idx]=Math.min(255,Math.max(0,data[idx]+errR*rt)); data[idx+1]=Math.min(255,Math.max(0,data[idx+1]+errG*rt)); data[idx+2]=Math.min(255,Math.max(0,data[idx+2]+errB*rt));
+                                    }
+                                }
+                            };
+                            dist(1,0,7/16); dist(-1,1,3/16); dist(0,1,5/16); dist(1,1,1/16);
+                        }
+                    } else {
+                        let r=oldR, g=oldG, b=oldB;
+                        if (ditherMode === 'ordered') {
+                            const th = (bayerMatrix[y%4][x%4]/16 - 0.5)*64;
+                            r=Math.min(255,Math.max(0,r+th)); g=Math.min(255,Math.max(0,g+th)); b=Math.min(255,Math.max(0,b+th));
+                        }
+                        const closest = getClosestActiveColor(r,g,b);
+                        data[i] = closest.r; data[i+1] = closest.g; data[i+2] = closest.b; data[i+3] = 255;
+                        
+                        if (ditherMode === 'floyd') {
+                            const errR = oldR - closest.r, errG = oldG - closest.g, errB = oldB - closest.b;
+                            const dist = (xO, yO, rt) => {
+                                if (x+xO>=0 && x+xO<targetX && y+yO<targetY) {
+                                    const idx = ((y+yO)*targetX + x+xO)*4;
+                                    if (data[idx+3]>=128 || !activeColors[47]) {
+                                        data[idx]=Math.min(255,Math.max(0,data[idx]+errR*rt)); data[idx+1]=Math.min(255,Math.max(0,data[idx+1]+errG*rt)); data[idx+2]=Math.min(255,Math.max(0,data[idx+2]+errB*rt));
+                                    }
+                                }
+                            };
+                            dist(1,0,7/16); dist(-1,1,3/16); dist(0,1,5/16); dist(1,1,1/16);
+                        }
+                    }
+                }
+            }
+        }
+
+        // --- 追加：市松模様の半透明化処理 ---
+        if (document.getElementById('checkerAlphaCb') && document.getElementById('checkerAlphaCb').checked) {
+            for (let y = 0; y < targetY; y++) {
+                for (let x = 0; x < targetX; x++) {
+                    if ((x + y) % 2 === 0) {
+                        const idx = (y * targetX + x) * 4;
+                        data[idx + 3] = 0; // アルファ値を0にして完全に透明にする
                     }
                 }
             }
@@ -871,362 +2247,160 @@
 
         offCtx.putImageData(imageData, 0, 0);
         
-        // オフスクリーンCanvasの内容をImgタグのsrcにセット
-        previewImg.src = offscreenCanvas.toDataURL('image/png');
-        originalImg.src = originalCanvas.toDataURL('image/png');
+        const base64Url = offscreenCanvas.toDataURL('image/png');
+        previewImg.src = base64Url;
+        document.querySelectorAll('.seamless-item').forEach(img => img.src = base64Url);
         
+        originalImg.src = originalCanvas.toDataURL('image/png');
+        originalImg.style.filter = filterStr;
         drawGrid(); 
     }
-    
+
+    document.getElementById('checkerAlphaCb').addEventListener('change', processImage);
+
     async function handleFile(file) {
         if (!file) return;
-        
-        let currentFile = file;
-        fileName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-        const extension = file.name.split('.').pop().toLowerCase();
-        
+        let currentFile = file; fileName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
         document.getElementById('imageInfo').style.display = 'block';
         
-        if (extension === 'heic' || extension === 'heif') {
-            document.getElementById('infoFileName').textContent = `${file.name} (HEICデコード中...)`;
-            document.getElementById('infoOrigSize').textContent = "-";
-            document.getElementById('infoPreviewSize').textContent = "-";
-            document.getElementById('infoSaveSize').textContent = "-";
-            
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (ext === 'heic' || ext === 'heif') {
+            document.getElementById('infoFileName').textContent = `${file.name}${t('msgDecoding')}`;
             try {
-                const convertedBlob = await heic2any({
-                    blob: file,
-                    toType: "image/jpeg",
-                    quality: 0.9
-                });
-                currentFile = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
-            } catch (error) {
-                alert("HEICファイルのデコードに失敗しました。");
-                console.error(error);
-                document.getElementById('infoFileName').textContent = "デコード失敗";
-                return;
+                const blob = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.9 });
+                currentFile = Array.isArray(blob) ? blob[0] : blob;
+            } catch (e) {
+                await showCustomAlert(t('msgDecodeFail'));
+                document.getElementById('infoFileName').textContent = t('msgDecodeFail'); return; 
             }
         }
-
         const reader = new FileReader();
-        reader.onload = (event) => {
+        reader.onload = (e) => {
             const img = new Image();
             img.onload = () => {
                 currentImage = img;
                 document.getElementById('infoFileName').textContent = file.name;
                 document.getElementById('infoOrigSize').textContent = `${img.naturalWidth} × ${img.naturalHeight} px`;
                 processImage();
+                updateDownloadButtons();
             };
-            img.src = event.target.result;
+            img.src = e.target.result;
         };
         reader.readAsDataURL(currentFile);
     }
 
-    function updateSaveSizeDisplay(targetX, targetY) {
+    function updateSaveSizeDisplay() {
         if (!currentImage) return;
-        let scale = parseInt(document.getElementById('scaleFactor').value);
-        if (isNaN(scale) || scale < 1) scale = 1;
-
-        const tx = targetX || offscreenCanvas.width;
-        const ty = targetY || offscreenCanvas.height;
-
-        document.getElementById('infoSaveSize').textContent = `${tx * scale} × ${ty * scale} px`;
+        let scale = parseInt(document.getElementById('scaleFactor').value) || 1;
+        document.getElementById('infoSaveSize').textContent = `${offscreenCanvas.width * scale} × ${offscreenCanvas.height * scale} px`;
     }
-    
-    function updateAdjustments() {
-        brightnessVal.textContent = brightnessInput.value + '%';
-        contrastVal.textContent = contrastInput.value + '%';
-        blurVal.textContent = blurInput.value + 'px';
-        hueRotateVal.textContent = hueRotateInput.value + '°';
-        saturateVal.textContent = saturateInput.value + '%';
-        sepiaVal.textContent = sepiaInput.value + '%';
-        processImage();
-    }
-    brightnessInput.addEventListener('input', updateAdjustments);
-    contrastInput.addEventListener('input', updateAdjustments);
-    blurInput.addEventListener('input', updateAdjustments);
-    hueRotateInput.addEventListener('input', updateAdjustments);
-    saturateInput.addEventListener('input', updateAdjustments);
-    sepiaInput.addEventListener('input', updateAdjustments);
-    
-    resetAdjustBtn.addEventListener('click', () => {
-        brightnessInput.value = 100;
-        contrastInput.value = 100;
-        blurInput.value = 0;
-        hueRotateInput.value = 0;
-        saturateInput.value = 100;
-        sepiaInput.value = 0;
-        updateAdjustments();
-    });
 
+    const imageInput = document.getElementById('imageInput');
+    const dropZone = document.getElementById('dropZone');
     imageInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
-    dropZone.addEventListener('click', () => imageInput.click());
-    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-    dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropZone.classList.remove('drag-over');
-        if (e.dataTransfer.files.length > 0) {
-            imageInput.files = e.dataTransfer.files;
-            handleFile(e.dataTransfer.files[0]);
-        }
-    });
-
-    document.getElementById('countX').addEventListener('change', processImage);
-    document.getElementById('countY').addEventListener('change', processImage);
     
-    document.querySelectorAll('input[name="fitMode"], input[name="ditherMode"]').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            if (e.target.name === 'ditherMode') {
-                if (e.target.value === 'tb_random') {
-                    reRollBtn.style.display = 'inline-block';
-                } else {
-                    reRollBtn.style.display = 'none';
-                }
-            }
+    imageInput.addEventListener('click', (e) => { e.target.value = ''; });
+    
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault(); dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) { imageInput.files = e.dataTransfer.files; handleFile(e.dataTransfer.files[0]); }
+    });
+
+    document.getElementById('countX').addEventListener('change', () => { processImage(); updateDownloadButtons(); });
+    document.getElementById('countY').addEventListener('change', () => { processImage(); updateDownloadButtons(); });
+    document.getElementById('scaleFactor').addEventListener('change', updateSaveSizeDisplay);
+    
+    document.getElementById('fitModeSelect').addEventListener('change', processImage);
+    const ditherModeSelect = document.getElementById('ditherModeSelect');
+    ditherModeSelect.addEventListener('change', processImage);
+    ditherModeSelect.addEventListener('click', () => {
+        if (ditherModeSelect.value === 'tb_random') {
             processImage();
-        });
+        }
     });
 
-    document.getElementById('scaleFactor').addEventListener('input', () => updateSaveSizeDisplay());
-    document.getElementById('scaleFactor').addEventListener('change', () => updateSaveSizeDisplay());
-
-    reRollBtn.addEventListener('click', processImage);
-    convertBtn.addEventListener('click', processImage);
-
-    downloadBtn.addEventListener('click', () => {
-        if (!currentImage) {
-            alert("先に画像を選択してください。");
-            return;
-        }
-
-        let scale = parseInt(document.getElementById('scaleFactor').value);
-        if (isNaN(scale) || scale < 1) scale = 1;
-
-        let outputCanvas = offscreenCanvas;
-
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
+        let scale = parseInt(document.getElementById('scaleFactor').value) || 1;
+        let outCanvas = offscreenCanvas;
         if (scale > 1) {
-            outputCanvas = document.createElement('canvas');
-            outputCanvas.width = offscreenCanvas.width * scale;
-            outputCanvas.height = offscreenCanvas.height * scale;
-            const outputCtx = outputCanvas.getContext('2d');
-            
-            outputCtx.imageSmoothingEnabled = false;
-            outputCtx.drawImage(offscreenCanvas, 0, 0, outputCanvas.width, outputCanvas.height);
+            outCanvas = document.createElement('canvas'); outCanvas.width = offscreenCanvas.width * scale; outCanvas.height = offscreenCanvas.height * scale;
+            const outCtx = outCanvas.getContext('2d'); outCtx.imageSmoothingEnabled = false; outCtx.drawImage(offscreenCanvas, 0, 0, outCanvas.width, outCanvas.height);
         }
-
-        const link = document.createElement('a');
-        link.download = `${fileName}_${outputCanvas.width}x${outputCanvas.height}.png`;
-        link.href = outputCanvas.toDataURL('image/png');
-        link.click();
+        const link = document.createElement('a'); link.download = `${fileName}_${outCanvas.width}x${outCanvas.height}.png`; link.href = outCanvas.toDataURL('image/png'); link.click();
     });
 
-    downloadSplitPngBtn.addEventListener('click', () => {
-        if (!currentImage) {
-            alert("先に画像を選択してください。");
-            return;
-        }
-
-        let scale = parseInt(document.getElementById('scaleFactor').value);
-        if (isNaN(scale) || scale < 1) scale = 1;
-
-        const width = offscreenCanvas.width;
-        const height = offscreenCanvas.height;
-        const sizeX = width / 64;
-        const sizeY = height / 64;
-
-        let downloadCount = 0;
-
-        for (let v = 0; v < sizeY; v++) {
-            for (let u = 0; u < sizeX; u++) {
-                if (downloadCount > 0 && (downloadCount % 10) === 0) {
-                    alert("OKをクリックして次の画像をダウンロードします。");
-                }
-                downloadCount++;
-
-                const tileCanvas = document.createElement("canvas");
-                tileCanvas.width = 64 * scale;
-                tileCanvas.height = 64 * scale;
-                const tileCtx = tileCanvas.getContext("2d");
-                tileCtx.imageSmoothingEnabled = false;
-
-                tileCtx.drawImage(offscreenCanvas, u * 64, v * 64, 64, 64, 0, 0, 64 * scale, 64 * scale);
-
-                const link = document.createElement("a");
-                if (sizeX === 1 && sizeY === 1) {
-                    link.download = `${fileName}_split.png`;
-                } else {
-                    link.download = `${fileName}_${u + 1}-${v + 1}.png`;
-                }
-                
-                link.href = tileCanvas.toDataURL("image/png");
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+    document.getElementById('downloadSplitPngBtn').addEventListener('click', async () => {
+        let scale = parseInt(document.getElementById('scaleFactor').value) || 1;
+        const sX = offscreenCanvas.width / 64, sY = offscreenCanvas.height / 64;
+        let count = 0;
+        for (let v = 0; v < sY; v++) {
+            for (let u = 0; u < sX; u++) {
+                if (count > 0 && count % 10 === 0) await showCustomAlert(t('msgNextImg'));
+                count++;
+                const tCanvas = document.createElement("canvas"); tCanvas.width = 64 * scale; tCanvas.height = 64 * scale;
+                const tCtx = tCanvas.getContext("2d"); tCtx.imageSmoothingEnabled = false;
+                tCtx.drawImage(offscreenCanvas, u * 64, v * 64, 64, 64, 0, 0, 64 * scale, 64 * scale);
+                const link = document.createElement("a"); link.download = (sX===1 && sY===1) ? `${fileName}_split.png` : `${fileName}_${u+1}-${v+1}.png`;
+                link.href = tCanvas.toDataURL("image/png"); link.click();
             }
         }
     });
 
-    downloadCsvBtn.addEventListener('click', () => {
-        if (!currentImage) {
-            alert("先に画像を選択してください。");
-            return;
+    function getCsvData(u, v, w, h, data) {
+        const grid = new Uint8Array(4097); const colorCount = new Array(gbgColors.length).fill(0);
+        for (let y=0; y<64; y++) {
+            for (let x=0; x<64; x++) {
+                const idx = ((y+v*64)*w + (x+u*64))*4;
+                const cIdx = getGbgColorIndex(data[idx], data[idx+1], data[idx+2], data[idx+3]);
+                grid[x+y*64+1] = cIdx; colorCount[cIdx]++;
+            }
         }
+        let maxC = -1, maxI = 0;
+        for (let i=0; i<colorCount.length; i++) {
+            if (i===47 || gbgColors[i].startsWith("-") || gbgColors[i]==="00000000") continue;
+            if (colorCount[i]>maxC) { maxC = colorCount[i]; maxI = i; }
+        }
+        grid[0] = maxI; return grid;
+    }
 
-        const width = offscreenCanvas.width;
-        const height = offscreenCanvas.height;
-        const imageData = offCtx.getImageData(0, 0, width, height);
-        
-        const sizeX = width / 64;
-        const sizeY = height / 64;
-        
-        let downloadCount = 0;
-
-        for (let v = 0; v < sizeY; v++) {
-            for (let u = 0; u < sizeX; u++) {
-                
-                if (downloadCount > 0 && (downloadCount % 10) === 0) {
-                    alert("OKをクリックして次の画像をダウンロードします。");
-                }
-                downloadCount++;
-                
-                const grid = new Uint8Array(4097);
-                const colorCount = new Array(gbgColors.length).fill(0);
-                
-                for (let y = 0; y < 64; y++) {
-                    for (let x = 0; x < 64; x++) {
-                        const px = x + u * 64;
-                        const py = y + v * 64;
-                        
-                        const idx = (py * width + px) * 4;
-                        const r = imageData.data[idx];
-                        const g = imageData.data[idx + 1];
-                        const b = imageData.data[idx + 2];
-                        const a = imageData.data[idx + 3];
-                        
-                        const colorIndex = getGbgColorIndex(r, g, b, a);
-                        
-                        grid[x + y * 64 + 1] = colorIndex;
-                        colorCount[colorIndex]++;
-                    }
-                }
-                
-                let maxCount = -1;
-                let maxIndex = 0;
-                for (let i = 0; i < colorCount.length; i++) {
-                    if (i === 47 || gbgColors[i].startsWith("-") || gbgColors[i] === "00000000") continue;
-                    
-                    if (colorCount[i] > maxCount) {
-                        maxCount = colorCount[i];
-                        maxIndex = i;
-                    }
-                }
-                grid[0] = maxIndex;
-                
+    document.getElementById('downloadCsvBtn').addEventListener('click', async () => {
+        const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
+        const sX = w/64, sY = h/64; let count = 0;
+        for (let v=0; v<sY; v++) {
+            for (let u=0; u<sX; u++) {
+                if (count > 0 && count % 10 === 0) await showCustomAlert(t('msgNextFile'));
+                count++;
+                const grid = getCsvData(u, v, w, h, data);
                 const blob = new Blob(["\ufeff", grid.join(",")], { type: "text/csv" });
                 const url = URL.createObjectURL(blob);
-                const link = document.createElement("a");
-                link.href = url;
-                
-                if (sizeX === 1 && sizeY === 1) {
-                    link.download = `${fileName}.csv`;
-                } else {
-                    link.download = `${fileName}_${u + 1}-${v + 1}.csv`;
-                }
-                
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
+                const link = document.createElement("a"); link.href = url;
+                link.download = (sX===1 && sY===1) ? `${fileName}.csv` : `${fileName}_${u+1}-${v+1}.csv`;
+                link.click(); URL.revokeObjectURL(url);
             }
         }
     });
 
-    downloadCombinedCsvBtn.addEventListener('click', () => {
-        if (!currentImage) {
-            alert("先に画像を選択してください。");
-            return;
+    document.getElementById('downloadCombinedCsvBtn').addEventListener('click', async () => {
+        const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
+        const sX = w/64, sY = h/64; let allData = [];
+        for (let v=0; v<sY; v++) {
+            for (let u=0; u<sX; u++) { allData.push(getCsvData(u, v, w, h, data).join(",")); }
         }
-
-        const width = offscreenCanvas.width;
-        const height = offscreenCanvas.height;
-        const imageData = offCtx.getImageData(0, 0, width, height);
-
-        const sizeX = width / 64;
-        const sizeY = height / 64;
-
-        let allTilesData = [];
-
-        for (let v = 0; v < sizeY; v++) {
-            for (let u = 0; u < sizeX; u++) {
-                const grid = new Uint8Array(4097);
-                const colorCount = new Array(gbgColors.length).fill(0);
-
-                for (let y = 0; y < 64; y++) {
-                    for (let x = 0; x < 64; x++) {
-                        const px = x + u * 64;
-                        const py = y + v * 64;
-
-                        const idx = (py * width + px) * 4;
-                        const r = imageData.data[idx];
-                        const g = imageData.data[idx + 1];
-                        const b = imageData.data[idx + 2];
-                        const a = imageData.data[idx + 3];
-
-                        const colorIndex = getGbgColorIndex(r, g, b, a);
-
-                        grid[x + y * 64 + 1] = colorIndex;
-                        colorCount[colorIndex]++;
-                    }
-                }
-
-                let maxCount = -1;
-                let maxIndex = 0;
-                for (let i = 0; i < colorCount.length; i++) {
-                    if (i === 47 || gbgColors[i].startsWith("-") || gbgColors[i] === "00000000") continue;
-                    if (colorCount[i] > maxCount) {
-                        maxCount = colorCount[i];
-                        maxIndex = i;
-                    }
-                }
-                grid[0] = maxIndex;
-                allTilesData.push(grid.join(","));
-            }
-        }
-
-        const batchSize = 5;
-        let downloadCount = 0;
-
-        for (let i = 0; i < allTilesData.length; i += batchSize) {
-            if (downloadCount > 0 && (downloadCount % 10) === 0) {
-                alert("OKをクリックして次の画像セットをダウンロードします。");
-            }
-            downloadCount++;
-
-            const batch = allTilesData.slice(i, i + batchSize);
-            const combinedText = batch.join(",\n");
-
-            const blob = new Blob(["\ufeff", combinedText], { type: "text/csv;charset=utf-8;" });
+        let count = 0;
+        for (let i=0; i<allData.length; i+=5) {
+            if (count > 0 && count % 10 === 0) await showCustomAlert(t('msgNextFile'));
+            count++;
+            const text = allData.slice(i, i+5).join(",\n");
+            const blob = new Blob(["\ufeff", text], { type: "text/csv" });
             const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-
-            const startIdx = i + 1;
-            const endIdx = Math.min(i + batchSize, allTilesData.length);
-
-            if (startIdx === endIdx) {
-                link.download = `${fileName}_combined_${startIdx}.csv`;
-            } else {
-                link.download = `${fileName}_combined_${startIdx}-${endIdx}.csv`;
-            }
-
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+            const link = document.createElement("a"); link.href = url;
+            const end = Math.min(i+5, allData.length);
+            link.download = (i+1===end) ? `${fileName}_combined_${i+1}.csv` : `${fileName}_combined_${i+1}-${end}.csv`;
+            link.click(); URL.revokeObjectURL(url);
         }
     });
-
 </script>
 
 </body>
