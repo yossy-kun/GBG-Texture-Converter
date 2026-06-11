@@ -19,7 +19,7 @@
             --slider-bg: #d1d1d6;
 
             font-family: '-apple-system', 'BlinkMacSystemv', 'Inter', 'Noto Sans JP', 'Meiryo', sans-serif;
-            background-color: #f2f2f7;
+            background-color: #f4f4f8;
             color: #000;
             margin: 0;
             padding: 20px;
@@ -63,13 +63,19 @@
             font-size: 13px;
         }
 
-        /* --- タブ切り替えUI --- */
+                /* --- タブ切り替えUI --- */
         .tab-container {
             display: flex;
             gap: 10px;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 1px solid #ddd;
             margin-bottom: 20px;
+            /* 追加: 端までボーダーを伸ばす */
+            margin-left: -20px;
+            margin-right: -20px;
+            padding-left: 20px;
+            padding-right: 20px;
         }
+
         .tab-btn {
             background: transparent;
             color: #666;
@@ -81,7 +87,7 @@
             cursor: pointer;
             border-bottom: 3px solid transparent;
             border-radius: 0;
-            transition: color 0.2s;
+            transition: all 0.2s;
             box-shadow: none !important;
         }
         .tab-btn:hover:not(.active) {
@@ -105,9 +111,9 @@
             display: flex !important;
         }
         
-        /* 全体を囲う一つの大きなウィンドウ */
+         
         .panel-body {
-            background: #f9f9fc;
+            background: #fafafc;
             border-radius: 24px;
             border: 2px solid #fff;
             box-shadow: 0 4px 16px rgba(0,0,0,0.1);
@@ -120,12 +126,11 @@
         #tab-main {
             flex-direction: row;
             align-items: flex-start;
-            gap: 10px;
+            gap: 20px;
         }
 
         #tab-help {
             flex-direction: column;
-            max-width: 767px;
             padding: 30px;
         }
 
@@ -144,6 +149,7 @@
             width: 1px;
             background-color: #d1d1d6;
             align-self: stretch;
+            margin:-20px 0 -20px 0 ;
         }
         
         .panel-preview {
@@ -160,24 +166,26 @@
             overflow-y: auto;
         }
 
-        @media (max-width: 767px) {
-    .header-title-row {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .header-controls {
-        align-self: flex-end;
-        width: 100%;
-        justify-content: flex-end;
-        margin-top: 5px;
-    }
-    #tab-main { flex-direction: column; }
-    /* 以降は元の記述のまま */
-            .panel-divider {
-                width: 100%;
-                height: 1px;
-                margin: 10px 0;
+                @media (max-width: 767px) {
+            .header-title-row {
+                flex-direction: column;
+                align-items: flex-start;
             }
+            .header-controls {
+                align-self: flex-end;
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 5px;
+            }
+            #tab-main { flex-direction: column; }
+            
+            /* 修正: 端までボーダーを伸ばす */
+            .panel-divider {
+                width: calc(100% + 40px);
+                height: 1px;
+                margin: 20px -20px;
+            }
+            
             .panel-controls, .panel-preview {
                 max-width: 100%;
                 max-height: none; 
@@ -187,16 +195,17 @@
             }
         }
 
+
         .fieldset {
             border: none;
             border-radius: 0;
             max-width: none;
-            padding: 15px 0 0 0;
-            margin: 5px 0 0 0;
+            padding: 15px 20px 0 20px;
+            margin: 5px -20px 0 -20px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            border-top: 1px solid #ccc;
+            border-top: 1px solid #ddd;
         }
         .fieldset:first-of-type {
             border-top: none;
@@ -206,9 +215,9 @@
 
         .section-title {
             margin: 0;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
-            color: #000;
+            color: #333;
         }
 
         /* =========================================
@@ -219,10 +228,10 @@
             color: #000;
             padding: 10px 12px;
             border-radius: 24px;
-            border: 1px solid #eee;
+            border: 1px solid #e3e3e3;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             font-size: 14px;
-            font-family: inherit;                        
+            font-family: inherit;         
             box-sizing: border-box;  
             cursor: pointer;
             transition: all 0.1s;
@@ -233,7 +242,7 @@
         }
         button:not(:disabled):active {
            filter: brightness(0.85);
-            transform: scale(1.15);
+            transform: scale(0.9);
         }
         button:disabled {
             cursor: not-allowed;
@@ -247,7 +256,7 @@
         ========================================= */
         .drop-zone {
             display: block;
-            border: none;
+            border: 1px solid #e3e3e3;
             border-radius: 24px;
             padding: 20px 10px;
             box-sizing: border-box; 
@@ -340,12 +349,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid #e3e3e3;
             padding: 10px 16px;
             border-radius: 24px;
             background-color: #fff;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            color: #333;
-            font-size: 14px;
+            color: #000;
+            font-size: 15px;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -365,10 +375,14 @@
             left: 0;
             right: 0;
             margin-top: 6px;
-            background: #fff;
             border-radius: 16px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
             opacity: 0;
+            /* ここからすりガラス設定 */
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            /* ここまですりガラス設定 */
             visibility: hidden;
             pointer-events: none;
             transform: translateY(-10px);
@@ -386,10 +400,10 @@
             transform: translateY(0);
         }
         .custom-option {
-            padding: 9px 14px 9px 32px;
+            padding: 9px 2px 9px 32px;
             cursor: pointer;
             border-radius: 12px;
-            font-size: 14px;
+            font-size: 15px;
             color: #333;
             transition: background 0.15s;
             position: relative;
@@ -457,19 +471,21 @@
         
         .val-display {
             display: inline-block;
-            padding: 4px 12px;
-            background-color: #e9e9ea;
-            border-radius: 12px;
+            padding: 5px 12px;
+            border: 1px solid #e3e3e3;
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
+            font-size: 14px; 
             min-width: 24px;
             text-align: center;
             transition: background-color 0.1s;
             user-select: none;
         }
-        @media (hover: hover) { .val-display:hover { background-color: #d1d1d6; } }
-        .val-display:active { background-color: #c0c2c8; }
+        @media (hover: hover) { .val-display:hover { opacity: 0.7; } }
+        .val-display:active { filter: brightness(0.85);
+            transform: scale(0.9); }
 
         .gbg-slider-track {
             position: absolute;
@@ -497,9 +513,9 @@
         .gbg-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 24px;
-            height: 24px;
-            border: 1px solid #eee;
+            width: 26px;
+            height: 26px;
+            border: 1px solid #e3e3e3;
             border-radius: 28px;
             background-color: #fff;          
             box-sizing: border-box;
@@ -514,7 +530,7 @@
         .palette-btn-group {
             display: flex;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
         }
         .palette-table { border-collapse: collapse; margin: 0 auto; }
@@ -607,10 +623,10 @@
         .info-panel strong { width: 160px; color: #444; font-weight: bold; }
         
         .hint-box {
-            font-size: 13px;
+            font-size: 14px;
             line-height: 1.5;
             background-color: #fff;
-            border: 1px solid #e2e4e7;
+            border: 1px solid #ccc;
             padding: 8px 12px;
             border-radius: 16px;
             display: inline-block;
@@ -627,21 +643,30 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.4);
+            /* 背景を透明にして、モーダルの裏が暗くなるのを防ぐ */
+            background-color: transparent !important;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
         }
         .numpad-modal {
-            background-color: #f8f8fa;
+            /* すりガラス設定 */
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            
+            /* モーダルの外側だけを暗くする魔法のシャドウ（100vmax） */
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15), 0 0 0 100vmax rgba(0, 0, 0, 0.4);
+            
             border-radius: 24px;
             box-sizing: border-box;
             animation: numpadPop 0.15s ease-out;
             max-width: 95vw;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
             overflow: hidden;
         }
+
+        /* 既存のアニメーションやヘッダーの設定などはそのまま残す */
         @keyframes numpadPop {
             from { transform: scale(0.95); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
@@ -725,7 +750,7 @@
             color: #e0e0e0;
         }
         body.dark-mode .panel-body {
-            background: #111;
+            background-color: #1c1c1e;
             border-color: #2b2b2b;
             box-shadow: 0 4px 16px rgba(0,0,0,0.5);
         }
@@ -742,7 +767,7 @@
         body.dark-mode .drop-zone p {
             color: #f4f4f4;
         }
-        body.dark-mode .tab-btn { color: #888; background-color: #000; border-bottom-color: #000;}
+        body.dark-mode .tab-btn { color: #888; background: transparent; border-bottom-color: #000;}
         body.dark-mode .tab-btn:hover:not(.active) { color: #bbb; }
         body.dark-mode .tab-btn.active {
             color: #0091ff;
@@ -753,16 +778,23 @@
         body.dark-mode button,
         body.dark-mode .drop-zone,
         body.dark-mode .custom-select-trigger,
-        body.dark-mode .custom-options,
         body.dark-mode .slider-btn,
+        body.dark-mode .val-display,
         body.dark-mode .num-btn,
-        body.dark-mode #numpad-display,
         body.dark-mode .info-panel,
         body.dark-mode .hint-box {
             background-color: #333;
             border-color: #444;
         }
-        
+
+        body.dark-mode .custom-options {
+            background-color: rgba(40, 40, 40, 0.9);
+        }
+
+        body.dark-mode #numpad-display {
+            background-color: rgba(60, 60, 60, 0.9);
+        }
+
         body.dark-mode .hint-box {
             color: #aaa;
         }
@@ -781,19 +813,21 @@
 }
         
         body.dark-mode .drop-zone span { color: #aaa; }
-        body.dark-mode .drop-zone.dragover { background-color: #1a3a5f; }
-        @media (hover: hover) { body.dark-mode .drop-zone:hover { background-color: #1a3a5f; } }
-        
-        body.dark-mode .val-display { background-color: #333; color: #e0e0e0; }
-        @media (hover: hover) { body.dark-mode .val-display:hover { background-color: #444; } }
+        body.dark-mode .drop-zone.dragover { filter: brightness(1.35); }
+        @media (hover: hover) { body.dark-mode .drop-zone:hover { filter: brightness(1.35); } }
+    
         body.dark-mode .gbg-slider-track { background-color: #000; }
         body.dark-mode .gbg-slider::-webkit-slider-thumb { background-color: #e0e0e0; border-color: #666; }
         
-        body.dark-mode .numpad-modal,
-        body.dark-mode .palette-table { background-color: #1e1e1e; }
         body.dark-mode #numpad-display.is-initial { color: #777 !important; }
         @media (hover: hover) { body.dark-mode .num-btn:hover, body.dark-mode .slider-btn:hover { background-color: #3a3a3a; } }
         
+        /* ダークモード時のモーダルすりガラス設定 */
+        body.dark-mode .numpad-modal { 
+            background-color: rgba(30, 30, 30, 0.8); 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 100vmax rgba(0, 0, 0, 0.6);
+        }
+
         body.dark-mode .color-cell { border-color: #555; }
         body.dark-mode .preview-label { color: #bbb; }
         body.dark-mode .preview-box:nth-child(2) .preview-label { color: #4da3ff; }
@@ -814,6 +848,11 @@
         }
         body.dark-mode .info-panel strong { color: #ccc; }
         body.dark-mode #custom-alert-message { color: #e0e0e0 !important; }
+
+        body.dark-mode #texCountWarning {
+            background-color: #3b1a1a;
+            color: #ff6b6b;
+        }
     </style>
 </head>
 <body ontouchstart="">
@@ -849,6 +888,51 @@
                 <span data-i18n="imgHint">(png, jpg, webp, heic など)</span>
                 <input type="file" id="imageInput" accept="image/*,.heic,.HEIC" style="display: none;">
             </label>
+        </fieldset>
+
+        <fieldset class="fieldset">
+            <h3 class="section-title" data-i18n="fitMode">2. 画像のフィット方法</h3>
+            <div style="margin-top: 10px;">
+                <select id="fitModeSelect" class="styled-select">
+                    <option value="contain" data-i18n="fitCon" selected>元の比率を保持（余白を作る）</option>
+                    <option value="stretch" data-i18n="fitStr">キャンバスにフィット（比率を変える）</option>
+                </select>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+            <p class="section-title" data-i18n="texCount">5. テクスチャ枚数 <span style="font-size: 12px; font-weight: normal; color: #666;" data-i18n="texSub">(1枚 = 64×64ドット)</span></p>
+            
+            <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 10px;">
+                <div class="gbg-slider-container" style="margin: 0;">
+                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                        <span>X (ヨコ)</span>
+                        <span><span id="val-countX" class="val-display">1</span><span >枚</span></span>
+                    </p>
+                    <div class="slider-row">
+                        <button type="button" id="dec-countX" class="material-symbols-outlined slider-btn">remove</button>
+                        <div class="gbg-slider-wrapper">
+                            <div class="gbg-slider-track" id="track-countX"></div>
+                            <input type="range" id="countX" class="gbg-slider" min="1" max="16" value="1">
+                        </div>
+                        <button type="button" id="inc-countX" class="material-symbols-outlined slider-btn">add</button>
+                    </div>
+                </div>
+                <div class="gbg-slider-container" style="margin: 0;">
+                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                        <span>Y (タテ)</span>
+                        <span><span id="val-countY" class="val-display">1</span><span >枚</span></span>
+                    </p>
+                    <div class="slider-row">
+                        <button type="button" id="dec-countY" class="material-symbols-outlined slider-btn">remove</button>
+                        <div class="gbg-slider-wrapper">
+                            <div class="gbg-slider-track" id="track-countY"></div>
+                            <input type="range" id="countY" class="gbg-slider" min="1" max="16" value="1">
+                        </div>
+                        <button type="button" id="inc-countY" class="material-symbols-outlined slider-btn">add</button>
+                    </div>
+                </div>
+            </div>
         </fieldset>
 
        <fieldset class="fieldset">
@@ -919,21 +1003,9 @@
                 <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 8px; margin-bottom: 5px; align-items: center;">
                     <button type="button" id="resetAdjustBtn" data-i18n="reset">リセット</button>
                 </div>
-                <div class="hint-box" data-i18n="adjHint">
-                    色合いや明るさなどを調整できます<br>
-                    スライダーの操作中は変換前の画像にのみプレビュー反映されます
-                </div> 
 
-                <div style="margin-top: 15px;">
-                    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: bold;" data-i18n="filterModeTitle">フィルター方式</p>
-                    <select id="filterModeSelect" class="styled-select">
-                        <option value="css" data-i18n="filterCss" selected>CSS (高速・標準)</option>
-                        <option value="js" data-i18n="filterJs">JS (Safari等で反映されない場合)</option>
-                    </select>
-                </div>
-                <div class="hint-box" data-i18n="filterHint">
-                    基本的には「CSS」でOKです<br>SafariやiOSのブラウザではCSSフィルターがドット絵に反映されないことがありますが、その場合は「JS」を選ぶと反映されるようになります
-                </div> 
+                
+                
             </div>
         </fieldset>
 
@@ -941,50 +1013,6 @@
             <h3 class="section-title" data-i18n="palSet">3. パレット設定</h3>
             <div style="margin-top: 5px;">
                 <button type="button" id="openPaletteBtn" data-i18n="palBtn">パレット設定 ▼</button>
-            </div>
-        </fieldset>
-
-        <fieldset class="fieldset">
-            <h3 class="section-title" data-i18n="fitMode">4. 画像のフィット方法</h3>
-            <div style="margin-top: 10px;">
-                <select id="fitModeSelect" class="styled-select">
-                    <option value="contain" data-i18n="fitCon" selected>元の比率を保持（余白を作る）</option>
-                    <option value="stretch" data-i18n="fitStr">キャンバスにフィット（比率を変える）</option>
-                </select>
-            </div>
-        </fieldset>
-
-        <fieldset class="fieldset">
-            <p class="section-title" data-i18n="texCount">5. テクスチャ枚数 <span style="font-size: 12px; font-weight: normal; color: #666;" data-i18n="texSub">(1枚 = 64×64ドット)</span></p>
-            <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 10px;">
-                <div class="gbg-slider-container" style="margin: 0;">
-                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
-                        <span>X (ヨコ)</span>
-                        <span><span id="val-countX" class="val-display" title="タップして数字入力">1</span><span >枚</span></span>
-                    </p>
-                    <div class="slider-row">
-                        <button type="button" id="dec-countX" class="material-symbols-outlined slider-btn">remove</button>
-                        <div class="gbg-slider-wrapper">
-                            <div class="gbg-slider-track" id="track-countX"></div>
-                            <input type="range" id="countX" class="gbg-slider" min="1" max="16" value="1">
-                        </div>
-                        <button type="button" id="inc-countX" class="material-symbols-outlined slider-btn">add</button>
-                    </div>
-                </div>
-                <div class="gbg-slider-container" style="margin: 0;">
-                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
-                        <span>Y (タテ)</span>
-                        <span><span id="val-countY" class="val-display" title="タップして数字入力">1</span><span >枚</span></span>
-                    </p>
-                    <div class="slider-row">
-                        <button type="button" id="dec-countY" class="material-symbols-outlined slider-btn">remove</button>
-                        <div class="gbg-slider-wrapper">
-                            <div class="gbg-slider-track" id="track-countY"></div>
-                            <input type="range" id="countY" class="gbg-slider" min="1" max="16" value="1">
-                        </div>
-                        <button type="button" id="inc-countY" class="material-symbols-outlined slider-btn">add</button>
-                    </div>
-                </div>
             </div>
         </fieldset>
 
@@ -1003,7 +1031,7 @@
             
             <div style="margin-top: 15px;">
                 <label class="checkbox-label">
-                    <span data-i18n="checkerAlpha">市松模様で半透明にする</span>
+                    <span data-i18n="checkerAlpha">市松模様で半透明風にする</span>
                     <input type="checkbox" id="checkerAlphaCb">
                 </label>
             </div>
@@ -1048,8 +1076,13 @@
             <div><strong data-i18n="origSize">元の画像サイズ:</strong> <span id="infoOrigSize">-</span></div>
             <div><strong data-i18n="convSize">変換後画像サイズ:</strong> <span id="infoPreviewSize">-</span></div>
             <div><strong data-i18n="saveSize">保存サイズ:</strong> <span id="infoSaveSize">-</span></div>
+            <div><strong data-i18n="texCountInfo">テクスチャ枚数:</strong> <span id="infoTexCount">-</span></div>
+        <div id="texCountWarning" style="display: none; padding-top: 4px;" data-i18n="texWarning">
+                ※はじプロで置けるテクスチャは128枚までです
+            </div>
         </div>
 
+            
         <div class="preview-container">
             <div class="preview-box">
                 <div class="preview-label" data-i18n="prevBefore">変換前（元の画像）</div>
@@ -1090,29 +1123,10 @@
 
 <div class="panel-body tab-content" id="tab-help">
     <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 0;" data-i18n="aboutTitle">このツールについて</h3>
-    <ol style="line-height: 1.8; font-size: 15px; padding-left: 5px;" data-i18n="aboutText">      
+    <ol style="line-height: 1.8; font-size: 16px; padding-left: 5px;" data-i18n="aboutText">      
     <p style="font-size: 16px; margin-top: 0;">
-        このツールは、画像を「はじめてゲームプログラミング（はじプロ）」のテクスチャノードン風のドット絵に変換するためのツールです。
-        ドット絵のサイズやカラーパレットはテクスチャノードンの仕様に準拠しています。<br>
-        変換したドット絵は、PNG形式で画像として保存したり、CSV形式で保存してドット絵を<a href="https://note.com/yossy_kun/n/n5658e55dce01" target="_blank">自動描画ツール</a>ではじプロに取り込んだりできます。
-    </p>
-    <p><strong>やること</strong><br>
-        ・ダークモードの色修正<br>
-        ・チェックボックスの見た目修正<br>
-        ・テキスト書いたりする<br>
-        ・その他細かいとこの見た目修正<br>
-        ・画像調整cssフィルターとjsフィルター選べるようにする<br>
-        ・色の差激しいバグ直す
-        ・トグルと文字の左右の位置
-        <br><br>
-    <strong>既知のバグ</strong><br>
-        Safariやその他のiOSのブラウザで、変換後のドット絵に画像調整が反映されない。<br><br>
-       <strong>作者</strong><br>
-        YOSSYくん<br> 
-        <a href="https://x.com/yossy_kun_" target="_blank">https://x.com/yossy_kun_</a><br><br>
-        ※このツールの大部分はGeminiが作成しています。<br>
-        ※良識の範囲内でご使用ください。<br>
-           ※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。</p>       
+    ここに説明が表示されますわよ    
+    </p>       
     </ol>
 </div>
 
@@ -1121,7 +1135,7 @@
         <div class="numpad-header" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; box-sizing: border-box;">
             <button type="button" id="paletteCancelBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%;"><span class="material-symbols-outlined">close</span></button>
             <h3 data-i18n="palSet" style="margin: 0; text-align: center; font-size: 16px; font-weight: bold;">パレット設定</h3>
-            <button type="button" id="paletteOkBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; border: none; background-color: #0088ff; color: #fff;"><span class="material-symbols-outlined">check</span></button>
+            <button type="button" id="paletteOkBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; border: none; background-color: #0783ff; color: #8dffff;"><span class="material-symbols-outlined">check</span></button>
         </div>
         <div class="numpad-body">
             <div class="palette-btn-group">
@@ -1140,7 +1154,7 @@
 <div id="numpad-overlay" class="numpad-overlay" style="display: none;">
     <div class="numpad-modal">
         <div class="numpad-header">
-            <h3 id="numpad-title" data-i18n="npTitle">数の入力</h3>
+            <h3 id="numpad-title" data-i18n="npTitle"></h3>
         </div>
         <div class="numpad-body">
             <input type="text" id="numpad-display">
@@ -1230,7 +1244,7 @@
     const i18n = {
         ja: {
             title: "GBG Texture Converter <br><span style='font-size: 0.65em; font-weight: normal;'>～はじプロドット絵変換ツール～</span>",
-            themeLabel: "テーマ", // 追加
+            themeLabel: "テーマ",
             themeSys: "システム",
             themeLight: "ライト",
             themeDark: "ダーク",
@@ -1240,23 +1254,19 @@
             selImg: "1. 画像を選択",
             drop: "画像をドロップするか、クリックして選択",
             imgHint: "(png, jpg, heic, svg など)",
-            imgAdj: "2. 画像の調整",
+            imgAdj: "4. 画像の調整",
             hue: "色相",
             sat: "彩度",
             bri: "明るさ",
             con: "コントラスト",
             reset: "リセット",
-            adjHint: "色合いや明るさなどを調整できます<br>スライダーの操作中は変換前の画像にのみプレビュー反映されます",
             filterModeTitle: "フィルター方式",
-            filterCss: "CSS (高速・標準)",
-            filterJs: "JS (Safari等で反映されない場合)",
-            filterHint: "基本的には「CSS」でOKです<br>SafariやiOSのブラウザではCSSフィルターがドット絵に反映されないことがありますが、その場合は「JS」を選ぶと反映されるようになります",
-            palSet: "3. パレット設定",
+            palSet: "5. パレット設定",
             palBtn: "パレット設定を開く",
-            fitMode: "4. 画像のフィット方法",
+            fitMode: "2. 画像のフィット方法",
             fitCon: "元の比率を保持（余白を作る）",
-            fitStr: "キャンバスにフィット（比率を変える）",
-            texCount: "5. テクスチャ枚数",
+            fitStr: "全体にフィット（比率を変える）",
+            texCount: "3. テクスチャ枚数",
             texSub: "(1枚 = 64×64ドット)",
             dither: "6. ディザリング設定",
             dFloyd: "誤差拡散",
@@ -1265,26 +1275,29 @@
             dOrd8: "配列 (8x8)",
             dRand: "ランダム",
             dNone: "なし",
-            checkerAlpha: "市松模様で半透明にする",
+            checkerAlpha: "市松模様で半透明風にする",
             scale: "7. 保存時の拡大倍率",
             scaleUnit: "倍",
-            scaleHint: "拡大倍率はPNG保存時のみ有効です",
+            scaleHint: "拡大倍率を上げると、PNG保存時にドットがぼやけずくっきりとします",
             save: "8. テクスチャの保存",
             dlPngAll: "PNGで保存(全体)",
             dlPngSplit: "PNGで保存(分割)",
             dlCsvSingle: "CSVで保存(単体)",
             dlCsvComb: "CSVで保存(5枚結合)",
-            saveHint : "ドット絵を画像として保存したいときはPNG、自動描画ツールで使いたいときはCSVを選んでください",
+            saveHint : "「PNGで保存」を押すと、変換したドット絵の画像を保存できます<br>「CSVで保存」を押すと、変換したドット絵を自動描画ツールで使う用のデータとして保存できます",
             fileInfo: "ファイル名:",
             origSize: "元の画像サイズ:",
             convSize: "変換後画像サイズ:",
             saveSize: "保存サイズ:",
+            texCountInfo: "テクスチャ枚数:",
+            mai: " 枚",
+            msgTotalSheets: "合計 {0} 枚",
             prevBefore: "変換前（元の画像）",
             prevAfter: "変換後（ドット絵）",
             showGrid: "64×64グリッド線を表示",
             seamlessCheck: "シームレス確認 (2x2)",
             aboutTitle: "このツールについて",
-            aboutText: "<p style='font-size: 15px; margin-top: 0;'>このツールは、画像を「はじめてゲームプログラミング（はじプロ）」のテクスチャノードンと同じ仕様のドット絵に変換するためのツールです。ドット絵のサイズやカラーパレットはテクスチャノードンの仕様に準拠しています。<br>変換したドット絵は、PNG形式で画像として保存したり、CSV形式で保存してドット絵を<a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>自動描画ツール</a>ではじプロに取り込んだりできます。</p><p><strong>やること</strong><br>・テキスト書いたりする<br>・その他細かいとこの見た目修正<br><br><strong>既知の不具合</strong><br>現在既知の不具合はありません。やったね<br>画像調整のフィルター方式でJSを選んだ場合、変換前と変換後で若干色味が変わることがありますが、仕様です。<br><br><strong>作者</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Githubリポジトリ</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>※このツールの大部分はGeminiが作成しています。<br>※良識の範囲内でご使用ください。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。</p>",
+            aboutText: "<span style='font-size: 15px; margin-top: 0;'>このツールは、画像を「はじめてゲームプログラミング（はじプロ）」のテクスチャノードン仕様のドット絵に変換するツールです。ドット絵のサイズやカラーパレットはテクスチャノードンの仕様に準拠しています。<br>変換したドット絵は、PNG形式で画像として保存できます。CSV形式で保存すれば、変換したドット絵を<a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>自動描画ツール</a>ではじプロに取り込むこともできます。</span><p> <strong>使い方</strong><br><strong>やること</strong><br>・テキスト書いたりする<br>・その他細かいとこの見た目修正<br><br><strong>既知の不具合</strong><br>現在既知の不具合はありません。やったね<br>画像調整のフィルター方式でJSを選んだ場合、変換前と変換後で若干色味が変わることがありますが、仕様です。<br><br><strong>作者</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Githubリポジトリ</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>※このツールの大部分はGeminiが作成しています。<br>※良識の範囲内でご使用ください。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。</p>",
             palAll: "すべて選択",
             palClear: "すべて解除",
             palMono: "白黒・透明",
@@ -1300,9 +1313,8 @@
             msgSheets: "枚分"
         },
         en: {
-            // visibility: hidden; を使って、見えない状態で改行と高さを確保します
-            title: "GBG Texture Converter <br><span style='font-size: 0.65em; font-weight: normal; visibility: hidden;'>～はじプロドット絵変換ツール～</span>",
-            themeLabel: "Theme", // 追加
+            title: "GBG Texture Converter <br><span style='font-size: 0.65em; font-weight: normal; '>～はじプロドット絵変換ツール～</span>",
+            themeLabel: "Theme",
             themeSys: "System",
             themeLight: "Light",
             themeDark: "Dark",
@@ -1318,12 +1330,8 @@
             bri: "Brightness",
             con: "Contrast",
             reset: "Reset",
-            adjHint: "Sliders preview on the original image while moving.",
-            filterModeTitle: "Filter Engine (iOS/Safari Fix)",
-            filterCss: "CSS (Fast, Standard)",
-            filterJs: "JS (Fallback for Safari)",
             palSet: "3. Palette Settings",
-            palBtn: "Palette Settings ▼",
+            palBtn: "Open Palette Settings",
             fitMode: "4. Image Fit Mode",
             fitCon: "Scale Proportionally (Add Padding)",
             fitStr: "Scale to Fit (Stretch)",
@@ -1331,7 +1339,7 @@
             texSub: "(1 Texture = 64x64 pixels)",
             dither: "6. Dithering Settings",
             dFloyd: "Floyd Steinberg",
-            dFloydMirror: "Floyd (Mirrored Edge)",
+            dFloydMirror: "Floyd Steinberg (Edge Correction)",
             dOrd4: "Ordered (4x4)",
             dOrd8: "Ordered (8x8)",
             dRand: "Random",
@@ -1349,6 +1357,8 @@
             origSize: "Original Size:",
             convSize: "Converted Size:",
             saveSize: "Export Size:",
+            texCountInfo: "Texture Count:",
+            msgTotalSheets: "Total: {0}",
             prevBefore: "Before (Original)",
             prevAfter: "After (Pixel Art)",
             showGrid: "Show 64x64 Grid Lines",
@@ -1402,6 +1412,8 @@
         if (currentImage) {
             updatePreviewSizeDisplay();
         }
+
+        updateTotalTexCount(); // ★これを追加
     }
 
     document.getElementById('langToggleBtn').addEventListener('click', () => {
@@ -1641,6 +1653,38 @@
         updateSlider();
     }
 
+    function updateTotalTexCount() {
+        const countX = parseInt(document.getElementById('countX').value) || 1;
+        const countY = parseInt(document.getElementById('countY').value) || 1;
+        const total = countX * countY;
+        
+        const infoTexCount = document.getElementById('infoTexCount');
+        const warningEl = document.getElementById('texCountWarning');
+        
+        // プレビューパネル内のテキストを更新
+        if (infoTexCount) {
+            // 現在の言語が日本語（ja）のときだけ「 枚」を後ろに付ける
+            const unit = currentLang === 'ja' ? t('mai') : '';
+            infoTexCount.textContent = `${countX} × ${countY}${unit} (${t('msgTotalSheets').replace('{0}', total)})`;
+        }
+        
+        if (total > 128) {
+            if (warningEl) warningEl.style.display = 'block';
+        } else {
+            if (warningEl) warningEl.style.display = 'none';
+        }
+    }
+
+    // スライダーを動かした時(input)と、指を離した時/テンキーで入力した時(change)に更新
+    ['countX', 'countY'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateTotalTexCount);
+        document.getElementById(id).addEventListener('change', updateTotalTexCount);
+    });
+    
+    // 初期読み込み時の実行
+    updateTotalTexCount();
+    // ▲ここまで追加▲
+
     const allSliders = [
         { id: "countX", min: 1, max: 16, titleKey: "texCount" },
         { id: "countY", min: 1, max: 16, titleKey: "texCount" },
@@ -1687,8 +1731,6 @@
         processImage(); 
     });
 
-    document.getElementById('filterModeSelect').addEventListener('change', processImage);
-
     function updateDownloadButtons() {
         const cx = parseInt(document.getElementById('countX').value) || 1;
         const cy = parseInt(document.getElementById('countY').value) || 1;
@@ -1719,6 +1761,7 @@
 
     let activeColors = new Array(gbgColors.length).fill(true);
     let tb_averageR = 0, tb_averageG = 0, tb_averageB = 0;
+    let parsedActiveColors = []; // ★追加
 
     const paletteOverlay = document.getElementById('palette-overlay');
     const paletteContainer = document.getElementById('paletteContainer');
@@ -1763,16 +1806,21 @@
     function updateActiveColors() {
         tb_averageR = 0; tb_averageG = 0; tb_averageB = 0;
         let activeRGBs = [];
+        parsedActiveColors = []; // ★追加
         for (let i = 0; i < gbgColors.length; i++) {
             const cb = document.getElementById('color-cb-' + i);
             if (cb) {
                 activeColors[i] = cb.checked;
                 if (cb.checked && !gbgColors[i].startsWith("-") && i !== 47) {
-                    activeRGBs.push({
-                        r: parseInt(gbgColors[i].substring(0, 2), 16),
-                        g: parseInt(gbgColors[i].substring(2, 4), 16),
-                        b: parseInt(gbgColors[i].substring(4, 6), 16)
-                    });
+                    const hex = gbgColors[i];
+                    const r = parseInt(hex.substring(0, 2), 16);
+                    const g = parseInt(hex.substring(2, 4), 16);
+                    const b = parseInt(hex.substring(4, 6), 16);
+                    
+                    activeRGBs.push({ r: r, g: g, b: b });
+                    
+                    // ★追加: 事前に数値化したパレットを保存しておく
+                    parsedActiveColors.push({ r: r, g: g, b: b, index: i });
                 }
             } else { activeColors[i] = false; }
         }
@@ -1838,13 +1886,16 @@
     ];
 
     function getClosestActiveColor(r, g, b) {
-        let minDist = Infinity; let closest = { r: 0, g: 0, b: 0, index: 32 };
-        for (let i = 0; i < gbgColors.length; i++) {
-            if (!activeColors[i] || gbgColors[i].startsWith("-") || i === 47) continue;
-            const hex = gbgColors[i];
-            const pr = parseInt(hex.substring(0, 2), 16), pg = parseInt(hex.substring(2, 4), 16), pb = parseInt(hex.substring(4, 6), 16);
-            const dist = (r - pr) ** 2 + (g - pg) ** 2 + (b - pb) ** 2;
-            if (dist < minDist) { minDist = dist; closest = { r: pr, g: pg, b: pb, index: i }; }
+        let minDist = Infinity; 
+        let closest = { r: 0, g: 0, b: 0, index: 32 };
+        
+        for (let i = 0; i < parsedActiveColors.length; i++) {
+            const pc = parsedActiveColors[i];
+            const dist = (r - pc.r) ** 2 + (g - pc.g) ** 2 + (b - pc.b) ** 2;
+            if (dist < minDist) { 
+                minDist = dist; 
+                closest = pc; 
+            }
         }
         return closest;
     }
@@ -1907,7 +1958,7 @@
     document.getElementById('seamlessCb').addEventListener('change', () => {
         const isSeamless = document.getElementById('seamlessCb').checked;
         const targetX = (parseInt(document.getElementById('countX').value) || 1) * 64;
-        const displayWidth = Math.max(250, targetX);
+        const displayWidth = 250; // 【修正後】横幅を250pxに固定する
         
         if (isSeamless) {
             previewImg.style.display = 'none';
@@ -1925,7 +1976,9 @@
         let countX = Math.max(1, parseInt(document.getElementById('countX').value) || 1);
         let countY = Math.max(1, parseInt(document.getElementById('countY').value) || 1);
         const targetX = countX * 64; const targetY = countY * 64;
-        document.getElementById('infoPreviewSize').textContent = `${targetX} × ${targetY} px (${countX}×${countY} ${t('msgSheets')})`;
+        
+        // 後ろにくっついていた枚数のテキストを削除
+        document.getElementById('infoPreviewSize').textContent = `${targetX} × ${targetY} px`;
     }
 
     function applyJSFilter(imageData, hueRot, sat, bri, con) {
@@ -1938,48 +1991,54 @@
         const cosA = Math.cos(hue * Math.PI / 180);
         const sinA = Math.sin(hue * Math.PI / 180);
         
-        const a00 = 0.213 + cosA * 0.787 - sinA * 0.213;
-        const a01 = 0.715 - cosA * 0.715 - sinA * 0.715;
-        const a02 = 0.072 - cosA * 0.072 + sinA * 0.928;
-        const a10 = 0.213 - cosA * 0.213 + sinA * 0.143;
-        const a11 = 0.715 + cosA * 0.285 + sinA * 0.140;
-        const a12 = 0.072 - cosA * 0.072 - sinA * 0.283;
-        const a20 = 0.213 - cosA * 0.213 - sinA * 0.787;
-        const a21 = 0.715 - cosA * 0.715 + sinA * 0.715;
-        const a22 = 0.072 + cosA * 0.928 + sinA * 0.072;
+        const h00 = 0.213 + cosA * 0.787 - sinA * 0.213; const h01 = 0.715 - cosA * 0.715 - sinA * 0.715; const h02 = 0.072 - cosA * 0.072 + sinA * 0.928;
+        const h10 = 0.213 - cosA * 0.213 + sinA * 0.143; const h11 = 0.715 + cosA * 0.285 + sinA * 0.140; const h12 = 0.072 - cosA * 0.072 - sinA * 0.283;
+        const h20 = 0.213 - cosA * 0.213 - sinA * 0.787; const h21 = 0.715 - cosA * 0.715 + sinA * 0.715; const h22 = 0.072 + cosA * 0.928 + sinA * 0.072;
+
+        const s00 = 0.213 + 0.787 * saturation; const s01 = 0.715 - 0.715 * saturation; const s02 = 0.072 - 0.072 * saturation;
+        const s10 = 0.213 - 0.213 * saturation; const s11 = 0.715 + 0.285 * saturation; const s12 = 0.072 - 0.072 * saturation;
+        const s20 = 0.213 - 0.213 * saturation; const s21 = 0.715 - 0.715 * saturation; const s22 = 0.072 + 0.928 * saturation;
+
+        const doBrightness = brightness !== 1;
+        const doContrast = contrast !== 1;
+        const doHue = hue !== 0;
+        const doSaturation = saturation !== 1;
+
+        if (!doBrightness && !doContrast && !doHue && !doSaturation) return;
+
+        let bcLUT = null;
+        if (doBrightness || doContrast) {
+            bcLUT = new Uint8Array(256);
+            for (let i = 0; i < 256; i++) {
+                let val = i;
+                if (doBrightness) val = val * brightness;
+                if (doContrast) val = (val - 127.5) * contrast + 127.5;
+                bcLUT[i] = val < 0 ? 0 : (val > 255 ? 255 : val);
+            }
+        }
 
         for (let i = 0; i < data.length; i += 4) {
-            let r = data[i];
-            let g = data[i+1];
-            let b = data[i+2];
+            let r = data[i], g = data[i+1], b = data[i+2];
 
-            if (hue !== 0) {
-                let hr = r * a00 + g * a01 + b * a02;
-                let hg = r * a10 + g * a11 + b * a12;
-                let hb = r * a20 + g * a21 + b * a22;
-                r = hr; g = hg; b = hb;
+            if (bcLUT) {
+                r = bcLUT[r]; g = bcLUT[g]; b = bcLUT[b];
             }
 
-            if (saturation !== 1) {
-                let lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-                r = lum + saturation * (r - lum);
-                g = lum + saturation * (g - lum);
-                b = lum + saturation * (b - lum);
+            if (doHue) {
+                let hr = r * h00 + g * h01 + b * h02;
+                let hg = r * h10 + g * h11 + b * h12;
+                let hb = r * h20 + g * h21 + b * h22;
+                r = hr < 0 ? 0 : (hr > 255 ? 255 : hr); g = hg < 0 ? 0 : (hg > 255 ? 255 : hg); b = hb < 0 ? 0 : (hb > 255 ? 255 : hb);
             }
 
-            if (brightness !== 1) {
-                r *= brightness; g *= brightness; b *= brightness;
+            if (doSaturation) {
+                let sr = r * s00 + g * s01 + b * s02;
+                let sg = r * s10 + g * s11 + b * s12;
+                let sb = r * s20 + g * s21 + b * s22;
+                r = sr < 0 ? 0 : (sr > 255 ? 255 : sr); g = sg < 0 ? 0 : (sg > 255 ? 255 : sg); b = sb < 0 ? 0 : (sb > 255 ? 255 : sb);
             }
 
-            if (contrast !== 1) {
-                r = (r - 128) * contrast + 128;
-                g = (g - 128) * contrast + 128;
-                b = (b - 128) * contrast + 128;
-            }
-
-            data[i] = Math.min(255, Math.max(0, r));
-            data[i+1] = Math.min(255, Math.max(0, g));
-            data[i+2] = Math.min(255, Math.max(0, b));
+            data[i] = r; data[i+1] = g; data[i+2] = b;
         }
     }
 
@@ -2005,7 +2064,7 @@
         offscreenCanvas.width = targetX; offscreenCanvas.height = targetY;
         originalCanvas.width = origW; originalCanvas.height = origH;
 
-        const displayWidth = Math.max(250, targetX);
+        const displayWidth = 250; // 【修正後】横幅を250pxに固定する
         const isSeamless = document.getElementById('seamlessCb') && document.getElementById('seamlessCb').checked;
         
         originalImg.style.width = displayWidth + 'px';
@@ -2028,18 +2087,15 @@
         const saturate = document.getElementById('saturate').value;
         const filterStr = `brightness(${brightness}%) contrast(${contrast}%) hue-rotate(${hueRotate}deg) saturate(${saturate}%)`;
         
-        const filterMode = document.getElementById('filterModeSelect').value;
+        // filterModeの取得を削除
 
         const workCanvas = document.createElement('canvas');
         workCanvas.width = origW; 
         workCanvas.height = origH;
         const workCtx = workCanvas.getContext('2d', { willReadFrequently: true });
 
-        if (filterMode === 'css') {
-            workCtx.filter = filterStr;
-        } else {
-            workCtx.filter = 'none';
-        }
+        // 常に filter = 'none' にする
+        workCtx.filter = 'none';
         originalCtx.filter = 'none';
 
         if (fitMode === 'stretch') {
@@ -2057,11 +2113,10 @@
             originalCtx.drawImage(currentImage, oDrawX, oDrawY, oDrawW, oDrawH);
         }
 
-        if (filterMode === 'js') {
-            const workImageData = workCtx.getImageData(0, 0, origW, origH);
-            applyJSFilter(workImageData, parseFloat(hueRotate), parseFloat(saturate), parseFloat(brightness), parseFloat(contrast));
-            workCtx.putImageData(workImageData, 0, 0);
-        }
+        // 常にJSフィルターを適用する
+        const workImageData = workCtx.getImageData(0, 0, origW, origH);
+        applyJSFilter(workImageData, parseFloat(hueRotate), parseFloat(saturate), parseFloat(brightness), parseFloat(contrast));
+        workCtx.putImageData(workImageData, 0, 0);
 
         updatePreviewSizeDisplay();
         updateSaveSizeDisplay();
@@ -2150,17 +2205,30 @@
                     const errG = oldG - closest.g;
                     const errB = oldB - closest.b;
 
-                    const dist = (xO, yO, rt) => {
-                        if (x + xO >= 0 && x + xO < fullW && y + yO < fullH) {
-                            const tIdx = ((y + yO) * fullW + x + xO) * 4;
-                            if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
-                                paddedData[tIdx] += errR * rt;
-                                paddedData[tIdx+1] += errG * rt;
-                                paddedData[tIdx+2] += errB * rt;
-                            }
+                    if (x + 1 < fullW) {
+                        const tIdx = (y * fullW + x + 1) * 4;
+                        if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
+                            paddedData[tIdx] += errR * (7/16); paddedData[tIdx+1] += errG * (7/16); paddedData[tIdx+2] += errB * (7/16);
                         }
-                    };
-                    dist(1, 0, 7/16); dist(-1, 1, 3/16); dist(0, 1, 5/16); dist(1, 1, 1/16);
+                    }
+                    if (x - 1 >= 0 && y + 1 < fullH) {
+                        const tIdx = ((y + 1) * fullW + x - 1) * 4;
+                        if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
+                            paddedData[tIdx] += errR * (3/16); paddedData[tIdx+1] += errG * (3/16); paddedData[tIdx+2] += errB * (3/16);
+                        }
+                    }
+                    if (y + 1 < fullH) {
+                        const tIdx = ((y + 1) * fullW + x) * 4;
+                        if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
+                            paddedData[tIdx] += errR * (5/16); paddedData[tIdx+1] += errG * (5/16); paddedData[tIdx+2] += errB * (5/16);
+                        }
+                    }
+                    if (x + 1 < fullW && y + 1 < fullH) {
+                        const tIdx = ((y + 1) * fullW + x + 1) * 4;
+                        if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
+                            paddedData[tIdx] += errR * (1/16); paddedData[tIdx+1] += errG * (1/16); paddedData[tIdx+2] += errB * (1/16);
+                        }
+                    }
                 }
             }
 
