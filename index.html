@@ -7,8 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=add,check,close,dark_mode,light_mode,remove" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=add,check,close,dark_mode,light_mode,remove" />
     <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
    
     <style>
         /* =========================================
@@ -201,7 +203,7 @@
             border-radius: 0;
             max-width: none;
             padding: 15px 20px 0 20px;
-            margin: 5px -20px 0 -20px;
+            margin: 5px -11px 0 -20px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -241,14 +243,24 @@
             button:not(:disabled):hover { opacity: 0.7; } 
         }
         button:not(:disabled):active {
-           filter: brightness(0.85);
+           filter: brightness(0.9);
             transform: scale(0.9);
         }
         button:disabled {
             cursor: not-allowed;
             box-shadow: none;
-            background-color: #fdfdff;
-            color: #bbb
+            color: #bbb;
+        }
+        
+        .btn-blue {
+        background-color: #0088ff;
+            color: #84ffff;
+            border: 1px solid #21c8ff;
+        }
+        
+        .btn-blue:not(:disabled):active {
+           filter: brightness(1.2);
+            transform: scale(0.9);
         }
 
         /* =========================================
@@ -286,10 +298,10 @@
             -webkit-appearance: none;
             appearance: none;
             position: relative;
-            width: 46px;
-            height: 26px;
+            width: 48px;
+            height: 28px;
             background-color: #e9e9ea;
-            border-radius: 13px;
+            border-radius: 14px;
             cursor: pointer;
             outline: none;
             transition: background-color 0.2s ease;
@@ -300,8 +312,8 @@
         .checkbox-label input[type="checkbox"]::after {
             content: "";
             position: absolute;
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background-color: #fff;
             top: 2px;
@@ -410,7 +422,7 @@
         }
         .custom-option::before {
             content: "check";
-            font-family: 'Material Symbols Outlined';
+            font-family: 'Material Symbols Rounded';
             position: absolute;
             left: 10px;
             top: 50%;
@@ -460,9 +472,9 @@
         @media (hover: hover) { .slider-btn:hover { background-color: #f2f2f7; } }
         .slider-btn:active { filter: brightness(0.85); transform: scale(1.15); }
 
-        .gbg-slider-container { width: 100%; margin: 5px 0 15px 0; }
+        .slider-container { width: 100%; margin: 5px 0 15px 0; }
         
-        .gbg-slider-wrapper {
+        .slider-wrapper {
             position: relative;
             flex: 1;
             display: flex;
@@ -471,7 +483,7 @@
         
         .val-display {
             display: inline-block;
-            padding: 5px 12px;
+            padding: 4px 12px;
             border: 1px solid #e3e3e3;
             background-color: #fff;
             border-radius: 16px;
@@ -487,7 +499,7 @@
         .val-display:active { filter: brightness(0.85);
             transform: scale(0.9); }
 
-        .gbg-slider-track {
+        .slider-track {
             position: absolute;
             left: 10px;
             right: 10px;
@@ -499,7 +511,7 @@
             pointer-events: none;
             box-sizing: border-box;
         }
-        .gbg-slider {
+        .slider {
             -webkit-appearance: none;
             appearance: none;
             width: 100%;
@@ -510,7 +522,7 @@
             margin: 0;
             z-index: 1;
         }
-        .gbg-slider::-webkit-slider-thumb {
+        .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
             width: 26px;
@@ -522,7 +534,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: all 0.1s;
         }
-        .gbg-slider:active::-webkit-slider-thumb { filter: brightness(0.85); transform: scale(1.1); }
+        .slider:active::-webkit-slider-thumb { filter: brightness(0.85); transform: scale(1.1); }
 
         /* =========================================
            UIパーツ：カラーパレット
@@ -619,6 +631,9 @@
             margin-bottom: 10px;
             color: #000;
         }
+        
+        .about-text strong { font-size: 18px; }
+        
         .info-panel div { display: flex; justify-content: flex-start; }
         .info-panel strong { width: 160px; color: #444; font-weight: bold; }
         
@@ -723,7 +738,7 @@
             transition: background-color 0.1s;
         }
         .num-btn.round-btn { width: 60px; height: 60px; border-radius: 30px; }
-        .num-btn.rect-btn { width: 100px; height: 60px; border-radius: 24px; font-size: 14px; }
+        .num-btn.rect-btn { width: 100px; height: 60px; border-radius: 30px; font-size: 14px; }
         @media (hover: hover) { .num-btn:hover { background-color: #f2f2f7; } }
         .num-btn:active { background-color: #e3e3e3; }
         
@@ -750,8 +765,8 @@
             color: #e0e0e0;
         }
         body.dark-mode .panel-body {
-            background-color: #1c1c1e;
-            border-color: #2b2b2b;
+            background-color: #1b1b1d;
+            border-color: #333;
             box-shadow: 0 4px 16px rgba(0,0,0,0.5);
         }
         body.dark-mode .panel-header h2 { color: #e0e0e0; }
@@ -783,7 +798,7 @@
         body.dark-mode .num-btn,
         body.dark-mode .info-panel,
         body.dark-mode .hint-box {
-            background-color: #333;
+            background-color: #313133;
             border-color: #444;
         }
 
@@ -797,6 +812,12 @@
 
         body.dark-mode .hint-box {
             color: #aaa;
+        }
+        
+        body.dark-mode .btn-blue {
+        background-color: #0092ff;
+            color: #7effff;
+            border: 1px solid #00b7ff;
         }
         
         body.dark-mode button:disabled {
@@ -816,15 +837,15 @@
         body.dark-mode .drop-zone.dragover { filter: brightness(1.35); }
         @media (hover: hover) { body.dark-mode .drop-zone:hover { filter: brightness(1.35); } }
     
-        body.dark-mode .gbg-slider-track { background-color: #000; }
-        body.dark-mode .gbg-slider::-webkit-slider-thumb { background-color: #e0e0e0; border-color: #666; }
+        body.dark-mode .slider-track { background-color: #000; }
+        body.dark-mode .slider::-webkit-slider-thumb { background-color: #e0e0e0; border-color: #666; }
         
         body.dark-mode #numpad-display.is-initial { color: #777 !important; }
         @media (hover: hover) { body.dark-mode .num-btn:hover, body.dark-mode .slider-btn:hover { background-color: #3a3a3a; } }
         
         /* ダークモード時のモーダルすりガラス設定 */
         body.dark-mode .numpad-modal { 
-            background-color: rgba(30, 30, 30, 0.8); 
+            background-color: rgba(27, 27, 29, 1); 
             box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 100vmax rgba(0, 0, 0, 0.6);
         }
 
@@ -848,11 +869,6 @@
         }
         body.dark-mode .info-panel strong { color: #ccc; }
         body.dark-mode #custom-alert-message { color: #e0e0e0 !important; }
-
-        body.dark-mode #texCountWarning {
-            background-color: #3b1a1a;
-            color: #ff6b6b;
-        }
     </style>
 </head>
 <body ontouchstart="">
@@ -882,7 +898,7 @@
     <div class="panel-controls">
         
         <fieldset class="fieldset">
-            <h3 class="section-title" data-i18n="selImg">1. 画像を選択</h3>
+            <h3 class="section-title" data-i18n="selImg">画像を選択</h3>
             <label id="dropZone" class="drop-zone">
                 <p data-i18n="drop">画像をドロップするか、クリックして選択</p>
                 <span data-i18n="imgHint">(png, jpg, webp, heic など)</span>
@@ -891,112 +907,113 @@
         </fieldset>
 
         <fieldset class="fieldset">
-            <h3 class="section-title" data-i18n="fitMode">2. 画像のフィット方法</h3>
+            <h3 class="section-title" data-i18n="fitMode">画像のフィット方法</h3>
             <div style="margin-top: 10px;">
                 <select id="fitModeSelect" class="styled-select">
-                    <option value="contain" data-i18n="fitCon" selected>元の比率を保持（余白を作る）</option>
-                    <option value="stretch" data-i18n="fitStr">キャンバスにフィット（比率を変える）</option>
+                    <option value="contain" data-i18n="fitCon" selected>元の比率を保持</option>
+                    <option value="stretch" data-i18n="fitStr">キャンバスにフィット</option>
                 </select>
             </div>
         </fieldset>
 
         <fieldset class="fieldset">
-            <p class="section-title" data-i18n="texCount">5. テクスチャ枚数 <span style="font-size: 12px; font-weight: normal; color: #666;" data-i18n="texSub">(1枚 = 64×64ドット)</span></p>
+            <p class="section-title" data-i18n="texCount">テクスチャ枚数 <span style="font-size: 12px; font-weight: normal; color: #666;" data-i18n="texSub">(1枚 = 64×64ドット)</span></p>
             
             <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 10px;">
-                <div class="gbg-slider-container" style="margin: 0;">
+                <div class="slider-container" style="margin: 0;">
                     <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
-                        <span>X (ヨコ)</span>
+                        <span>X</span>
                         <span><span id="val-countX" class="val-display">1</span><span >枚</span></span>
                     </p>
                     <div class="slider-row">
-                        <button type="button" id="dec-countX" class="material-symbols-outlined slider-btn">remove</button>
-                        <div class="gbg-slider-wrapper">
-                            <div class="gbg-slider-track" id="track-countX"></div>
-                            <input type="range" id="countX" class="gbg-slider" min="1" max="16" value="1">
+                        <button type="button" id="dec-countX" class="material-symbols-rounded slider-btn">remove</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-track" id="track-countX"></div>
+                            <input type="range" id="countX" class="slider" min="1" max="16" value="1">
                         </div>
-                        <button type="button" id="inc-countX" class="material-symbols-outlined slider-btn">add</button>
+                        <button type="button" id="inc-countX" class="material-symbols-rounded slider-btn">add</button>
                     </div>
                 </div>
-                <div class="gbg-slider-container" style="margin: 0;">
+                <div class="slider-container" style="margin: 0;">
                     <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
-                        <span>Y (タテ)</span>
+                        <span>Y</span>
                         <span><span id="val-countY" class="val-display">1</span><span >枚</span></span>
                     </p>
                     <div class="slider-row">
-                        <button type="button" id="dec-countY" class="material-symbols-outlined slider-btn">remove</button>
-                        <div class="gbg-slider-wrapper">
-                            <div class="gbg-slider-track" id="track-countY"></div>
-                            <input type="range" id="countY" class="gbg-slider" min="1" max="16" value="1">
+                        <button type="button" id="dec-countY" class="material-symbols-rounded slider-btn">remove</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-track" id="track-countY"></div>
+                            <input type="range" id="countY" class="slider" min="1" max="16" value="1">
                         </div>
-                        <button type="button" id="inc-countY" class="material-symbols-outlined slider-btn">add</button>
+                        <button type="button" id="inc-countY" class="material-symbols-rounded slider-btn">add</button>
                     </div>
                 </div>
+                <div class="hint-box" data-i18n="texSub"></div> 
             </div>
         </fieldset>
 
        <fieldset class="fieldset">
-            <h3 class="section-title" data-i18n="imgAdj">2. 画像の調整</h3>
+            <h3 class="section-title" data-i18n="imgAdj">画像の調整</h3>
             
             <div style="display: flex; flex-direction: column; gap: 5px;">
                 
-                <div class="gbg-slider-container">
+                <div class="slider-container">
                     <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
                         <span data-i18n="hue">色相</span>
                         <span><span id="val-hueRotate" class="val-display">0</span>°</span>
                     </p>
                     <div class="slider-row">
-                        <button type="button" id="dec-hueRotate" class="material-symbols-outlined slider-btn">remove</button>
-                        <div class="gbg-slider-wrapper">
-                            <div class="gbg-slider-track" id="track-hueRotate"></div>
-                            <input type="range" id="hueRotate" class="gbg-slider" min="0" max="360" value="0">
+                        <button type="button" id="dec-hueRotate" class="material-symbols-rounded slider-btn">remove</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-track" id="track-hueRotate"></div>
+                            <input type="range" id="hueRotate" class="slider" min="0" max="360" value="0">
                         </div>
-                        <button type="button" id="inc-hueRotate" class="material-symbols-outlined slider-btn">add</button>
+                        <button type="button" id="inc-hueRotate" class="material-symbols-rounded slider-btn">add</button>
                     </div>
                 </div>
 
-                <div class="gbg-slider-container">
+                <div class="slider-container">
                     <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
                         <span data-i18n="sat">彩度</span>
                         <span><span id="val-saturate" class="val-display">100</span>%</span>
                     </p>
                     <div class="slider-row">
-                        <button type="button" id="dec-saturate" class="material-symbols-outlined slider-btn">remove</button>
-                        <div class="gbg-slider-wrapper">
-                            <div class="gbg-slider-track" id="track-saturate"></div>
-                            <input type="range" id="saturate" class="gbg-slider" min="0" max="200" value="100">
+                        <button type="button" id="dec-saturate" class="material-symbols-rounded slider-btn">remove</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-track" id="track-saturate"></div>
+                            <input type="range" id="saturate" class="slider" min="0" max="200" value="100">
                         </div>
-                        <button type="button" id="inc-saturate" class="material-symbols-outlined slider-btn">add</button>
+                        <button type="button" id="inc-saturate" class="material-symbols-rounded slider-btn">add</button>
                     </div>
                 </div>
 
-                <div class="gbg-slider-container">
+                <div class="slider-container">
                     <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
                         <span data-i18n="bri">明るさ</span>
                         <span><span id="val-brightness" class="val-display">100</span>%</span>
                     </p>
                     <div class="slider-row">
-                        <button type="button" id="dec-brightness" class="material-symbols-outlined slider-btn">remove</button>
-                        <div class="gbg-slider-wrapper">
-                            <div class="gbg-slider-track" id="track-brightness"></div>
-                            <input type="range" id="brightness" class="gbg-slider" min="0" max="200" value="100">
+                        <button type="button" id="dec-brightness" class="material-symbols-rounded slider-btn">remove</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-track" id="track-brightness"></div>
+                            <input type="range" id="brightness" class="slider" min="0" max="200" value="100">
                         </div>
-                        <button type="button" id="inc-brightness" class="material-symbols-outlined slider-btn">add</button>
+                        <button type="button" id="inc-brightness" class="material-symbols-rounded slider-btn">add</button>
                     </div>
                 </div>
 
-                <div class="gbg-slider-container">
+                <div class="slider-container">
                     <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
                         <span data-i18n="con">コントラスト</span>
                         <span><span id="val-contrast" class="val-display">100</span>%</span>
                     </p>
                     <div class="slider-row">
-                        <button type="button" id="dec-contrast" class="material-symbols-outlined slider-btn">remove</button>
-                        <div class="gbg-slider-wrapper">
-                            <div class="gbg-slider-track" id="track-contrast"></div>
-                            <input type="range" id="contrast" class="gbg-slider" min="0" max="200" value="100">
+                        <button type="button" id="dec-contrast" class="material-symbols-rounded slider-btn">remove</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-track" id="track-contrast"></div>
+                            <input type="range" id="contrast" class="slider" min="0" max="200" value="100">
                         </div>
-                        <button type="button" id="inc-contrast" class="material-symbols-outlined slider-btn">add</button>
+                        <button type="button" id="inc-contrast" class="material-symbols-rounded slider-btn">add</button>
                     </div>
                 </div>
                 
@@ -1010,14 +1027,14 @@
         </fieldset>
 
         <fieldset class="fieldset">
-            <h3 class="section-title" data-i18n="palSet">3. パレット設定</h3>
+            <h3 class="section-title" data-i18n="palSet">パレット設定</h3>
             <div style="margin-top: 5px;">
-                <button type="button" id="openPaletteBtn" data-i18n="palBtn">パレット設定 ▼</button>
+                <button type="button" id="openPaletteBtn" data-i18n="palBtn">パレット設定を開く</button>
             </div>
         </fieldset>
 
         <fieldset class="fieldset">
-            <h3 class="section-title" data-i18n="dither">6. ディザリング設定</h3>
+            <h3 class="section-title" data-i18n="dither">ディザリング設定</h3>
             <div style="margin-top: 10px;">
                 <select id="ditherModeSelect" class="styled-select">
                     <option value="floyd_mirror" data-i18n="dFloydMirror" selected>誤差拡散(端補正)</option>
@@ -1038,25 +1055,25 @@
         </fieldset>
 
         <fieldset class="fieldset">
-            <h3 class="section-title" data-i18n="scale">7. 保存時の拡大倍率</h3>
-            <div class="gbg-slider-container" style="margin-top: 10px;">
+            <h3 class="section-title" data-i18n="scale">保存時の拡大倍率</h3>
+            <div class="slider-container" style="margin-top: 10px;">
                 <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: flex-end;">
                     <span><span id="val-scaleFactor" class="val-display" title="タップして数字入力">1</span><span data-i18n="scaleUnit">倍</span></span>
                 </p>
                 <div class="slider-row">
-                    <button type="button" id="dec-scaleFactor" class="material-symbols-outlined slider-btn">remove</button>
-                    <div class="gbg-slider-wrapper">
-                        <div class="gbg-slider-track" id="track-scaleFactor"></div>
-                        <input type="range" id="scaleFactor" class="gbg-slider" min="1" max="16" value="1">
+                    <button type="button" id="dec-scaleFactor" class="material-symbols-rounded slider-btn">remove</button>
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="track-scaleFactor"></div>
+                        <input type="range" id="scaleFactor" class="slider" min="1" max="16" value="1">
                     </div>
-                    <button type="button" id="inc-scaleFactor" class="material-symbols-outlined slider-btn">add</button>
+                    <button type="button" id="inc-scaleFactor" class="material-symbols-rounded slider-btn">add</button>
                 </div>
             </div>
             <div class="hint-box" data-i18n="scaleHint"></div> 
         </fieldset>
         
        <fieldset class="fieldset">
-       <h3 class="section-title" data-i18n="save">8. 保存</h3>
+       <h3 class="section-title" data-i18n="save">保存</h3>
         <div class="btn-group" style="margin-top: 15px;">
             <button id="downloadBtn" data-i18n="dlPngAll">PNGで保存(全体)</button>
             <button id="downloadSplitPngBtn" data-i18n="dlPngSplit">PNGで保存(分割)</button>
@@ -1077,7 +1094,7 @@
             <div><strong data-i18n="convSize">変換後画像サイズ:</strong> <span id="infoPreviewSize">-</span></div>
             <div><strong data-i18n="saveSize">保存サイズ:</strong> <span id="infoSaveSize">-</span></div>
             <div><strong data-i18n="texCountInfo">テクスチャ枚数:</strong> <span id="infoTexCount">-</span></div>
-        <div id="texCountWarning" style="display: none; padding-top: 4px;" data-i18n="texWarning">
+        <div id="texCountWarning" style="display: none; padding-top: 4px; color: #0088ff;" data-i18n="texWarning">
                 ※はじプロで置けるテクスチャは128枚までです
             </div>
         </div>
@@ -1087,14 +1104,14 @@
             <div class="preview-box">
                 <div class="preview-label" data-i18n="prevBefore">変換前（元の画像）</div>
                 <div class="canvas-wrapper" title="画像をドラッグ＆ドロップで保存できます">
-                    <img id="originalImg" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="250" height="250" style="image-rendering: auto; max-width: 100%; height: auto; display: block;">
+                    <img id="originalImg" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="256" height="256" style="image-rendering: auto; max-width: 100%; height: auto; display: block;">
                 </div>
             </div>
 
             <div class="preview-box">
                 <div class="preview-label" style="color: #0088ff;" data-i18n="prevAfter">変換後（ドット絵）</div>
                 <div class="canvas-wrapper" id="previewWrapper" title="画像をドラッグ＆ドロップで保存できます">
-                    <img id="previewImg" class="pixel-canvas" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="250" height="250">
+                    <img id="previewImg" class="pixel-canvas" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="256" height="256">
                     
                     <div id="seamlessGrid">
                         <img class="pixel-canvas seamless-item" draggable="false" src="">
@@ -1112,7 +1129,7 @@
                         <input type="checkbox" id="showGridCb">
                     </label>
                     <label class="checkbox-label" style="display: block;">
-                        <span data-i18n="seamlessCheck">シームレス確認 (2x2)</span>
+                        <span data-i18n="seamlessCheck">ループ確認 (2x2)</span>
                         <input type="checkbox" id="seamlessCb">
                     </label>
                 </div>
@@ -1122,10 +1139,10 @@
 </div>
 
 <div class="panel-body tab-content" id="tab-help">
-    <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 0;" data-i18n="aboutTitle">このツールについて</h3>
-    <ol style="line-height: 1.8; font-size: 16px; padding-left: 5px;" data-i18n="aboutText">      
+    <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 0; margin-bottom: 6px;" data-i18n="aboutTitle">このツールについて</h3>
+    <ol style="line-height: 1.8; font-size: 16px; padding-left: 5px;" data-i18n="aboutText" class="about-text">      
     <p style="font-size: 16px; margin-top: 0;">
-    ここに説明が表示されますわよ    
+    ここに説明が表示されますよ    
     </p>       
     </ol>
 </div>
@@ -1133,9 +1150,9 @@
 <div id="palette-overlay" class="numpad-overlay" style="display: none;">
     <div class="numpad-modal" style="max-width: 95vw;">
         <div class="numpad-header" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; box-sizing: border-box;">
-            <button type="button" id="paletteCancelBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%;"><span class="material-symbols-outlined">close</span></button>
-            <h3 data-i18n="palSet" style="margin: 0; text-align: center; font-size: 16px; font-weight: bold;">パレット設定</h3>
-            <button type="button" id="paletteOkBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; border: none; background-color: #0783ff; color: #8dffff;"><span class="material-symbols-outlined">check</span></button>
+            <button type="button" id="paletteCancelBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%;"><span class="material-symbols-rounded" style="font-size: 32px;">close</span></button>
+            <h3 data-i18n="npTitlePalette" style="margin: 0; text-align: center; font-size: 16px; font-weight: bold;">パレット設定</h3>
+            <button type="button" id="paletteOkBtn" class="btn-blue" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%;"><span class="material-symbols-rounded" style="font-size: 34px">check</span></button>
         </div>
         <div class="numpad-body">
             <div class="palette-btn-group">
@@ -1154,7 +1171,7 @@
 <div id="numpad-overlay" class="numpad-overlay" style="display: none;">
     <div class="numpad-modal">
         <div class="numpad-header">
-            <h3 id="numpad-title" data-i18n="npTitle"></h3>
+            <h3 id="numpad-title"></h3>
         </div>
         <div class="numpad-body">
             <input type="text" id="numpad-display">
@@ -1186,8 +1203,8 @@
 <div id="custom-alert-overlay" class="numpad-overlay" style="display: none;">
     <div class="numpad-modal" style="min-width: 280px; max-width: 95vw;">
         <div class="numpad-body" style="text-align: center; gap: 20px; padding: 16px;">
-            <p id="custom-alert-message" style="color: #000; margin: 10px 0; font-size: 15px; white-space: pre-wrap; word-break: break-all;"></p>
-            <button type="button" id="custom-alert-ok" class="gbg-btn" style="width: 120px; font-size: 14px; padding: 10px; background-color: #0088ff; color: #fff;" data-i18n="ok">OK</button>
+            <p id="custom-alert-message" style="color: #000; margin: 4px 0 -4px 0; font-size: 16px; white-space: pre-wrap; word-break: break-all;"></p>
+            <button type="button" id="custom-alert-ok" class="btn-blue" style="width: 128px; font-size: 16px; padding: 10px;">OK</button>
         </div>
     </div>
 </div>
@@ -1260,14 +1277,13 @@
             bri: "明るさ",
             con: "コントラスト",
             reset: "リセット",
-            filterModeTitle: "フィルター方式",
             palSet: "5. パレット設定",
             palBtn: "パレット設定を開く",
             fitMode: "2. 画像のフィット方法",
             fitCon: "元の比率を保持（余白を作る）",
             fitStr: "全体にフィット（比率を変える）",
             texCount: "3. テクスチャ枚数",
-            texSub: "(1枚 = 64×64ドット)",
+            texSub: "1枚 = 64×64ドットです",
             dither: "6. ディザリング設定",
             dFloyd: "誤差拡散",
             dFloydMirror: "誤差拡散(端補正)", 
@@ -1295,22 +1311,22 @@
             prevBefore: "変換前（元の画像）",
             prevAfter: "変換後（ドット絵）",
             showGrid: "64×64グリッド線を表示",
-            seamlessCheck: "シームレス確認 (2x2)",
+            seamlessCheck: "ループ確認 (2x2)",
             aboutTitle: "このツールについて",
-            aboutText: "<span style='font-size: 15px; margin-top: 0;'>このツールは、画像を「はじめてゲームプログラミング（はじプロ）」のテクスチャノードン仕様のドット絵に変換するツールです。ドット絵のサイズやカラーパレットはテクスチャノードンの仕様に準拠しています。<br>変換したドット絵は、PNG形式で画像として保存できます。CSV形式で保存すれば、変換したドット絵を<a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>自動描画ツール</a>ではじプロに取り込むこともできます。</span><p> <strong>使い方</strong><br><strong>やること</strong><br>・テキスト書いたりする<br>・その他細かいとこの見た目修正<br><br><strong>既知の不具合</strong><br>現在既知の不具合はありません。やったね<br>画像調整のフィルター方式でJSを選んだ場合、変換前と変換後で若干色味が変わることがありますが、仕様です。<br><br><strong>作者</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Githubリポジトリ</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>※このツールの大部分はGeminiが作成しています。<br>※良識の範囲内でご使用ください。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。</p>",
+            aboutText: "<span style='font-size: 16px; margin-top: 0;'>このツールは、画像を「はじめてゲームプログラミング」仕様のドット絵（テクスチャ）に変換するツールです。<br>好きな画像をアップロードするだけで、簡単にはじプロ風のドット絵を作成できます。<br>変換したドット絵は、画像として保存したり、<a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>自動描画ツール</a>を使ってはじプロのゲーム内に取り込んだりできます。</span><br><br><strong>使い方</strong><ol><li>変換したい画像をアップロード</li><li>ドット絵の大きさや色合いなどの調整</li><li>変換したドット絵をダウンロード</li></ol><br><strong>作者</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Githubリポジトリ</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>※良識の範囲内でご使用ください。<br>※選択した画像はすべてブラウザ内で処理されるため、外部に送信されることはありません。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。</p>",
             palAll: "すべて選択",
             palClear: "すべて解除",
             palMono: "白黒・透明",
             cancel: "キャンセル",
-            ok: "OK",
-            npTitle: "数の入力",
             npBack: "←ひとつ消す",
             npClear: "ぜんぶ消す",
             msgDecoding: " (HEICデコード中...)",
             msgDecodeFail: "デコード失敗",
-            msgNextImg: "OKをクリックして次の画像をダウンロードします。",
-            msgNextFile: "OKをクリックして次のファイルをダウンロードします。",
-            msgSheets: "枚分"
+            // ★追加: テンキー・パレットの専用タイトル
+            npTitleTexX: "テクスチャ枚数：X",
+            npTitleTexY: "テクスチャ枚数：Y",
+            npTitleScale: "拡大倍率",
+            npTitlePalette: "パレット設定",
         },
         en: {
             title: "GBG Texture Converter <br><span style='font-size: 0.65em; font-weight: normal; '>～はじプロドット絵変換ツール～</span>",
@@ -1336,7 +1352,7 @@
             fitCon: "Scale Proportionally (Add Padding)",
             fitStr: "Scale to Fit (Stretch)",
             texCount: "5. Number of Textures",
-            texSub: "(1 Texture = 64x64 pixels)",
+            texSub: "1 Texture = 64x64 pixels",
             dither: "6. Dithering Settings",
             dFloyd: "Floyd Steinberg",
             dFloydMirror: "Floyd Steinberg (Edge Correction)",
@@ -1344,10 +1360,10 @@
             dOrd8: "Ordered (8x8)",
             dRand: "Random",
             dNone: "None",
-            checkerAlpha: "Checkerboard Transparency",
+            checkerAlpha: "Semi-transparent with checkerboard",
             scale: "7. Export Scale",
             scaleUnit: "x",
-            scaleHint: "* Only applies to PNG exports.",
+            scaleHint: "Increasing the scale factor makes the pixels sharp and not blurry when saving as PNG.",
             save: "8. Save Textures",
             dlPngAll: "Save as PNG (Full)",
             dlPngSplit: "Save as PNG (Split)",
@@ -1362,22 +1378,22 @@
             prevBefore: "Before (Original)",
             prevAfter: "After (Pixel Art)",
             showGrid: "Show 64x64 Grid Lines",
-            seamlessCheck: "Seamless Check (2x2)",
+            seamlessCheck: "Loop Check (2x2)",
             aboutTitle: "About this tool",
-            aboutText: "<p style='font-size: 15px; margin-top: 0;'>This tool is designed to create pixel art tailored to the exact specifications of the Texture Nodon in Game Builder Garage (GBG). The canvas sizes and color palettes match the in-game limitations perfectly.<br>Converted pixel art can be saved as PNG images, or as CSV files which can be imported into GBG using the <a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>Automatic Drawing Tool</a>.</p><p><strong>Known Issues</strong><br>・Image adjustments may not render correctly on the pixel canvas when using Safari or other iOS browsers.<br><br><strong>Author</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br>* Most of this code was generated by Gemini.<br>* Please use this tool responsibly.<br>* This is an unofficial, fan-made tool and is not affiliated with Nintendo Co., Ltd.</p>",
+            aboutText: "<span style='font-size: 16px; margin-top: 0;'>This tool converts images into pixel art (textures) formatted for \"Game Builder Garage\".<br>Simply upload your favorite image to easily create pixel art in the style of GBG.<br>Converted pixel art can be saved as images, or imported into your GBG games using the <a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>Automatic Drawing Tool</a>.</span><br><br><strong>How to Use</strong><ol><li>Upload the image you want to convert.</li><li>Adjust the size and colors of the pixel art.</li><li>Download the converted pixel art.</li></ol><br><strong>Author</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Github Repository</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>* Please use this tool within the bounds of common sense.<br>* All selected images are processed locally within your browser and are not sent externally.<br>* This is an unofficial, fan-made tool and is not affiliated with Nintendo Co., Ltd.</p>",
             palAll: "Select All",
             palClear: "Deselect All",
             palMono: "Monochrome",
             cancel: "Cancel",
-            ok: "OK",
-            npTitle: "Number Input",
             npBack: "Backspace",
             npClear: "Delete All",
             msgDecoding: " (Decoding HEIC...)",
             msgDecodeFail: "Decode Failed",
-            msgNextImg: "Click OK to download the next image.",
-            msgNextFile: "Click OK to download the next file.",
-            msgSheets: "sheets"
+            // ★追加: テンキー・パレットの専用タイトル
+            npTitleTexX: "Number of Textures: X",
+            npTitleTexY: "Number of Textures: Y",
+            npTitleScale: "Export Scale",
+            npTitlePalette: "Palette Settings",
         }
     };
 
@@ -1551,7 +1567,7 @@
 
     function openNumpad(input, min, max, titleTextKey) {
         currentTargetInput = input; numpadMin = min; numpadMax = max;
-        document.getElementById("numpad-title").textContent = t(titleTextKey) || t("npTitle");
+        document.getElementById("numpad-title").textContent = t(titleTextKey);
         setInitialValue(input.value);
         numpadOverlay.style.display = "flex";
         setTimeout(() => numpadDisplay.focus(), 50);
@@ -1624,7 +1640,7 @@
         }
     });
 
-    function initgbgSlider(sliderId, valId, trackId, decId, incId) {
+    function initSlider(sliderId, valId, trackId, decId, incId) {
         const slider = document.getElementById(sliderId);
         const valDisplay = document.getElementById(valId);
         const track = document.getElementById(trackId);
@@ -1686,9 +1702,9 @@
     // ▲ここまで追加▲
 
     const allSliders = [
-        { id: "countX", min: 1, max: 16, titleKey: "texCount" },
-        { id: "countY", min: 1, max: 16, titleKey: "texCount" },
-        { id: "scaleFactor", min: 1, max: 16, titleKey: "scale" },
+        { id: "countX", min: 1, max: 16, titleKey: "npTitleTexX" }, // 変更
+        { id: "countY", min: 1, max: 16, titleKey: "npTitleTexY" }, // 変更
+        { id: "scaleFactor", min: 1, max: 16, titleKey: "npTitleScale" }, // 変更
         { id: "hueRotate", min: 0, max: 360, titleKey: "hue" },
         { id: "saturate", min: 0, max: 200, titleKey: "sat" },
         { id: "brightness", min: 0, max: 200, titleKey: "bri" },
@@ -1696,7 +1712,7 @@
     ];
 
     allSliders.forEach(s => {
-        initgbgSlider(s.id, `val-${s.id}`, `track-${s.id}`, `dec-${s.id}`, `inc-${s.id}`);
+        initSlider(s.id, `val-${s.id}`, `track-${s.id}`, `dec-${s.id}`, `inc-${s.id}`);
         const valDisplay = document.getElementById(`val-${s.id}`);
         if (valDisplay) {
             valDisplay.addEventListener("click", () => {
@@ -1958,7 +1974,7 @@
     document.getElementById('seamlessCb').addEventListener('change', () => {
         const isSeamless = document.getElementById('seamlessCb').checked;
         const targetX = (parseInt(document.getElementById('countX').value) || 1) * 64;
-        const displayWidth = 250; // 【修正後】横幅を250pxに固定する
+        const displayWidth = 256; // 【修正後】横幅を256pxに固定する
         
         if (isSeamless) {
             previewImg.style.display = 'none';
@@ -1991,54 +2007,69 @@
         const cosA = Math.cos(hue * Math.PI / 180);
         const sinA = Math.sin(hue * Math.PI / 180);
         
-        const h00 = 0.213 + cosA * 0.787 - sinA * 0.213; const h01 = 0.715 - cosA * 0.715 - sinA * 0.715; const h02 = 0.072 - cosA * 0.072 + sinA * 0.928;
-        const h10 = 0.213 - cosA * 0.213 + sinA * 0.143; const h11 = 0.715 + cosA * 0.285 + sinA * 0.140; const h12 = 0.072 - cosA * 0.072 - sinA * 0.283;
-        const h20 = 0.213 - cosA * 0.213 - sinA * 0.787; const h21 = 0.715 - cosA * 0.715 + sinA * 0.715; const h22 = 0.072 + cosA * 0.928 + sinA * 0.072;
+        // W3C規格のHue（色相）変換行列
+        const h00 = 0.213 + cosA * 0.787 - sinA * 0.213;
+        const h01 = 0.715 - cosA * 0.715 - sinA * 0.715;
+        const h02 = 0.072 - cosA * 0.072 + sinA * 0.928;
+        const h10 = 0.213 - cosA * 0.213 + sinA * 0.143;
+        const h11 = 0.715 + cosA * 0.285 + sinA * 0.140;
+        const h12 = 0.072 - cosA * 0.072 - sinA * 0.283;
+        const h20 = 0.213 - cosA * 0.213 - sinA * 0.787;
+        const h21 = 0.715 - cosA * 0.715 + sinA * 0.715;
+        const h22 = 0.072 + cosA * 0.928 + sinA * 0.072;
 
-        const s00 = 0.213 + 0.787 * saturation; const s01 = 0.715 - 0.715 * saturation; const s02 = 0.072 - 0.072 * saturation;
-        const s10 = 0.213 - 0.213 * saturation; const s11 = 0.715 + 0.285 * saturation; const s12 = 0.072 - 0.072 * saturation;
-        const s20 = 0.213 - 0.213 * saturation; const s21 = 0.715 - 0.715 * saturation; const s22 = 0.072 + 0.928 * saturation;
+        // W3C規格のSaturate（彩度）変換行列
+        const s00 = 0.213 + 0.787 * saturation;
+        const s01 = 0.715 - 0.715 * saturation;
+        const s02 = 0.072 - 0.072 * saturation;
+        const s10 = 0.213 - 0.213 * saturation;
+        const s11 = 0.715 + 0.285 * saturation;
+        const s12 = 0.072 - 0.072 * saturation;
+        const s20 = 0.213 - 0.213 * saturation;
+        const s21 = 0.715 - 0.715 * saturation;
+        const s22 = 0.072 + 0.928 * saturation;
 
-        const doBrightness = brightness !== 1;
-        const doContrast = contrast !== 1;
-        const doHue = hue !== 0;
-        const doSaturation = saturation !== 1;
-
-        if (!doBrightness && !doContrast && !doHue && !doSaturation) return;
-
-        let bcLUT = null;
-        if (doBrightness || doContrast) {
-            bcLUT = new Uint8Array(256);
-            for (let i = 0; i < 256; i++) {
-                let val = i;
-                if (doBrightness) val = val * brightness;
-                if (doContrast) val = (val - 127.5) * contrast + 127.5;
-                bcLUT[i] = val < 0 ? 0 : (val > 255 ? 255 : val);
-            }
-        }
+        // 0~255に収めるためのヘルパー
+        const clamp = val => Math.min(255, Math.max(0, val));
 
         for (let i = 0; i < data.length; i += 4) {
-            let r = data[i], g = data[i+1], b = data[i+2];
+            let r = data[i];
+            let g = data[i+1];
+            let b = data[i+2];
 
-            if (bcLUT) {
-                r = bcLUT[r]; g = bcLUT[g]; b = bcLUT[b];
+            // 1. Brightness (明るさ)
+            if (brightness !== 1) {
+                r = clamp(r * brightness);
+                g = clamp(g * brightness);
+                b = clamp(b * brightness);
             }
 
-            if (doHue) {
+            // 2. Contrast (コントラスト)
+            if (contrast !== 1) {
+                r = clamp((r - 127.5) * contrast + 127.5);
+                g = clamp((g - 127.5) * contrast + 127.5);
+                b = clamp((b - 127.5) * contrast + 127.5);
+            }
+
+            // 3. Hue-rotate (色相)
+            if (hue !== 0) {
                 let hr = r * h00 + g * h01 + b * h02;
                 let hg = r * h10 + g * h11 + b * h12;
                 let hb = r * h20 + g * h21 + b * h22;
-                r = hr < 0 ? 0 : (hr > 255 ? 255 : hr); g = hg < 0 ? 0 : (hg > 255 ? 255 : hg); b = hb < 0 ? 0 : (hb > 255 ? 255 : hb);
+                r = clamp(hr); g = clamp(hg); b = clamp(hb);
             }
 
-            if (doSaturation) {
+            // 4. Saturate (彩度)
+            if (saturation !== 1) {
                 let sr = r * s00 + g * s01 + b * s02;
                 let sg = r * s10 + g * s11 + b * s12;
                 let sb = r * s20 + g * s21 + b * s22;
-                r = sr < 0 ? 0 : (sr > 255 ? 255 : sr); g = sg < 0 ? 0 : (sg > 255 ? 255 : sg); b = sb < 0 ? 0 : (sb > 255 ? 255 : sb);
+                r = clamp(sr); g = clamp(sg); b = clamp(sb);
             }
 
-            data[i] = r; data[i+1] = g; data[i+2] = b;
+            data[i] = r;
+            data[i+1] = g;
+            data[i+2] = b;
         }
     }
 
@@ -2064,7 +2095,7 @@
         offscreenCanvas.width = targetX; offscreenCanvas.height = targetY;
         originalCanvas.width = origW; originalCanvas.height = origH;
 
-        const displayWidth = 250; // 【修正後】横幅を250pxに固定する
+        const displayWidth = 256; // 【修正後】横幅を256pxに固定する
         const isSeamless = document.getElementById('seamlessCb') && document.getElementById('seamlessCb').checked;
         
         originalImg.style.width = displayWidth + 'px';
@@ -2402,17 +2433,35 @@
     document.getElementById('downloadSplitPngBtn').addEventListener('click', async () => {
         let scale = parseInt(document.getElementById('scaleFactor').value) || 1;
         const sX = offscreenCanvas.width / 64, sY = offscreenCanvas.height / 64;
-        let count = 0;
-        for (let v = 0; v < sY; v++) {
-            for (let u = 0; u < sX; u++) {
-                if (count > 0 && count % 10 === 0) await showCustomAlert(t('msgNextImg'));
-                count++;
-                const tCanvas = document.createElement("canvas"); tCanvas.width = 64 * scale; tCanvas.height = 64 * scale;
-                const tCtx = tCanvas.getContext("2d"); tCtx.imageSmoothingEnabled = false;
-                tCtx.drawImage(offscreenCanvas, u * 64, v * 64, 64, 64, 0, 0, 64 * scale, 64 * scale);
-                const link = document.createElement("a"); link.download = (sX===1 && sY===1) ? `${fileName}_split.png` : `${fileName}_${u+1}-${v+1}.png`;
-                link.href = tCanvas.toDataURL("image/png"); link.click();
+        const totalFiles = sX * sY;
+
+        if (totalFiles >= 2) {
+            const zip = new JSZip();
+            for (let v = 0; v < sY; v++) {
+                for (let u = 0; u < sX; u++) {
+                    const tCanvas = document.createElement("canvas"); 
+                    tCanvas.width = 64 * scale; tCanvas.height = 64 * scale;
+                    const tCtx = tCanvas.getContext("2d"); 
+                    tCtx.imageSmoothingEnabled = false;
+                    tCtx.drawImage(offscreenCanvas, u * 64, v * 64, 64, 64, 0, 0, 64 * scale, 64 * scale);
+                    
+                    // CanvasからBlobを作成してZIPに追加
+                    const blob = await new Promise(resolve => tCanvas.toBlob(resolve, "image/png"));
+                    zip.file(`${fileName}_${u+1}-${v+1}.png`, blob);
+                }
             }
+            const zipBlob = await zip.generateAsync({type: "blob"});
+            const link = document.createElement("a"); 
+            link.download = `${fileName}_split.zip`;
+            link.href = URL.createObjectURL(zipBlob);
+            link.click();
+            URL.revokeObjectURL(link.href);
+        } else {
+            const tCanvas = document.createElement("canvas"); tCanvas.width = 64 * scale; tCanvas.height = 64 * scale;
+            const tCtx = tCanvas.getContext("2d"); tCtx.imageSmoothingEnabled = false;
+            tCtx.drawImage(offscreenCanvas, 0, 0, 64, 64, 0, 0, 64 * scale, 64 * scale);
+            const link = document.createElement("a"); link.download = `${fileName}_split.png`;
+            link.href = tCanvas.toDataURL("image/png"); link.click();
         }
     });
 
@@ -2435,18 +2484,30 @@
 
     document.getElementById('downloadCsvBtn').addEventListener('click', async () => {
         const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
-        const sX = w/64, sY = h/64; let count = 0;
-        for (let v=0; v<sY; v++) {
-            for (let u=0; u<sX; u++) {
-                if (count > 0 && count % 10 === 0) await showCustomAlert(t('msgNextFile'));
-                count++;
-                const grid = getCsvData(u, v, w, h, data);
-                const blob = new Blob(["\ufeff", grid.join(",")], { type: "text/csv" });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement("a"); link.href = url;
-                link.download = (sX===1 && sY===1) ? `${fileName}.csv` : `${fileName}_${u+1}-${v+1}.csv`;
-                link.click(); URL.revokeObjectURL(url);
+        const sX = w/64, sY = h/64; 
+        const totalFiles = sX * sY;
+
+        if (totalFiles >= 2) {
+            const zip = new JSZip();
+            for (let v=0; v<sY; v++) {
+                for (let u=0; u<sX; u++) {
+                    const grid = getCsvData(u, v, w, h, data);
+                    zip.file(`${fileName}_${u+1}-${v+1}.csv`, "\ufeff" + grid.join(","));
+                }
             }
+            const zipBlob = await zip.generateAsync({type: "blob"});
+            const link = document.createElement("a");
+            link.download = `${fileName}_csv.zip`;
+            link.href = URL.createObjectURL(zipBlob);
+            link.click();
+            URL.revokeObjectURL(link.href);
+        } else {
+            const grid = getCsvData(0, 0, w, h, data);
+            const blob = new Blob(["\ufeff", grid.join(",")], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a"); link.href = url;
+            link.download = `${fileName}.csv`;
+            link.click(); URL.revokeObjectURL(url);
         }
     });
 
@@ -2456,16 +2517,30 @@
         for (let v=0; v<sY; v++) {
             for (let u=0; u<sX; u++) { allData.push(getCsvData(u, v, w, h, data).join(",")); }
         }
-        let count = 0;
-        for (let i=0; i<allData.length; i+=5) {
-            if (count > 0 && count % 10 === 0) await showCustomAlert(t('msgNextFile'));
-            count++;
-            const text = allData.slice(i, i+5).join(",\n");
+        
+        const totalFiles = Math.ceil(allData.length / 5);
+
+        if (totalFiles >= 2) {
+            const zip = new JSZip();
+            for (let i=0; i<allData.length; i+=5) {
+                const text = allData.slice(i, i+5).join(",\n");
+                const end = Math.min(i+5, allData.length);
+                const fileNameStr = (i+1===end) ? `${fileName}_combined_${i+1}.csv` : `${fileName}_combined_${i+1}-${end}.csv`;
+                zip.file(fileNameStr, "\ufeff" + text);
+            }
+            const zipBlob = await zip.generateAsync({type: "blob"});
+            const link = document.createElement("a");
+            link.download = `${fileName}_combined_csv.zip`;
+            link.href = URL.createObjectURL(zipBlob);
+            link.click();
+            URL.revokeObjectURL(link.href);
+        } else {
+            const text = allData.slice(0, 5).join(",\n");
             const blob = new Blob(["\ufeff", text], { type: "text/csv" });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a"); link.href = url;
-            const end = Math.min(i+5, allData.length);
-            link.download = (i+1===end) ? `${fileName}_combined_${i+1}.csv` : `${fileName}_combined_${i+1}-${end}.csv`;
+            const end = Math.min(5, allData.length);
+            link.download = (1===end) ? `${fileName}_combined_1.csv` : `${fileName}_combined_1-${end}.csv`;
             link.click(); URL.revokeObjectURL(url);
         }
     });
