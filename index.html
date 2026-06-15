@@ -300,6 +300,9 @@
         /* =========================================
            戻るボタン (左上)
         ========================================= */
+        /* =========================================
+           戻るボタン (左上)
+        ========================================= */
         .back-btn {
             display: flex;
             align-items: center;
@@ -312,8 +315,26 @@
             padding: 0;
             flex-shrink: 0;
             font-size: 28px;
-            position: relative;
-            left: -10px;
+            
+            /* 追従させるための変更 */
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 戻るボタンが固定表示される分、タイトルが被らないように右にずらす */
+        body.has-image-state .header-title-row > div:first-child h2 {
+            margin-left: 54px;
+        }
+
+        /* ダークモード時の戻るボタンの背景色 */
+        body.dark-mode .back-btn {
+            background-color: rgba(49, 49, 51, 0.8);
         }
 
         /* =========================================
@@ -326,7 +347,7 @@
         body:not(.has-image-state) .panel-preview { display: none !important; }
 
         body.has-image-state #dropZoneFieldset { display: none !important; }
-        body.has-image-state .panel-body { margin-bottom: 200px; }
+        body.has-image-state #tab-main.panel-body { margin-bottom: 200px; }
 
         /* 画像選択前の画面を中央寄せ＆大きく表示 */
         body:not(.has-image-state) #tab-main {
@@ -358,17 +379,17 @@
         ========================================= */
         .bottom-action-bar {
             position: fixed;
-            bottom: 18px;
+            bottom: 16px;
             left: 0;
             right: 0;       /* 追加 */
             margin: 0 auto; /* 追加 */
-            width: 100%;
+            width: 95%;
             max-width: 600px;
             background-color: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
             border-radius: 64px;
-            padding: 14px 20px;
+            padding: 12px 16px;
             box-sizing: border-box;
             display: none; 
             gap: 15px;
@@ -378,7 +399,7 @@
         }
         @supports (padding-bottom: env(safe-area-inset-bottom)) {
             .bottom-action-bar {
-                padding-bottom: calc(14px + env(safe-area-inset-bottom));
+                padding-bottom: calc(12px + env(safe-area-inset-bottom));
             }
         }
         .bottom-action-bar.active {
@@ -850,7 +871,7 @@ body::after {
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 136, 255, 0.15); /* 全体を少し青くする */
-    border: 6px dashed #0088ff; /* 画面枠に点線を出す */
+    
     box-sizing: border-box;
     z-index: 99999;
     pointer-events: none; /* マウスイベントを邪魔しないようにする */
@@ -868,7 +889,6 @@ body.dragover-active::after {
 /* ダークモード時の調整（任意） */
 body.dark-mode::after {
     background-color: rgba(0, 145, 255, 0.15);
-    border-color: #0092ff;
 }
 
         /* =========================================
@@ -989,6 +1009,11 @@ body.dark-mode::after {
         body.dark-mode .bottom-action-bar {
             background-color: rgba(27, 27, 29, 0.4);
             border-top-color: #444;      
+        }
+        body.dark-mode #saveFileNameInput {
+            background-color: #313133;
+            border-color: #444;
+            color: #f4f4f4;
         }
     </style>
 </head>
@@ -1268,7 +1293,7 @@ body.dark-mode::after {
     </div>
 </div>
 
-<div id="numpad-overlay" class="numpad-overlay" style="display: none;">
+<div id="numpad-overlay" class="numpad-overlay" style="display: none; z-index: 10002;">
     <div class="numpad-modal">
         <div class="numpad-header">
             <h3 id="numpad-title"></h3>
@@ -1300,7 +1325,7 @@ body.dark-mode::after {
     </div>
 </div>
 
-<div id="custom-alert-overlay" class="numpad-overlay" style="display: none; z-index: 1000px;">
+<div id="custom-alert-overlay" class="numpad-overlay" style="display: none; z-index: 10003;">
     <div class="numpad-modal" style="min-width: 280px; max-width: 95vw;">
         <div class="numpad-body" style="text-align: center; gap: 20px; padding: 16px;">
             <p id="custom-alert-message" style="color: #000; margin: 4px 0 -4px 0; font-size: 16px; white-space: pre-wrap; word-break: break-all;"></p>
@@ -1316,7 +1341,11 @@ body.dark-mode::after {
             <button type="button" id="saveCancelBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%;"><span class="material-symbols-rounded" style="font-size: 32px;">close</span></button>
         </div>
         <div class="numpad-body" style="padding: 10px 20px 25px 20px; align-items: stretch;">
-  
+            
+            <div style="margin-bottom: 15px; text-align: left;">
+                <p style="margin: 0 0 10px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="saveFileName">ファイル名</p>
+                <input type="text" id="saveFileNameInput" style="width: 100%; padding: 10px 16px; border-radius: 24px; border: 1px solid #e3e3e3; font-size: 16px; font-family: inherit; box-sizing: border-box; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" placeholder="ファイル名を入力">
+            </div>
             <div style="margin-bottom: 5px; text-align: left;">
                 <p style="margin: 0 0 10px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="saveFormat">保存形式</p>
                 <div style="margin-bottom: 15px;">
@@ -1345,16 +1374,23 @@ body.dark-mode::after {
             
                 <div id="pngOptions">
                     <label class="checkbox-label" style="display: flex; align-items: center;">
-                        <span style="font-size: 15px; font-weight: bold;">1枚ごとに分割</span>
+                        <span style="font-size: 15px;" data-i18n="pngSplit">1枚ごとに分割</span>
                         <input type="checkbox" id="splitPngCb">
                     </label>
                 </div>
 
                 <div id="csvOptions" style="display: none;">
-                    <label class="checkbox-label" style="display: flex; align-items: center;">
-                        <span style="font-size: 15px; font-weight: bold;">5枚ごとに結合</span><input type="checkbox" id="combineCsvCb">
-                    </label>
-                </div>
+    <label class="checkbox-label" style="display: flex; align-items: center;">
+        <span style="font-size: 15px;" data-i18n="csvCombine">5枚ごとに結合</span><input type="checkbox" id="combineCsvCb">
+    </label>
+    
+    <div id="copyRangeContainer" style="display: none; margin-top: 15px; padding-left: 2px;">
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: bold; color: inherit;">
+            コピーする範囲 <span style="font-size: 12px; font-weight: normal; color: #666;">(コピー時のみ)</span>
+        </p>
+        <select id="copyRangeSelect" class="styled-select"></select>
+    </div>
+</div>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -1450,13 +1486,16 @@ body.dark-mode::after {
             dRand: "ランダム",
             dNone: "なし",
             checkerAlpha: "市松模様で半透明風にする",
-            scale: "保存時の拡大倍率",
+            scale: "拡大率",
             scaleUnit: "倍",
             scaleHint: "拡大倍率を上げると、PNG保存時にドットがぼやけずくっきりとします",
             saveTitle: "保存メニュー",
             save: "保存",
             saveFormat: "保存形式",
+            saveFileName: "ファイル名", // ←これを追加
             openSaveModal: "ドット絵を保存",
+            pngSplit: "1枚ごとに分割",
+            csvCombine: "5枚ごとに結合",
             dlPngAll: "PNGで保存(全体)",
             dlPngSplit: "PNGで保存(分割)",
             dlCsvSingle: "CSVで保存(単体)",
@@ -1477,7 +1516,7 @@ body.dark-mode::after {
             showGrid: "64×64グリッド線を表示",
             seamlessCheck: "ループ確認 (2x2)",
             aboutTitle: "このツールについて",
-            aboutText: "<span style='font-size: 16px; margin-top: 0;'>このツールは、画像を「はじめてゲームプログラミング」仕様のドット絵（テクスチャ）に変換するツールです。<br>好きな画像をアップロードするだけで、簡単にはじプロ風のドット絵を作成できます。<br>変換したドット絵は、画像として保存したり、<a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>自動描画ツール</a>を使ってはじプロのゲーム内に取り込んだりできます。</span><br><br><strong>使い方</strong><ol><li>変換したい画像をアップロード</li><li>ドット絵の大きさや色合いなどの調整</li><li>変換したドット絵をダウンロード</li></ol><br><strong>作者</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Githubリポジトリ</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>※良識の範囲内でご使用ください。<br>※選択した画像はすべてブラウザ内で処理されるため、外部に送信されることはありません。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。</p>",
+            aboutText: "<span style='font-size: 16px; margin-top: 0;'>このツールは、画像を「はじめてゲームプログラミング」仕様のドット絵（テクスチャ）に変換するツールです。<br>好きな画像をアップロードするだけで、簡単にはじプロ風のドット絵を作成できます。<br>変換したドット絵は、画像として保存したり、<a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>自動描画ツール</a>を使ってはじプロのゲーム内に取り込んだりできます。</span><br><br><strong>使い方</strong><ol><li>変換したい画像をアップロード</li><li>ドット絵の大きさや色合いなどの調整</li><li>変換したドット絵をダウンロード</li></ol><br><strong>作者</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Githubリポジトリ</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>※良識の範囲内でご使用ください。<br>※このツールはAIを使用して作成されました。<br>※選択した画像はすべてブラウザ内で処理されるため、外部に送信されることはありません。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。</p>",
             palAll: "すべて選択",
             palClear: "すべて解除",
             palMono: "白黒・透明",
@@ -1525,13 +1564,16 @@ body.dark-mode::after {
             dRand: "Random",
             dNone: "None",
             checkerAlpha: "Make semi-transparent with checkerboard pattern",
-            scale: "Export Scale",
+            scale: "Scale",
             scaleUnit: "x",
             scaleHint: "Increasing the scale factor makes the pixels sharp and not blurry when saving as PNG.",
             save: "Save",
             saveTitle: "Save Menu",
             saveFormat: "Save Format",
+            saveFileName: "File Name", // ←これを追加
             openSaveModal: "Save pixel art",
+            pngSplit: "Divided into individual sheets",
+            csvCombine: "Combine every 5 sheets",
             dlPngAll: "Save as PNG (Full)",
             dlPngSplit: "Save as PNG (Split)",
             dlCsvSingle: "Save as CSV (Single)",
@@ -1539,7 +1581,7 @@ body.dark-mode::after {
             dlCsvComb: "Save as CSV (Combined 5)",
             copyCsvComb: "Copy CSV (All Combined)",
             msgCopied: "Copied to clipboard",
-            saveHint: "Click 'Save as PNG' to save the converted pixel art image.<br>Click 'Save as CSV' to save the data for use with the Automatic Drawing Tool.",
+            saveHint: "If you select PNG, you can save the converted pixel art image.<br>If you select CSV, you can save the data for use with the Automatic Drawing Tool.",
             fileInfo: "File Name:",
             origSize: "Original Size:",
             convSize: "Converted Size:",
@@ -1551,7 +1593,7 @@ body.dark-mode::after {
             showGrid: "Show 64x64 Grid Lines",
             seamlessCheck: "Loop Check (2x2)",
             aboutTitle: "About this tool",
-            aboutText: "<span style='font-size: 16px; margin-top: 0;'>This tool converts images into pixel art (textures) formatted for \"Game Builder Garage\".<br>Simply upload your favorite image to easily create pixel art in the style of GBG.<br>Converted pixel art can be saved as images, or imported into your GBG games using the <a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>Automatic Drawing Tool</a>.</span><br><br><strong>How to Use</strong><ol><li>Upload the image you want to convert.</li><li>Adjust the size and colors of the pixel art.</li><li>Download the converted pixel art.</li></ol><br><strong>Author</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Github Repository</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>* Please use this tool within the bounds of common sense.<br>* All selected images are processed locally within your browser and are not sent externally.<br>* This is an unofficial, fan-made tool and is not affiliated with Nintendo Co., Ltd.</p>",
+            aboutText: "<span style='font-size: 16px; margin-top: 0;'>This tool converts images into pixel art (textures) formatted for Game Builder Garage.<br>Simply upload your favorite image to easily create pixel art in the style of GBG.<br>Converted pixel art can be saved as images, or imported into your GBG games using the <a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>Automatic Drawing Tool</a>.</span><br><br><strong>How to Use</strong><ol><li>Upload the image you want to convert.</li><li>Adjust the size and colors of the pixel art.</li><li>Download the converted pixel art.</li></ol><br><strong>Author</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Github Repository</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>* Please use this tool within the bounds of common sense.<br>* This tool was made using AI.<br>* All selected images are processed locally within your browser and are not sent externally.<br>* This is an unofficial, fan-made tool and is not affiliated with Nintendo Co., Ltd.</p>",
             palAll: "Select All",
             palClear: "Deselect All",
             palMono: "Monochrome",
@@ -1931,6 +1973,7 @@ body.dark-mode::after {
     function updateDownloadButtons() {
         const cx = parseInt(document.getElementById('countX').value) || 1;
         const cy = parseInt(document.getElementById('countY').value) || 1;
+        const total = cx * cy; // ← 全枚数の計算を追加
         const isOneByOne = (cx === 1 && cy === 1);
         
         const hasImage = currentImage !== null;
@@ -1958,19 +2001,48 @@ body.dark-mode::after {
         const saveFormatSelect = document.getElementById('saveFormatSelect');
         const pngOptions = document.getElementById('pngOptions');
         const csvOptions = document.getElementById('csvOptions');
-        const scaleOptions = document.getElementById('scaleOptions'); // ←追加
+        const scaleOptions = document.getElementById('scaleOptions');
+        
+        // ▼ 追加要素の取得
+        const copyRangeContainer = document.getElementById('copyRangeContainer');
+        const copyRangeSelect = document.getElementById('copyRangeSelect');
         
         if (saveFormatSelect && pngOptions && csvOptions) {
             if (saveFormatSelect.value === 'png') {
                 pngOptions.style.display = isOneByOne ? 'none' : 'block';
                 csvOptions.style.display = 'none';
                 if (executeCopyBtn) executeCopyBtn.style.display = 'none';
-                if (scaleOptions) scaleOptions.style.display = 'block'; // ←追加：PNGのときは表示
+                if (scaleOptions) scaleOptions.style.display = 'block'; 
+                if (copyRangeContainer) copyRangeContainer.style.display = 'none'; // 非表示
             } else {
                 pngOptions.style.display = 'none';
                 csvOptions.style.display = isOneByOne ? 'none' : 'block';
                 if (executeCopyBtn) executeCopyBtn.style.display = 'block';
-                if (scaleOptions) scaleOptions.style.display = 'none'; // ←追加：CSVのときは非表示
+                if (scaleOptions) scaleOptions.style.display = 'none'; 
+                
+                // ▼ 追加：プルダウンの表示制御とオプションの動的生成
+                if (combineCsvCb && combineCsvCb.checked && total > 5) {
+                    if (copyRangeContainer) {
+                        copyRangeContainer.style.display = 'block';
+                        
+                        // 現在の選択値を保持しておく（再描画時のズレ防止）
+                        const currentVal = copyRangeSelect.value;
+                        copyRangeSelect.innerHTML = '';
+                        
+                        const maxBatches = Math.ceil(total / 5);
+                        for (let i = 0; i < maxBatches; i++) {
+                            const start = i * 5 + 1;
+                            const end = Math.min((i + 1) * 5, total);
+                            const option = document.createElement('option');
+                            option.value = i;
+                            option.textContent = `${start} 〜 ${end} 枚目`;
+                            if (i.toString() === currentVal) option.selected = true;
+                            copyRangeSelect.appendChild(option);
+                        }
+                    }
+                } else {
+                    if (copyRangeContainer) copyRangeContainer.style.display = 'none';
+                }
             }
         }
     }
@@ -1981,6 +2053,11 @@ body.dark-mode::after {
     saveFormatSelect.addEventListener('change', () => {
         updateDownloadButtons();
     });
+
+    // ▼ この3行を追加 ▼
+    if (document.getElementById('combineCsvCb')) {
+        document.getElementById('combineCsvCb').addEventListener('change', updateDownloadButtons);
+    }
 
     const gbgColors = [
         "ffffffff", "edededff", "d9d9d9ff", "f3e6ffff", "dcb3ffff", "c685ffff", "e6fbffff", "ccf7ffff", "85ebffff", "f7ffe6ff", "e6ffb3ff", "d6ff85ff", "ffe6e6ff", "ffb3b3ff", "ff8585ff",
@@ -2651,6 +2728,12 @@ document.body.addEventListener('drop', (e) => {
     // =========================================
     // 保存・コピー処理群
     // =========================================
+    function getSaveFileName() {
+        const inputVal = document.getElementById('saveFileNameInput').value.trim();
+        // 空欄にされた場合はデフォルトの "pixelart" を使う
+        return inputVal || "pixelart";
+    }
+
     function getCsvData(u, v, w, h, data) {
         const grid = new Uint8Array(4097); const colorCount = new Array(gbgColors.length).fill(0);
         for (let y=0; y<64; y++) {
@@ -2669,16 +2752,23 @@ document.body.addEventListener('drop', (e) => {
     }
     
     async function handleDownloadPngAll() {
+        // ▼追加：入力されたファイル名を取得
+        const currentFileName = getSaveFileName(); 
+        
         let scale = parseInt(document.getElementById('scaleFactor').value) || 1;
         let outCanvas = offscreenCanvas;
         if (scale > 1) {
             outCanvas = document.createElement('canvas'); outCanvas.width = offscreenCanvas.width * scale; outCanvas.height = offscreenCanvas.height * scale;
             const outCtx = outCanvas.getContext('2d'); outCtx.imageSmoothingEnabled = false; outCtx.drawImage(offscreenCanvas, 0, 0, outCanvas.width, outCanvas.height);
         }
-        const link = document.createElement('a'); link.download = `${fileName}_${outCanvas.width}x${outCanvas.height}.png`; link.href = outCanvas.toDataURL('image/png'); link.click();
+        const link = document.createElement('a'); 
+        // ▼変更：fileName を currentFileName にする
+        link.download = `${currentFileName}_${outCanvas.width}x${outCanvas.height}.png`; 
+        link.href = outCanvas.toDataURL('image/png'); link.click();
     }
 
     async function handleDownloadPngSplit() {
+        const currentFileName = getSaveFileName();
         let scale = parseInt(document.getElementById('scaleFactor').value) || 1;
         const sX = offscreenCanvas.width / 64, sY = offscreenCanvas.height / 64;
         const totalFiles = sX * sY;
@@ -2694,7 +2784,7 @@ document.body.addEventListener('drop', (e) => {
                     tCtx.drawImage(offscreenCanvas, u * 64, v * 64, 64, 64, 0, 0, 64 * scale, 64 * scale);
                     
                     const blob = await new Promise(resolve => tCanvas.toBlob(resolve, "image/png"));
-                    zip.file(`${fileName}_${u+1}-${v+1}.png`, blob);
+                    zip.file(`${currentFileName}_${u+1}-${v+1}.png`, blob);
                 }
             }
             const zipBlob = await zip.generateAsync({type: "blob"});
@@ -2707,12 +2797,14 @@ document.body.addEventListener('drop', (e) => {
             const tCanvas = document.createElement("canvas"); tCanvas.width = 64 * scale; tCanvas.height = 64 * scale;
             const tCtx = tCanvas.getContext("2d"); tCtx.imageSmoothingEnabled = false;
             tCtx.drawImage(offscreenCanvas, 0, 0, 64, 64, 0, 0, 64 * scale, 64 * scale);
-            const link = document.createElement("a"); link.download = `${fileName}_split.png`;
+            const link = document.createElement("a"); link.download = `${currentFileName}_split.png`;
             link.href = tCanvas.toDataURL("image/png"); link.click();
         }
     }
 
     async function handleDownloadCsvSingle() {
+        const currentFileName = getSaveFileName();
+        
         const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
         const sX = w/64, sY = h/64; 
         const totalFiles = sX * sY;
@@ -2722,12 +2814,12 @@ document.body.addEventListener('drop', (e) => {
             for (let v=0; v<sY; v++) {
                 for (let u=0; u<sX; u++) {
                     const grid = getCsvData(u, v, w, h, data);
-                    zip.file(`${fileName}_${u+1}-${v+1}.csv`, "\ufeff" + grid.join(","));
+                    zip.file(`${currentFileName}_${u+1}-${v+1}.csv`, "\ufeff" + grid.join(","));
                 }
             }
             const zipBlob = await zip.generateAsync({type: "blob"});
             const link = document.createElement("a");
-            link.download = `${fileName}_csv.zip`;
+            link.download = `${currentFileName}_csv.zip`;
             link.href = URL.createObjectURL(zipBlob);
             link.click();
             URL.revokeObjectURL(link.href);
@@ -2736,12 +2828,14 @@ document.body.addEventListener('drop', (e) => {
             const blob = new Blob(["\ufeff", grid.join(",")], { type: "text/csv" });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a"); link.href = url;
-            link.download = `${fileName}.csv`;
+            link.download = `${currentFileName}.csv`;
             link.click(); URL.revokeObjectURL(url);
         }
     }
 
     async function handleDownloadCsvCombined() {
+        const currentFileName = getSaveFileName();
+
         const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
         const sX = w/64, sY = h/64; let allData = [];
         for (let v=0; v<sY; v++) {
@@ -2755,12 +2849,12 @@ document.body.addEventListener('drop', (e) => {
             for (let i=0; i<allData.length; i+=5) {
                 const text = allData.slice(i, i+5).join(",\n");
                 const end = Math.min(i+5, allData.length);
-                const fileNameStr = (i+1===end) ? `${fileName}_combined_${i+1}.csv` : `${fileName}_combined_${i+1}-${end}.csv`;
+                const fileNameStr = (i+1===end) ? `${currentFileName}_combined_${i+1}.csv` : `${fileName}_combined_${i+1}-${end}.csv`;
                 zip.file(fileNameStr, "\ufeff" + text);
             }
             const zipBlob = await zip.generateAsync({type: "blob"});
             const link = document.createElement("a");
-            link.download = `${fileName}_combined_csv.zip`;
+            link.download = `${currentFileName}_combined_csv.zip`;
             link.href = URL.createObjectURL(zipBlob);
             link.click();
             URL.revokeObjectURL(link.href);
@@ -2770,7 +2864,7 @@ document.body.addEventListener('drop', (e) => {
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a"); link.href = url;
             const end = Math.min(5, allData.length);
-            link.download = (1===end) ? `${fileName}_combined_1.csv` : `${fileName}_combined_1-${end}.csv`;
+            link.download = (1===end) ? `${currentFileName}_combined_1.csv` : `${currentFileName}_combined_1-${end}.csv`;
             link.click(); URL.revokeObjectURL(url);
         }
     }
@@ -2794,7 +2888,20 @@ document.body.addEventListener('drop', (e) => {
         for (let v=0; v<sY; v++) {
             for (let u=0; u<sX; u++) { allData.push(getCsvData(u, v, w, h, data).join(",")); }
         }
-        const textToCopy = allData.join(",\n");
+        
+        let textToCopy = "";
+        const copyRangeContainer = document.getElementById('copyRangeContainer');
+        
+        // ▼ プルダウンが表示されている場合、選択された範囲だけを抽出
+        if (copyRangeContainer && copyRangeContainer.style.display !== 'none') {
+            const batchIndex = parseInt(document.getElementById('copyRangeSelect').value) || 0;
+            const start = batchIndex * 5;
+            const end = start + 5;
+            textToCopy = allData.slice(start, end).join(",\n");
+        } else {
+            textToCopy = allData.join(",\n");
+        }
+
         try {
             await navigator.clipboard.writeText(textToCopy);
             return true; // 成功を返す
@@ -2839,12 +2946,14 @@ document.body.addEventListener('drop', (e) => {
         if (success) {
             const originalText = btn.textContent;
             // Material Symbolsを使ってチェックマークと文字を表示
-            btn.innerHTML = '<span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">check</span>クリップボードにコピーしました';
+            btn.innerHTML = '<span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">check</span><span>コピーしました</span>';
             
-            // 2秒後に元のテキストに戻す
+            // 2秒後に元のテキストとアイコンに戻す
+            // ▼ ここを変更 ▼
             setTimeout(() => {
-                btn.textContent = 'クリップボードにコピー';
+                btn.innerHTML = '<span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">content_copy</span><span>クリップボードにコピー</span>';
             }, 2000);
+            // ▲ ここまで ▲
         }
     });
 
@@ -2853,6 +2962,8 @@ document.body.addEventListener('drop', (e) => {
     // =========================================
     const saveOverlay = document.getElementById('save-overlay');
     document.getElementById('openSaveModalBtn').addEventListener('click', () => {
+        // ▼追加：モーダルを開くときに入力欄へ現在のファイル名をセットする
+        document.getElementById('saveFileNameInput').value = fileName;
         saveOverlay.style.display = 'flex';
     });
     document.getElementById('saveCancelBtn').addEventListener('click', () => {
