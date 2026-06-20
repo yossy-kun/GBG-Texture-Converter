@@ -23,8 +23,7 @@
             background-color: #f4f4f8;
             color: #000;
             margin: 0;
-            padding: 20px;
-            padding-bottom: 90px; /* ボトムアクションバーの分の余白 */
+            padding: 20px;  
             transition: background-color 0.1s;
         }
         html {
@@ -174,15 +173,14 @@
                 justify-content: flex-end;
                 margin-top: 5px;
             }
-            /* ここに display: flex; を追加し、各要素に order を指定します */
             #tab-main { 
                 display: flex;
                 flex-direction: column; 
             }
             .panel-preview { 
             order: -1;
-            position: static; /* ←この1行を追加して追従を解除 */
-        } /* プレビューを一番上にする */
+            position: static; 
+        } 
             .panel-divider { order: 0; }
             .panel-controls { order: 1; }
             
@@ -247,7 +245,7 @@
         }
         button:not(:disabled):active {
            filter: brightness(0.9);
-            transform: scale(0.9);
+            transform: scale(0.95);
         }
         button:disabled {
             cursor: not-allowed;
@@ -265,41 +263,48 @@
 
         .btn-blue:not(:disabled):active {
            filter: brightness(1.2);
-            transform: scale(0.9);
+            transform: scale(0.95);
         }
 
         /* =========================================
-           UIパーツ：ドラッグ＆ドロップ
-        ========================================= */
-        .drop-zone {
-            display: block;
-            border: 1px solid #e3e3e3;
-            border-radius: 24px;
-            padding: 20px 10px;
-            box-sizing: border-box; 
-            text-align: center;
-            background-color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: all 0.1s;
-        }
-        @media (hover: hover) { .drop-zone:hover { filter: brightness(0.9); } }
-        .drop-zone p {
-            margin: 0;
-            font-weight: bold;
-            color: #333;
-            pointer-events: none;
-            font-size: 14px;
-        }
-        .drop-zone span {
-            font-size: 12px;
-            font-weight: normal;
-            color: #888;
-        }
+   UIパーツ：ドラッグ＆ドロップ
+========================================= */
+.drop-zone {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    border-radius: 24px;
+    padding: 30px 20px;
+    box-sizing: border-box; 
+    text-align: center;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease; /* アニメーションを少し滑らかに */
+}
 
-        /* =========================================
-           戻るボタン (左上)
-        ========================================= */
+@media (hover: hover) { 
+    .drop-zone:hover { 
+     opacity: 0.7;
+    } 
+}
+
+.drop-zone p {
+    margin: 0;
+    font-weight: bold;
+    color: #000; /* 真っ黒から少し柔らかい色へ */
+    pointer-events: none;
+    font-size: 16px;
+}
+
+.drop-zone span {
+    font-size: 14px;
+    font-weight: normal;
+    color: #666;
+    pointer-events: none;
+}
+
         /* =========================================
            戻るボタン (左上)
         ========================================= */
@@ -316,10 +321,9 @@
             flex-shrink: 0;
             font-size: 28px;
             
-            /* 追従させるための変更 */
             position: fixed;
-            top: 20px;
-            left: 20px;
+            top: 16px;
+            left: 16px;
             z-index: 1000;
             background-color: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(4px);
@@ -327,12 +331,10 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        /* 戻るボタンが固定表示される分、タイトルが被らないように右にずらす */
         body.has-image-state .header-title-row > div:first-child h2 {
-            margin-left: 54px;
+            margin-left: 48px;
         }
 
-        /* ダークモード時の戻るボタンの背景色 */
         body.dark-mode .back-btn {
             background-color: rgba(49, 49, 51, 0.8);
         }
@@ -347,9 +349,8 @@
         body:not(.has-image-state) .panel-preview { display: none !important; }
 
         body.has-image-state #dropZoneFieldset { display: none !important; }
-        body.has-image-state #tab-main.panel-body { margin-bottom: 200px; }
+        body.has-image-state #tab-main.panel-body { margin-bottom: 270px; }
 
-        /* 画像選択前の画面を中央寄せ＆大きく表示 */
         body:not(.has-image-state) #tab-main {
             justify-content: center;
             align-items: center;
@@ -370,20 +371,17 @@
             margin-bottom: 20px;
             font-size: 20px;
         }
-        body:not(.has-image-state) .drop-zone {
-            padding: 80px 20px;
-        }
 
         /* =========================================
            固定アクションバー (新規追加)
         ========================================= */
         .bottom-action-bar {
             position: fixed;
-            bottom: 16px;
+            bottom: 24px;
             left: 0;
-            right: 0;       /* 追加 */
-            margin: 0 auto; /* 追加 */
-            width: 95%;
+            right: 0;
+            margin: 0 auto;
+            width: 88%;
             max-width: 600px;
             background-color: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(6px);
@@ -421,10 +419,10 @@
             -webkit-appearance: none;
             appearance: none;
             position: relative;
-            width: 48px;
-            height: 28px;
+            width: 52px;
+            height: 30px;
             background-color: #e9e9ea;
-            border-radius: 14px;
+            border-radius: 16px;
             cursor: pointer;
             outline: none;
             transition: background-color 0.2s ease;
@@ -435,8 +433,8 @@
         .checkbox-label input[type="checkbox"]::after {
             content: "";
             position: absolute;
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             background-color: #fff;
             top: 2px;
@@ -448,7 +446,7 @@
             background-color: #34c759;
         }
         .checkbox-label input[type="checkbox"]:checked::after {
-            transform: translateX(20px);
+            transform: translateX(22px);
         }
 
         /* =========================================
@@ -588,7 +586,7 @@
             transition: all 0.1s;
             flex-shrink: 0;
         }
-        @media (hover: hover) { .slider-btn:hover { background-color: #f2f2f7; } }
+        @media (hover: hover) { .slider-btn:hover { opacity: 0.7; } }
         .slider-btn:active { filter: brightness(0.85); transform: scale(1.15); }
 
         .slider-container { width: 100%; margin: 5px 0 15px 0; }
@@ -692,7 +690,7 @@
             align-items: center;
         }
         .preview-label {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             color: #555;
             margin-bottom: 5px;
@@ -764,7 +762,7 @@
             padding: 8px 12px;
             border-radius: 16px;
             display: inline-block;
-            color: #666;
+            color: #555;
             margin-top: 5px;
         }
 
@@ -802,7 +800,7 @@
             color: #000;
             text-align: center;
         }
-        .numpad-header h3 { margin: 0; font-size: 16px; font-weight: bold; }
+        .numpad-header h3 { margin: 0; font-size: 18px; font-weight: bold; }
         .numpad-body {
             padding: 2px 20px 20px 20px;
             display: flex;
@@ -880,13 +878,11 @@ body::after {
     transition: opacity 0.2s, visibility 0.2s;
 }
 
-/* ドラッグオーバー時に表示するクラス */
 body.dragover-active::after {
     opacity: 1;
     visibility: visible;
 }
 
-/* ダークモード時の調整（任意） */
 body.dark-mode::after {
     background-color: rgba(0, 145, 255, 0.15);
 }
@@ -970,15 +966,14 @@ body.dark-mode::after {
             color: #e0e0e0;
         }
         
+        body.dark-mode .drop-zone p { color: #f4f4f4; }
         body.dark-mode .drop-zone span { color: #aaa; }
-        body.dark-mode .drop-zone.dragover { filter: brightness(1.35); }
-        @media (hover: hover) { body.dark-mode .drop-zone:hover { filter: brightness(1.35); } }
     
         body.dark-mode .slider-track { background-color: #000; }
         body.dark-mode .slider::-webkit-slider-thumb { background-color: #e0e0e0; border-color: #666; }
         
         body.dark-mode #numpad-display.is-initial { color: #777 !important; }
-        @media (hover: hover) { body.dark-mode .num-btn:hover, body.dark-mode .slider-btn:hover { background-color: #3a3a3a; } }
+        @media (hover: hover) { body.dark-mode body.dark-mode .slider-btn:hover { background-color: #3a3a3a; } }
         
         body.dark-mode .numpad-modal { 
             background-color: #1b1b1d;
@@ -1022,10 +1017,10 @@ body.dark-mode::after {
 <div class="panel-header">
     <div class="header-title-row">
         <div style="display: flex; align-items: center;">
-            <button type="button" id="backToHomeBtn" class="back-btn"><span class="material-symbols-rounded" style="position: relative; left: -1px;">arrow_back_ios_new</span></button>
             <h2 data-i18n="title">GBG Texture Converter<br><span style='font-size: 0.6em; font-weight: normal; color: #666;'>～はじプロドット絵変換ツール～</span></h2>
         </div>
         <div class="header-controls">
+        <button type="button" id="backToHomeBtn" class="back-btn"><span class="material-symbols-rounded" style="position: relative; left: -1px;">arrow_back_ios_new</span></button>
             <span data-i18n="themeLabel" style="font-size: 14px; font-weight: bold; white-space: nowrap;">テーマ</span>
             <div style="width: 130px;">
                 <select id="themeSelect" class="styled-select">
@@ -1046,20 +1041,24 @@ body.dark-mode::after {
 <div class="panel-body tab-content active" id="tab-main">
     <div class="panel-controls">
         <fieldset class="fieldset" id="dropZoneFieldset">
-        <span style="text-align: center; font-size: 18px;">画像を「はじめてゲームプログラミング」仕様のドット絵に変換</span><br>
-            <h3 class="section-title" data-i18n="selImg">画像を選択</h3>
+            <div style="text-align: center; margin-bottom: 16px;">
+                <span data-i18n="welcomeTitle" style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 6px;">画像をはじプロ仕様のドット絵に変換</span>
+                <span data-i18n="welcomeSub" style="font-size: 15px; display: block; max-width: 420px; margin: 0 auto; line-height: 1.4;">お気に入りの写真やイラストをアップロードするだけで、簡単にゲーム内で使えるテクスチャデータを作成できます。</span>
+            </div>
+            <h3 class="section-title"data-i18n="selImg">画像を選択</h3>
             <label id="dropZone" class="drop-zone">
-                <p data-i18n="drop">画像をドロップするか、クリックして選択</p>
-                <span data-i18n="imgHint">(png, jpg, webp, heic など)</span>
-                <input type="file" id="imageInput" accept="image/*,.heic,.HEIC" style="display: none;">
-            </label>
+    <span class="material-symbols-rounded" style="font-size: 48px; color: var(--slider-fill); margin-bottom: 12px; margin-top: -12px; display: block;">upload</span>
+    <p data-i18n="drop" style="font-size: 18px;">画像をドロップするか、クリックして選択</p>
+    <span data-i18n="imgHint" style="display: block; margin-top: 8px;">(png, jpg, webp, heic など)</span>
+    <input type="file" id="imageInput" accept="image/*,.heic,.HEIC" style="display: none;">
+</label>
         </fieldset>
 
-        <div class="controls-wrap">
-            <h3 class="section-title" data-i18n="settings"style="padding-bottom: 12px;">設定</h3>
+        <div class="controls-wrap" style="margin-top: -2px;">
+            <h3 class="section-title settings" data-i18n="settings"style="padding-bottom: 20px; margin-top:-12px; font-size: 18px;">設定</h3>
             <fieldset class="fieldset">
                 <h3 class="section-title" data-i18n="fitMode">画像のフィット方法</h3>
-                <div style="margin-top: 10px; margin-bottom: 5px;">
+                <div style="margin-top: 10px; margin-bottom: 10px;">
                     <select id="fitModeSelect" class="styled-select">
                         <option value="contain" data-i18n="fitCon" selected>元の比率を保持</option>
                         <option value="stretch" data-i18n="fitStr">キャンバスにフィット</option>
@@ -1207,7 +1206,7 @@ body.dark-mode::after {
     <div class="panel-divider"></div>
 
     <div class="panel-preview">
-        <label style="align-self: flex-start; font-weight: bold; font-size: 16px; margin-bottom: 10px;">プレビュー</label>
+        <label style="align-self: flex-start; font-weight: bold; font-size: 18px; margin-bottom: 10px;">プレビュー</label>
         
         <div id="imageInfo" class="info-panel" style="display: none;">
             <div><strong data-i18n="fileInfo">ファイル名:</strong> <span id="infoFileName" style="word-break: break-all;">-</span></div>
@@ -1243,14 +1242,14 @@ body.dark-mode::after {
                     <canvas id="gridCanvas"></canvas>
                 </div>
                 
-                <div id="gridToggleContainer" style="display: none; margin-top: 15px; width: 100%;">
-                    <label class="checkbox-label" style="margin-bottom: 10px; display: block;">
-                        <span data-i18n="showGrid">グリッド線を表示</span>
-                        <input type="checkbox" id="showGridCb">
-                    </label>
+                <div id="gridToggleContainer" style="display: none; margin-top: 15px; margin-bottom: -20px; width: 100%;">
                     <label class="checkbox-label" style="display: block;">
                         <span data-i18n="seamlessCheck">ループ確認 (2x2)</span>
                         <input type="checkbox" id="seamlessCb">
+                    </label>
+                    <label class="checkbox-label" style="display: block;">
+                        <span data-i18n="showGrid">グリッド線を表示</span>
+                        <input type="checkbox" id="showGridCb">
                     </label>
                 </div>
             </div>
@@ -1335,12 +1334,12 @@ body.dark-mode::after {
 </div>
 
 <div id="save-overlay" class="numpad-overlay" style="display: none;">
-    <div class="numpad-modal" style="width: 90vw; max-width: 400px;">
+    <div class="numpad-modal" style="width: 90vw; max-width: 400px; overflow: visible;">
         <div class="numpad-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; box-sizing: border-box;">
             <button type="button" style="visibility: hidden; width: 44px;"></button> <h3 data-i18n="saveTitle" style="margin: 0; text-align: center; font-size: 16px; font-weight: bold;">保存メニュー</h3>
             <button type="button" id="saveCancelBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%;"><span class="material-symbols-rounded" style="font-size: 32px;">close</span></button>
         </div>
-        <div class="numpad-body" style="padding: 10px 20px 25px 20px; align-items: stretch;">
+        <div class="numpad-body" style="padding: 10px 20px 25px 20px; align-items: stretch; overflow: visible;">
             
             <div style="margin-bottom: 15px; text-align: left;">
                 <p style="margin: 0 0 10px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="saveFileName">ファイル名</p>
@@ -1385,8 +1384,8 @@ body.dark-mode::after {
     </label>
     
     <div id="copyRangeContainer" style="display: none; margin-top: 15px; padding-left: 2px;">
-        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: bold; color: inherit;">
-            コピーする範囲 <span style="font-size: 12px; font-weight: normal; color: #666;">(コピー時のみ)</span>
+        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="copyTexture">
+            コピーするテクスチャ <span style="font-size: 12px; font-weight: normal; color: #666;">(コピー時のみ)</span>
         </p>
         <select id="copyRangeSelect" class="styled-select"></select>
     </div>
@@ -1395,7 +1394,7 @@ body.dark-mode::after {
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 <button id="executeSaveBtn" class="btn-blue" style="padding: 12px; font-size: 15px; font-weight: bold;"><span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">download</span><span data-i18n="save">保存</span></button>
-                <button id="executeCopyBtn" style="padding: 12px; font-size: 15px; font-weight: bold; display: none;"><span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">content_copy</span><span>クリップボードにコピー</span></button>
+                <button id="executeCopyBtn" style="padding: 12px; font-size: 15px; font-weight: bold; display: none;"><span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">content_copy</span><span data-i18n="copyClipboard">クリップボードにコピー</span></button>
             </div>
             <div class="hint-box" style="margin-top: 5px; font-size: 12px; text-align: left;" data-i18n="saveHint"></div>
         </div>
@@ -1403,6 +1402,11 @@ body.dark-mode::after {
 </div>
 
 <script>
+    let currentImage = null; 
+    let fileName = "pixelart";
+    let baseFileNameForSave = "pixelart";
+    let isFileNameEdited = false;
+
     // =========================================
     // テーマ（ダーク/ライトモード）設定
     // =========================================
@@ -1454,6 +1458,8 @@ body.dark-mode::after {
     const i18n = {
         ja: {
             title: "GBG Texture Converter <br><span style='font-size: 0.65em; font-weight: normal;'>～はじプロドット絵変換ツール～</span>",
+            welcomeTitle: "画像をはじプロ仕様のドット絵に変換",
+            welcomeSub: "はじプロ用のテクスチャを簡単に作成できます",
             themeLabel: "テーマ",
             themeSys: "システム",
             themeLight: "ライト",
@@ -1492,18 +1498,16 @@ body.dark-mode::after {
             saveTitle: "保存メニュー",
             save: "保存",
             saveFormat: "保存形式",
-            saveFileName: "ファイル名", // ←これを追加
-            openSaveModal: "ドット絵を保存",
+            saveFileName: "ファイル名", 
+            openSaveModal: "保存",
             pngSplit: "1枚ごとに分割",
             csvCombine: "5枚ごとに結合",
-            dlPngAll: "PNGで保存(全体)",
-            dlPngSplit: "PNGで保存(分割)",
-            dlCsvSingle: "CSVで保存(単体)",
-            copyCsvSingle: "CSVをコピー(単体)",
-            dlCsvComb: "CSVで保存(5枚結合)",
-            copyCsvComb: "CSVをコピー(全結合)",
-            msgCopied: "クリップボードにコピーしました",
+            copyTexture:"コピーするテクスチャ（コピー時のみ）",        
+            copyClipboard:"クリップボードにコピー",
+            msgCopied: "コピーしました",
             saveHint : "PNGを選ぶと、変換したドット絵の画像を保存できます<br>CSVを選ぶと、変換したドット絵を自動描画ツールで使う用のデータとして保存できます",
+            sheetSingle: "{0} 枚目",
+            sheetRange: "{0} 〜 {1} 枚目",
             fileInfo: "ファイル名:",
             origSize: "元の画像サイズ:",
             convSize: "変換後画像サイズ:",
@@ -1532,6 +1536,8 @@ body.dark-mode::after {
         },
         en: {
             title: "GBG Texture Converter <br><span style='font-size: 0.65em; font-weight: normal; '>～はじプロドット絵変換ツール～</span>",
+            welcomeTitle: "Convert Images to GBG Textures Instantly",
+            welcomeSub: "You can easily create textures for Game Builder Garage",
             themeLabel: "Theme",
             themeSys: "System",
             themeLight: "Light",
@@ -1570,18 +1576,16 @@ body.dark-mode::after {
             save: "Save",
             saveTitle: "Save Menu",
             saveFormat: "Save Format",
-            saveFileName: "File Name", // ←これを追加
+            saveFileName: "File Name", 
             openSaveModal: "Save pixel art",
             pngSplit: "Divided into individual sheets",
             csvCombine: "Combine every 5 sheets",
-            dlPngAll: "Save as PNG (Full)",
-            dlPngSplit: "Save as PNG (Split)",
-            dlCsvSingle: "Save as CSV (Single)",
-            copyCsvSingle: "Copy CSV (Single)",
-            dlCsvComb: "Save as CSV (Combined 5)",
-            copyCsvComb: "Copy CSV (All Combined)",
-            msgCopied: "Copied to clipboard",
+            copyTexture:"Copy Texture (Only When Copying)",
+            copyClipboard:"Copy to clipboard",
+            msgCopied: "Copied",
             saveHint: "If you select PNG, you can save the converted pixel art image.<br>If you select CSV, you can save the data for use with the Automatic Drawing Tool.",
+            sheetSingle: "Sheet {0}",
+            sheetRange: "Sheets {0} - {1}",
             fileInfo: "File Name:",
             origSize: "Original Size:",
             convSize: "Converted Size:",
@@ -1649,8 +1653,6 @@ body.dark-mode::after {
         localStorage.setItem('gbg-lang', currentLang);
         updateLanguage();
     });
-
-    let currentImage = null; let fileName = "pixelart";
 
     updateLanguage();
 
@@ -1723,7 +1725,6 @@ body.dark-mode::after {
             const targetId = target.getAttribute('data-target');
             document.getElementById(targetId).classList.add('active');
 
-            // 変換ツールの時だけボトムバーを表示する
             if(targetId === 'tab-main') {
                 document.getElementById('bottomActionBar').classList.add('active');
             } else {
@@ -1973,7 +1974,7 @@ body.dark-mode::after {
     function updateDownloadButtons() {
         const cx = parseInt(document.getElementById('countX').value) || 1;
         const cy = parseInt(document.getElementById('countY').value) || 1;
-        const total = cx * cy; // ← 全枚数の計算を追加
+        const total = cx * cy; 
         const isOneByOne = (cx === 1 && cy === 1);
         
         const hasImage = currentImage !== null;
@@ -2002,8 +2003,6 @@ body.dark-mode::after {
         const pngOptions = document.getElementById('pngOptions');
         const csvOptions = document.getElementById('csvOptions');
         const scaleOptions = document.getElementById('scaleOptions');
-        
-        // ▼ 追加要素の取得
         const copyRangeContainer = document.getElementById('copyRangeContainer');
         const copyRangeSelect = document.getElementById('copyRangeSelect');
         
@@ -2013,31 +2012,107 @@ body.dark-mode::after {
                 csvOptions.style.display = 'none';
                 if (executeCopyBtn) executeCopyBtn.style.display = 'none';
                 if (scaleOptions) scaleOptions.style.display = 'block'; 
-                if (copyRangeContainer) copyRangeContainer.style.display = 'none'; // 非表示
+                if (copyRangeContainer) copyRangeContainer.style.display = 'none'; 
             } else {
                 pngOptions.style.display = 'none';
                 csvOptions.style.display = isOneByOne ? 'none' : 'block';
                 if (executeCopyBtn) executeCopyBtn.style.display = 'block';
                 if (scaleOptions) scaleOptions.style.display = 'none'; 
                 
-                // ▼ 追加：プルダウンの表示制御とオプションの動的生成
-                if (combineCsvCb && combineCsvCb.checked && total > 5) {
+                // プルダウンの表示制御とオプションの動的生成
+                if (total > 1) {
                     if (copyRangeContainer) {
                         copyRangeContainer.style.display = 'block';
                         
-                        // 現在の選択値を保持しておく（再描画時のズレ防止）
                         const currentVal = copyRangeSelect.value;
                         copyRangeSelect.innerHTML = '';
                         
-                        const maxBatches = Math.ceil(total / 5);
-                        for (let i = 0; i < maxBatches; i++) {
-                            const start = i * 5 + 1;
-                            const end = Math.min((i + 1) * 5, total);
-                            const option = document.createElement('option');
-                            option.value = i;
-                            option.textContent = `${start} 〜 ${end} 枚目`;
-                            if (i.toString() === currentVal) option.selected = true;
-                            copyRangeSelect.appendChild(option);
+                        if (combineCsvCb && combineCsvCb.checked) {
+                            const maxBatches = Math.ceil(total / 5);
+                            for (let i = 0; i < maxBatches; i++) {
+                                const start = i * 5 + 1;
+                                const end = Math.min((i + 1) * 5, total);
+                                const option = document.createElement('option');
+                                option.value = i;
+                                if (total > 1) {
+    if (copyRangeContainer) {
+        copyRangeContainer.style.display = 'block';
+        
+        const currentVal = copyRangeSelect.value;
+        copyRangeSelect.innerHTML = '';
+        
+        if (combineCsvCb && combineCsvCb.checked) {
+            const maxBatches = Math.ceil(total / 5);
+            for (let i = 0; i < maxBatches; i++) {
+                const start = i * 5 + 1;
+                const end = Math.min((i + 1) * 5, total);
+                const option = document.createElement('option');
+                option.value = i;
+                // ▼ 翻訳対応
+                option.textContent = t('sheetRange').replace('{0}', start).replace('{1}', end);
+                if (i.toString() === currentVal) option.selected = true;
+                copyRangeSelect.appendChild(option);
+            }
+        } else {
+            // 単体コピーの場合
+            for (let i = 0; i < total; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                // ▼ 翻訳対応
+                option.textContent = t('sheetSingle').replace('{0}', i + 1);
+                if (i.toString() === currentVal) option.selected = true;
+                copyRangeSelect.appendChild(option);
+            }
+        }
+    }
+} else {
+    if (copyRangeContainer) copyRangeContainer.style.display = 'none';
+}
+                                if (i.toString() === currentVal) option.selected = true;
+                                copyRangeSelect.appendChild(option);
+                            }
+                        } else {
+                            // 単体コピーの場合
+                            for (let i = 0; i < total; i++) {
+                                const option = document.createElement('option');
+                                option.value = i;
+                                if (total > 1) {
+    if (copyRangeContainer) {
+        copyRangeContainer.style.display = 'block';
+        
+        const currentVal = copyRangeSelect.value;
+        copyRangeSelect.innerHTML = '';
+        
+        if (combineCsvCb && combineCsvCb.checked) {
+            const maxBatches = Math.ceil(total / 5);
+            for (let i = 0; i < maxBatches; i++) {
+                const start = i * 5 + 1;
+                const end = Math.min((i + 1) * 5, total);
+                const option = document.createElement('option');
+                option.value = i;
+                // ▼ 翻訳対応
+                option.textContent = t('sheetRange').replace('{0}', start).replace('{1}', end);
+                if (i.toString() === currentVal) option.selected = true;
+                copyRangeSelect.appendChild(option);
+            }
+        } else {
+            // 単体コピーの場合
+            for (let i = 0; i < total; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                // ▼ 翻訳対応
+                option.textContent = t('sheetSingle').replace('{0}', i + 1);
+                if (i.toString() === currentVal) option.selected = true;
+                copyRangeSelect.appendChild(option);
+            }
+        }
+    }
+} else {
+    if (copyRangeContainer) copyRangeContainer.style.display = 'none';
+}
+                                if (i.toString() === currentVal) option.selected = true;
+                                copyRangeSelect.appendChild(option);
+                            }
                         }
                     }
                 } else {
@@ -2045,8 +2120,56 @@ body.dark-mode::after {
                 }
             }
         }
+        
+        updateDefaultFileName();
     }
     
+    // 入力欄の初期値を動的に生成する関数
+    function updateDefaultFileName() {
+        if (isFileNameEdited) return;
+
+        const saveFormatSelect = document.getElementById('saveFormatSelect');
+        const splitPngCb = document.getElementById('splitPngCb');
+        const combineCsvCb = document.getElementById('combineCsvCb');
+        if(!saveFormatSelect || !splitPngCb || !combineCsvCb) return;
+
+        const format = saveFormatSelect.value;
+        const isSplit = splitPngCb.checked;
+        const isCombine = combineCsvCb.checked;
+        
+        let cx = parseInt(document.getElementById('countX').value) || 1;
+        let cy = parseInt(document.getElementById('countY').value) || 1;
+        let total = cx * cy;
+        let scale = parseInt(document.getElementById('scaleFactor').value) || 1;
+        
+        let defaultName = baseFileNameForSave;
+
+        if (format === 'png') {
+            if (total > 1 && isSplit) {
+                defaultName += `_split`;
+            } else {
+                let w = cx * 64 * scale;
+                let h = cy * 64 * scale;
+                defaultName += `_${w}x${h}`;
+            }
+        } else if (format === 'csv') {
+            if (total > 1) {
+                if (isCombine) {
+                    if (total <= 5) {
+                        defaultName += `_combined_1-${total}`;
+                    } else {
+                        defaultName += `_combined_csv`;
+                    }
+                } else {
+                    defaultName += `_csv`;
+                }
+            }
+        }
+        
+        const inputEl = document.getElementById('saveFileNameInput');
+        if (inputEl) inputEl.value = defaultName;
+    }
+
     updateDownloadButtons();
 
     const saveFormatSelect = document.getElementById('saveFormatSelect');
@@ -2054,9 +2177,11 @@ body.dark-mode::after {
         updateDownloadButtons();
     });
 
-    // ▼ この3行を追加 ▼
     if (document.getElementById('combineCsvCb')) {
         document.getElementById('combineCsvCb').addEventListener('change', updateDownloadButtons);
+    }
+    if (document.getElementById('splitPngCb')) {
+        document.getElementById('splitPngCb').addEventListener('change', updateDownloadButtons);
     }
 
     const gbgColors = [
@@ -2241,12 +2366,22 @@ body.dark-mode::after {
 
     function drawGrid() {
         const gridCanvas = document.getElementById('gridCanvas');
-        const showGrid = document.getElementById('showGridCb').checked;
-        const isSeamless = document.getElementById('seamlessCb') && document.getElementById('seamlessCb').checked;
+        const showGridCb = document.getElementById('showGridCb');
+        const showGrid = showGridCb.checked;
+        const seamlessCb = document.getElementById('seamlessCb');
+        const isSeamless = seamlessCb && seamlessCb.checked;
         
         let countX = parseInt(document.getElementById('countX').value) || 1;
         let countY = parseInt(document.getElementById('countY').value) || 1;
         
+        // グリッド線表示トグルの表示・非表示を制御
+        const showGridLabel = showGridCb.closest('label');
+        if (countX === 1 && countY === 1 && !isSeamless) {
+            showGridLabel.style.display = 'none';
+        } else {
+            showGridLabel.style.display = 'block';
+        }
+
         if (isSeamless) {
             countX *= 2;
             countY *= 2;
@@ -2660,7 +2795,6 @@ body.dark-mode::after {
             const img = new Image();
             img.onload = () => {
                 currentImage = img;
-                // ここで画像あり状態のクラスを付与
                 document.body.classList.add('has-image-state');
                 
                 document.getElementById('infoFileName').textContent = file.name;
@@ -2688,19 +2822,18 @@ body.dark-mode::after {
     // 画面全体へのドラッグ＆ドロップ対応
 document.body.addEventListener('dragover', (e) => { 
     e.preventDefault(); 
-    document.body.classList.add('dragover-active'); // クラスを変更
+    document.body.classList.add('dragover-active'); 
 });
 
 document.body.addEventListener('dragleave', (e) => { 
-    // マウスがブラウザの画面外に出た時だけハイライトを解除する
     if (!e.relatedTarget) {
-        document.body.classList.remove('dragover-active'); // クラスを変更
+        document.body.classList.remove('dragover-active'); 
     }
 });
 
 document.body.addEventListener('drop', (e) => {
     e.preventDefault(); 
-    document.body.classList.remove('dragover-active'); // クラスを変更
+    document.body.classList.remove('dragover-active'); 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) { 
         imageInput.files = e.dataTransfer.files; 
         handleFile(e.dataTransfer.files[0]); 
@@ -2714,7 +2847,10 @@ document.body.addEventListener('drop', (e) => {
 
     document.getElementById('countX').addEventListener('change', () => { processImage(); updateDownloadButtons(); });
     document.getElementById('countY').addEventListener('change', () => { processImage(); updateDownloadButtons(); });
-    document.getElementById('scaleFactor').addEventListener('change', updateSaveSizeDisplay);
+    document.getElementById('scaleFactor').addEventListener('change', () => {
+        updateSaveSizeDisplay();
+        updateDefaultFileName();
+    });
     
     document.getElementById('fitModeSelect').addEventListener('change', processImage);
     const ditherModeSelect = document.getElementById('ditherModeSelect');
@@ -2730,7 +2866,6 @@ document.body.addEventListener('drop', (e) => {
     // =========================================
     function getSaveFileName() {
         const inputVal = document.getElementById('saveFileNameInput').value.trim();
-        // 空欄にされた場合はデフォルトの "pixelart" を使う
         return inputVal || "pixelart";
     }
 
@@ -2752,7 +2887,6 @@ document.body.addEventListener('drop', (e) => {
     }
     
     async function handleDownloadPngAll() {
-        // ▼追加：入力されたファイル名を取得
         const currentFileName = getSaveFileName(); 
         
         let scale = parseInt(document.getElementById('scaleFactor').value) || 1;
@@ -2762,8 +2896,7 @@ document.body.addEventListener('drop', (e) => {
             const outCtx = outCanvas.getContext('2d'); outCtx.imageSmoothingEnabled = false; outCtx.drawImage(offscreenCanvas, 0, 0, outCanvas.width, outCanvas.height);
         }
         const link = document.createElement('a'); 
-        // ▼変更：fileName を currentFileName にする
-        link.download = `${currentFileName}_${outCanvas.width}x${outCanvas.height}.png`; 
+        link.download = `${currentFileName}.png`; 
         link.href = outCanvas.toDataURL('image/png'); link.click();
     }
 
@@ -2789,7 +2922,7 @@ document.body.addEventListener('drop', (e) => {
             }
             const zipBlob = await zip.generateAsync({type: "blob"});
             const link = document.createElement("a"); 
-            link.download = `${fileName}_split.zip`;
+            link.download = `${currentFileName}.zip`;
             link.href = URL.createObjectURL(zipBlob);
             link.click();
             URL.revokeObjectURL(link.href);
@@ -2797,7 +2930,7 @@ document.body.addEventListener('drop', (e) => {
             const tCanvas = document.createElement("canvas"); tCanvas.width = 64 * scale; tCanvas.height = 64 * scale;
             const tCtx = tCanvas.getContext("2d"); tCtx.imageSmoothingEnabled = false;
             tCtx.drawImage(offscreenCanvas, 0, 0, 64, 64, 0, 0, 64 * scale, 64 * scale);
-            const link = document.createElement("a"); link.download = `${currentFileName}_split.png`;
+            const link = document.createElement("a"); link.download = `${currentFileName}.png`;
             link.href = tCanvas.toDataURL("image/png"); link.click();
         }
     }
@@ -2819,7 +2952,7 @@ document.body.addEventListener('drop', (e) => {
             }
             const zipBlob = await zip.generateAsync({type: "blob"});
             const link = document.createElement("a");
-            link.download = `${currentFileName}_csv.zip`;
+            link.download = `${currentFileName}.zip`;
             link.href = URL.createObjectURL(zipBlob);
             link.click();
             URL.revokeObjectURL(link.href);
@@ -2849,12 +2982,12 @@ document.body.addEventListener('drop', (e) => {
             for (let i=0; i<allData.length; i+=5) {
                 const text = allData.slice(i, i+5).join(",\n");
                 const end = Math.min(i+5, allData.length);
-                const fileNameStr = (i+1===end) ? `${currentFileName}_combined_${i+1}.csv` : `${fileName}_combined_${i+1}-${end}.csv`;
+                const fileNameStr = (i+1===end) ? `${currentFileName}_${i+1}.csv` : `${currentFileName}_${i+1}-${end}.csv`;
                 zip.file(fileNameStr, "\ufeff" + text);
             }
             const zipBlob = await zip.generateAsync({type: "blob"});
             const link = document.createElement("a");
-            link.download = `${currentFileName}_combined_csv.zip`;
+            link.download = `${currentFileName}.zip`;
             link.href = URL.createObjectURL(zipBlob);
             link.click();
             URL.revokeObjectURL(link.href);
@@ -2863,19 +2996,34 @@ document.body.addEventListener('drop', (e) => {
             const blob = new Blob(["\ufeff", text], { type: "text/csv" });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a"); link.href = url;
-            const end = Math.min(5, allData.length);
-            link.download = (1===end) ? `${currentFileName}_combined_1.csv` : `${currentFileName}_combined_1-${end}.csv`;
+            link.download = `${currentFileName}.csv`;
             link.click(); URL.revokeObjectURL(url);
         }
     }
 
     async function handleCopyCsvSingle() {
         const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
-        const grid = getCsvData(0, 0, w, h, data); 
-        const textToCopy = grid.join(",");
+        const sX = w/64, sY = h/64; 
+        let allData = [];
+        for (let v=0; v<sY; v++) {
+            for (let u=0; u<sX; u++) { 
+                allData.push(getCsvData(u, v, w, h, data).join(",")); 
+            }
+        }
+        
+        let textToCopy = "";
+        const copyRangeContainer = document.getElementById('copyRangeContainer');
+        
+        if (copyRangeContainer && copyRangeContainer.style.display !== 'none') {
+            const index = parseInt(document.getElementById('copyRangeSelect').value) || 0;
+            textToCopy = allData[index];
+        } else {
+            textToCopy = allData[0];
+        }
+
         try {
             await navigator.clipboard.writeText(textToCopy);
-            return true; // 成功を返す
+            return true; 
         } catch (e) { 
             showCustomAlert("Copy failed"); 
             return false; 
@@ -2892,7 +3040,6 @@ document.body.addEventListener('drop', (e) => {
         let textToCopy = "";
         const copyRangeContainer = document.getElementById('copyRangeContainer');
         
-        // ▼ プルダウンが表示されている場合、選択された範囲だけを抽出
         if (copyRangeContainer && copyRangeContainer.style.display !== 'none') {
             const batchIndex = parseInt(document.getElementById('copyRangeSelect').value) || 0;
             const start = batchIndex * 5;
@@ -2904,7 +3051,7 @@ document.body.addEventListener('drop', (e) => {
 
         try {
             await navigator.clipboard.writeText(textToCopy);
-            return true; // 成功を返す
+            return true; 
         } catch (e) { 
             showCustomAlert("Copy failed"); 
             return false; 
@@ -2944,26 +3091,27 @@ document.body.addEventListener('drop', (e) => {
         }
 
         if (success) {
-            const originalText = btn.textContent;
-            // Material Symbolsを使ってチェックマークと文字を表示
-            btn.innerHTML = '<span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">check</span><span>コピーしました</span>';
+            btn.innerHTML = '<span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">check</span><span data-i18n="msgCopied">コピーしました</span>';
             
-            // 2秒後に元のテキストとアイコンに戻す
-            // ▼ ここを変更 ▼
             setTimeout(() => {
-                btn.innerHTML = '<span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">content_copy</span><span>クリップボードにコピー</span>';
+                btn.innerHTML = '<span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">content_copy</span><span data-i18n="copyClipboard">クリップボードにコピー</span>';
             }, 2000);
-            // ▲ ここまで ▲
         }
     });
 
     // =========================================
     // 保存メニューモーダルの開閉
     // =========================================
+    
+    document.getElementById('saveFileNameInput').addEventListener('input', () => {
+        isFileNameEdited = true;
+    });
+
     const saveOverlay = document.getElementById('save-overlay');
     document.getElementById('openSaveModalBtn').addEventListener('click', () => {
-        // ▼追加：モーダルを開くときに入力欄へ現在のファイル名をセットする
-        document.getElementById('saveFileNameInput').value = fileName;
+        baseFileNameForSave = fileName;
+        isFileNameEdited = false;
+        updateDownloadButtons();
         saveOverlay.style.display = 'flex';
     });
     document.getElementById('saveCancelBtn').addEventListener('click', () => {
