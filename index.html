@@ -2034,40 +2034,8 @@ body.dark-mode::after {
                                 const end = Math.min((i + 1) * 5, total);
                                 const option = document.createElement('option');
                                 option.value = i;
-                                if (total > 1) {
-    if (copyRangeContainer) {
-        copyRangeContainer.style.display = 'block';
-        
-        const currentVal = copyRangeSelect.value;
-        copyRangeSelect.innerHTML = '';
-        
-        if (combineCsvCb && combineCsvCb.checked) {
-            const maxBatches = Math.ceil(total / 5);
-            for (let i = 0; i < maxBatches; i++) {
-                const start = i * 5 + 1;
-                const end = Math.min((i + 1) * 5, total);
-                const option = document.createElement('option');
-                option.value = i;
-                // ▼ 翻訳対応
-                option.textContent = t('sheetRange').replace('{0}', start).replace('{1}', end);
-                if (i.toString() === currentVal) option.selected = true;
-                copyRangeSelect.appendChild(option);
-            }
-        } else {
-            // 単体コピーの場合
-            for (let i = 0; i < total; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                // ▼ 翻訳対応
-                option.textContent = t('sheetSingle').replace('{0}', i + 1);
-                if (i.toString() === currentVal) option.selected = true;
-                copyRangeSelect.appendChild(option);
-            }
-        }
-    }
-} else {
-    if (copyRangeContainer) copyRangeContainer.style.display = 'none';
-}
+                                // ▼ 翻訳対応
+                                option.textContent = t('sheetRange').replace('{0}', start).replace('{1}', end);
                                 if (i.toString() === currentVal) option.selected = true;
                                 copyRangeSelect.appendChild(option);
                             }
@@ -2076,40 +2044,8 @@ body.dark-mode::after {
                             for (let i = 0; i < total; i++) {
                                 const option = document.createElement('option');
                                 option.value = i;
-                                if (total > 1) {
-    if (copyRangeContainer) {
-        copyRangeContainer.style.display = 'block';
-        
-        const currentVal = copyRangeSelect.value;
-        copyRangeSelect.innerHTML = '';
-        
-        if (combineCsvCb && combineCsvCb.checked) {
-            const maxBatches = Math.ceil(total / 5);
-            for (let i = 0; i < maxBatches; i++) {
-                const start = i * 5 + 1;
-                const end = Math.min((i + 1) * 5, total);
-                const option = document.createElement('option');
-                option.value = i;
-                // ▼ 翻訳対応
-                option.textContent = t('sheetRange').replace('{0}', start).replace('{1}', end);
-                if (i.toString() === currentVal) option.selected = true;
-                copyRangeSelect.appendChild(option);
-            }
-        } else {
-            // 単体コピーの場合
-            for (let i = 0; i < total; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                // ▼ 翻訳対応
-                option.textContent = t('sheetSingle').replace('{0}', i + 1);
-                if (i.toString() === currentVal) option.selected = true;
-                copyRangeSelect.appendChild(option);
-            }
-        }
-    }
-} else {
-    if (copyRangeContainer) copyRangeContainer.style.display = 'none';
-}
+                                // ▼ 翻訳対応
+                                option.textContent = t('sheetSingle').replace('{0}', i + 1);
                                 if (i.toString() === currentVal) option.selected = true;
                                 copyRangeSelect.appendChild(option);
                             }
@@ -2160,8 +2096,6 @@ body.dark-mode::after {
                     } else {
                         defaultName += `_combined_csv`;
                     }
-                } else {
-                    defaultName += `_csv`;
                 }
             }
         }
