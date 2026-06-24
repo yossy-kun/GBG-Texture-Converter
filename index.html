@@ -281,7 +281,7 @@
     text-align: center;
     background-color: #fff;
     cursor: pointer;
-    transition: all 0.2s ease; /* アニメーションを少し滑らかに */
+    transition: all 0.2s ease;
 }
 
 @media (hover: hover) { 
@@ -293,7 +293,7 @@
 .drop-zone p {
     margin: 0;
     font-weight: bold;
-    color: #000; /* 真っ黒から少し柔らかい色へ */
+    color: #000;
     pointer-events: none;
     font-size: 16px;
 }
@@ -320,7 +320,6 @@
             padding: 0;
             flex-shrink: 0;
             font-size: 28px;
-            
             position: fixed;
             top: 16px;
             left: 16px;
@@ -1214,8 +1213,7 @@ body.dark-mode::after {
             <div><strong data-i18n="convSize">変換後画像サイズ:</strong> <span id="infoPreviewSize">-</span></div>
             <div><strong data-i18n="saveSize">保存サイズ:</strong> <span id="infoSaveSize">-</span></div>
             <div><strong data-i18n="texCountInfo">テクスチャ枚数:</strong> <span id="infoTexCount">-</span></div>
-        <div id="texCountWarning" style="display: none; padding-top: 4px; color: #0088ff;" data-i18n="texWarning">
-                ※はじプロで置けるテクスチャは128枚までです
+        <div id="texCountWarning" style="display: none; padding-top: 4px; color: #0088ff;" data-i18n="texWarning">※テクスチャノードンは128体しか呼び出せません
             </div>
         </div>
 
@@ -1515,12 +1513,13 @@ body.dark-mode::after {
             texCountInfo: "テクスチャ枚数:",
             mai: " 枚",
             msgTotalSheets: "合計 {0} 枚",
+            texWarning: "※テクスチャノードンは128体しか呼び出せません",
             prevBefore: "変換前（元の画像）",
             prevAfter: "変換後（ドット絵）",
             showGrid: "64×64グリッド線を表示",
             seamlessCheck: "ループ確認 (2x2)",
             aboutTitle: "このツールについて",
-            aboutText: "<span style='font-size: 16px; margin-top: 0;'>このツールは、画像を「はじめてゲームプログラミング」仕様のドット絵（テクスチャ）に変換するツールです。<br>好きな画像をアップロードするだけで、簡単にはじプロ風のドット絵を作成できます。<br>変換したドット絵は、画像として保存したり、<a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>自動描画ツール</a>を使ってはじプロのゲーム内に取り込んだりできます。</span><br><br><strong>使い方</strong><ol><li>変換したい画像をアップロード</li><li>ドット絵の大きさや色合いなどの調整</li><li>変換したドット絵をダウンロード</li></ol><br><strong>作者</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Githubリポジトリ</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>※良識の範囲内でご使用ください。<br>※このツールはGeminiを使用して作成されました。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。</p>",
+            aboutText: "<span style='font-size: 16px; margin-top: 0;'>このツールは、画像を「はじめてゲームプログラミング」仕様のドット絵（テクスチャ）に変換するツールです。<br>好きな画像をアップロードするだけで、簡単にはじプロ風のドット絵を作成できます。<br>変換したドット絵は、画像として保存したり、<a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>自動描画ツール</a>を使ってはじプロのゲーム内に取り込んだりできます。</span><br><br><strong>使い方</strong><ol><li>変換したい画像をアップロード</li><li>ドット絵の大きさや色合いなどの調整</li><li>変換したドット絵をダウンロード(画像として保存するならPNG、自動描画用のテクスチャデータとして保存するならCSV)</li></ol><br><strong>作者</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Githubリポジトリ</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>※良識の範囲内でご使用ください。<br>※このツールはAIを使用して作成されました。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。",
             palAll: "すべて選択",
             palClear: "すべて解除",
             palMono: "白黒・透明",
@@ -1592,12 +1591,13 @@ body.dark-mode::after {
             saveSize: "Export Size:",
             texCountInfo: "Texture Count:",
             msgTotalSheets: "Total: {0}",
+            texWarning: "※You can only call 128 Texture Nodon at a time.",
             prevBefore: "Before (Original)",
             prevAfter: "After (Pixel Art)",
             showGrid: "Show 64x64 Grid Lines",
             seamlessCheck: "Loop Check (2x2)",
             aboutTitle: "About this tool",
-            aboutText: "<span style='font-size: 16px; margin-top: 0;'>This tool converts images into pixel art (textures) formatted for Game Builder Garage.<br>Simply upload your favorite image to easily create pixel art in the style of GBG.<br>Converted pixel art can be saved as images, or imported into your GBG games using the <a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>Automatic Drawing Tool</a>.</span><br><br><strong>How to Use</strong><ol><li>Upload the image you want to convert.</li><li>Adjust the size and colors of the pixel art.</li><li>Download the converted pixel art.</li></ol><br><strong>Author</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Github Repository</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>* Please use this tool within the bounds of common sense.<br>* This tool was made using Gemini.<br>* This is an unofficial, fan-made tool and is not affiliated with Nintendo Co., Ltd.</p>",
+            aboutText: "<span style='font-size: 16px; margin-top: 0;'>This tool converts images into pixel art (textures) formatted for Game Builder Garage.<br>Simply upload your favorite image to easily create pixel art in the style of GBG.<br>Converted pixel art can be saved as images, or imported into your GBG games using the <a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>Automatic Drawing Tool</a>.</span><br><br><strong>How to Use</strong><ol><li>Upload the image you want to convert.</li><li>Adjust the size and colors of the pixel art.</li><li>Download the converted pixel art (PNG to save as an image, CSV to save as texture data for automatic drawing)</li></ol><br><strong>Author</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Github Repository</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>* Please use this tool within the bounds of common sense.<br>* This tool was made using AI.<br>* This is an unofficial, fan-made tool and is not affiliated with Nintendo Co., Ltd.</p>",
             palAll: "Select All",
             palClear: "Deselect All",
             palMono: "Monochrome",
