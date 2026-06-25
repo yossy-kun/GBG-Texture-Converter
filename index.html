@@ -1205,7 +1205,7 @@ body.dark-mode::after {
     <div class="panel-divider"></div>
 
     <div class="panel-preview">
-        <label style="align-self: flex-start; font-weight: bold; font-size: 18px; margin-bottom: 10px;">プレビュー</label>
+        <label style="align-self: flex-start; font-weight: bold; font-size: 18px; margin-bottom: 10px;" data-i18n="preview">プレビュー</label>
         
         <div id="imageInfo" class="info-panel" style="display: none;">
             <div><strong data-i18n="fileInfo">ファイル名:</strong> <span id="infoFileName" style="word-break: break-all;">-</span></div>
@@ -1469,6 +1469,7 @@ body.dark-mode::after {
             selImgBtn: "画像を選択",
             drop: "画像をドロップするか、クリックして選択",
             imgHint: "(png, jpg, heic, svg など)",
+            settings: "設定",
             imgAdj: "3. 画像の調整",
             hue: "色相",
             sat: "彩度",
@@ -1503,7 +1504,8 @@ body.dark-mode::after {
             copyTexture:"コピーするテクスチャ（コピー時のみ）",        
             copyClipboard:"クリップボードにコピー",
             msgCopied: "コピーしました",
-            saveHint : "PNGを選ぶと、変換したドット絵の画像を保存できます<br>CSVを選ぶと、変換したドット絵を自動描画ツールで使う用のデータとして保存できます",
+            saveHint: "PNGを選ぶと、変換したドット絵の画像を保存できます<br>CSVを選ぶと、変換したドット絵を自動描画ツールで使う用のデータとして保存できます",
+            preview: "プレビュー",
             sheetSingle: "{0} 枚目",
             sheetRange: "{0} 〜 {1} 枚目",
             fileInfo: "ファイル名:",
@@ -1548,6 +1550,7 @@ body.dark-mode::after {
             selImgBtn: "Select Image",
             drop: "Drag & drop an image here or click to browse",
             imgHint: "(Supports JPG, PNG, HEIC, SVG, etc.)",
+            settings: "Settings",
             imgAdj: "3. Image Adjustments",
             hue: "Hue",
             sat: "Saturation",
@@ -1583,6 +1586,7 @@ body.dark-mode::after {
             copyClipboard:"Copy to clipboard",
             msgCopied: "Copied",
             saveHint: "If you select PNG, you can save the converted pixel art image.<br>If you select CSV, you can save the data for use with the Automatic Drawing Tool.",
+            preview: "Preview",
             sheetSingle: "Sheet {0}",
             sheetRange: "Sheets {0} - {1}",
             fileInfo: "File Name:",
