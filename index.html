@@ -1066,7 +1066,7 @@ body.dark-mode::after {
             </fieldset>
 
             <fieldset class="fieldset">
-                <p class="section-title" data-i18n="texCount">テクスチャ枚数 <span style="font-size: 12px; font-weight: normal; color: #666;" data-i18n="texSub">(1枚 = 64×64ドット)</span></p>
+                <p class="section-title" data-i18n="texCount">テクスチャ枚数</p>
                 
                 <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 10px;">
                     <div class="slider-container" style="margin: 0;">
@@ -1364,9 +1364,9 @@ body.dark-mode::after {
                             <input type="range" id="scaleFactor" class="slider" min="1" max="16" value="1">
                         </div>
                         <button type="button" id="inc-scaleFactor" class="material-symbols-rounded slider-btn">add</button>
-                    </div>
+                    </div>                
                 </div>
-                
+                 <div class="hint-box" data-i18n="scaleHint" style="margin: 10px 0 -5px 0;"></div> 
             </div>
             
                 <div id="pngOptions">
@@ -1493,7 +1493,7 @@ body.dark-mode::after {
             checkerAlpha: "市松模様で半透明風にする",
             scale: "拡大率",
             scaleUnit: "倍",
-            scaleHint: "拡大倍率を上げると、PNG保存時にドットがぼやけずくっきりとします",
+            scaleHint: "拡大倍率を上げるとドットがぼやけずくっきりとします",
             saveTitle: "保存メニュー",
             save: "保存",
             saveFormat: "保存形式",
@@ -1537,7 +1537,7 @@ body.dark-mode::after {
         },
         en: {
             title: "GBG Texture Converter <br><span style='font-size: 0.65em; font-weight: normal; '>～はじプロドット絵変換ツール～</span>",
-            welcomeTitle: "Convert Images to GBG Textures Instantly",
+            welcomeTitle: "Convert Images to GBG Textures",
             welcomeSub: "You can easily create textures for Game Builder Garage",
             themeLabel: "Theme",
             themeSys: "System",
@@ -1574,7 +1574,7 @@ body.dark-mode::after {
             checkerAlpha: "Make semi-transparent with checkerboard pattern",
             scale: "Scale",
             scaleUnit: "x",
-            scaleHint: "Increasing the scale factor makes the pixels sharp and not blurry when saving as PNG.",
+            scaleHint: "Increasing the scale factor makes the pixels sharp and not blurry.",
             save: "Save",
             saveTitle: "Save Menu",
             saveFormat: "Save Format",
