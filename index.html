@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GBG Texture Converter</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=add,arrow_back_ios_new,check,close,content_copy,download,remove,upload" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=add,arrow_back_ios_new,check,close,content_copy,download,remove,settings,upload" />
     <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
    
@@ -18,12 +18,11 @@
         body {
             --slider-fill: #0088ff;
             --slider-bg: #d1d1d6;
-
             font-family: '-apple-system', 'BlinkMacSystemv', 'Noto Sans JP', sans-serif;
-            background-color: #f4f4f8;
+            background-color: #fbfbfd;
             color: #000;
             margin: 0;
-            padding: 20px;  
+            padding: 80px 16px 20px 16px; /* トップバーの高さ分余白を確保 */
             transition: background-color 0.1s;
         }
         html {
@@ -35,100 +34,210 @@
         a { color: #0088ff; }
         
         /* =========================================
-           パネルレイアウト
+           トップナビゲーションバー
         ========================================= */
-        .header-controls {
+        .top-nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(244, 244, 248, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
         }
-        .header-title-row {
+        body.dark-mode .top-nav-bar {
+            background-color: rgba(30, 30, 33, 0.8);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            border-bottom: 1px solid #333;
+        }
+        .top-bar-controls {
             display: flex;
+            flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5px;
-            gap: 10px;
+            padding: 10px 15px;
+            gap: 8px;
         }
-        .panel-header h2 {
-            color: #000;
-            margin: 0;
-            font-weight: bold;
-            font-size: 28px;
-            line-height: 1.2;
-        }
-        #langToggleBtn {
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 1; /* 追加 */
+            gap: 20px; /* 追加 */
             width: auto;
-            min-width: 80px;
-            padding: 10px 16px;
-            margin: 0;
-            font-size: 13px;
+            position: relative;
+            padding-left: 50px;
+            padding-right: 0; /* 変更: 50px -> 0 */
         }
-
-        /* --- タブ切り替えUI --- */
-        .tab-container {
+        .top-bar-left h2 {
+            margin: 0;
+            font-size: 20px;
+            line-height: 1.2;
+            color: #000;
+            font-weight: bold;
+            text-align: center;
+            flex-shrink: 0; /* 追加 */
+        }
+        .top-bar-left .back-btn {
+            position: absolute;
+            left: 0;
+        }        
+        /* ボタンをまとめるためのラッパーを追加 */
+        .action-buttons-wrap {
             display: flex;
             gap: 10px;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 20px;
-            margin-left: -20px;
-            margin-right: -20px;
-            padding-left: 20px;
-            padding-right: 20px;
-        }
-
-        .tab-btn {
-            background: transparent;
-            color: #666;
-            border: none;
-            padding: 10px 20px;
-            width :auto;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            border-radius: 0;
-            transition: all 0.2s;
-            box-shadow: none !important;
-        }
-        .tab-btn:hover:not(.active) {
-            color: #333;
-        }
-        .tab-btn.active {
-            color: #0088ff;
-            border-bottom: 3px solid #0088ff;
-            transform: none;
-        }
-        .tab-container .tab-btn:not(:disabled):active {
-            transform: none !important;
-            background-color: transparent !important;
+            align-items: center;
+            flex-wrap: wrap;
         }
         
-        .tab-content {
-            display: none !important;
+        /* =========================================
+           戻るボタン
+        ========================================= */
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            margin: 0;
+            padding: 0;
+            flex-shrink: 0;
+            font-size: 24px;
         }
-        .tab-content.active {
-            display: flex !important;
+        
+        /* =========================================
+           設定メニュー (ドロップダウン)
+        ========================================= */
+        .menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            margin: 0;
+            padding: 0;
+            flex-shrink: 0;
+        }
+        @media (hover: hover) { .menu-btn:hover { opacity: 0.7; } }
+        .menu-btn:active { transform: scale(0.98); }
+        body.dark-mode .menu-btn { color: #e0e0e0; }
+
+        .settings-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 200px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            border: 1px solid #e3e3e3;
+        }
+        .settings-dropdown.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        body.dark-mode .settings-dropdown {
+            background: #202022;
+            border-color: #444;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            color: #e0e0e0;
+        }
+        .settings-dropdown-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 14px;
+        }
+        #langToggleBtn {
+            width: 115px;
+            padding: 8px 12px;
+            margin: 0;
+            font-size: 14px;
+        }
+        /* レスポンシブ対応 (モバイル表示) */
+        @media (max-width: 767px) {
+            body { padding-top: 150px; }
+            /* ▼ この1行を追加（画像選択前の余白を小さくする） */
+            body:not(.has-image-state) { padding-top: 80px; }
+            .top-bar-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .top-bar-left { 
+                flex-direction: column; /* 縦並びに変更 */
+                gap: 10px;
+                justify-content: center; 
+                margin-bottom: 5px; 
+                width: 100%;
+                padding-left: 0;
+                padding-right: 0;
+            }
+            .top-bar-left h2 {
+                text-align: center;
+                margin: 0 45px;
+            }
+            .top-bar-left .back-btn {
+                top: 0;
+                transform: none;
+            }
+            .action-buttons-wrap {
+                width: 100%;
+                justify-content: center;
+            }
+            .top-bar-right { 
+                position: absolute;
+                top: 10px;
+                right: 15px;
+            }
+            .settings-dropdown {
+                top: 50px;
+                right: 0;
+            }
+            #selectImageBtn, #openSaveModalBtn { 
+                flex: 1; 
+                display: flex; 
+                justify-content: center; 
+                align-items: center;
+                min-width: 140px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .top-bar-left h2 { font-size: 18px; }
         }
          
-        .panel-body {
+     /*   .panel-body {
             background: #fafafc;
             border-radius: 24px;
             border: 2px solid #fff;
             box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            padding: 20px;
+            padding: 14px;
             box-sizing: border-box;
             width: 100%;
         }
-
-        #tab-main {
+*/
+        #main-content {
+            display: flex;
             flex-direction: row;
             align-items: flex-start;
             gap: 20px;
-        }
-
-        #tab-help {
-            flex-direction: column;
-            padding: 30px;
         }
 
         .panel-controls {
@@ -156,31 +265,22 @@
             display: flex;
             flex-direction: column;
             position: sticky;
-            top: 20px;
+            top: 150px;
             align-self: flex-start;
-            max-height: 85vh;
+            max-height: calc(100vh - 170px);
             overflow-y: auto;
         }
 
         @media (max-width: 767px) {
-            .header-title-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .header-controls {
-                align-self: flex-end;
-                width: 100%;
-                justify-content: flex-end;
-                margin-top: 5px;
-            }
-            #tab-main { 
+            #main-content { 
                 display: flex;
                 flex-direction: column; 
             }
             .panel-preview { 
-            order: -1;
-            position: static; 
-        } 
+                order: -1;
+                position: static; 
+                max-height: none;
+            } 
             .panel-divider { order: 0; }
             .panel-controls { order: 1; }
             
@@ -192,7 +292,6 @@
             
             .panel-controls, .panel-preview {
                 max-width: 100%;
-                max-height: none; 
                 width: 100%;
                 padding: 0;
                 overflow-y: visible;
@@ -204,7 +303,7 @@
             border-radius: 0;
             max-width: none;
             padding: 15px 20px 0 20px;
-            margin: 5px -20px 0 -20px;
+            margin: 10px -16px 0 -16px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -215,12 +314,35 @@
             padding-top: 0;
             margin-top: 0;
         }
-
+        /* エクストラ設定内の最初のfieldsetにはボーダーを適用する */
+#extraSettingsBlock .fieldset:first-of-type {
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+    margin-top: 10px;
+}
         .section-title {
             margin: 0;
             font-size: 16px;
             font-weight: bold;
-            color: #333;
+            color: #000;
+        }
+        
+        /*「設定」タイトルの余白調整 */
+.section-title.settings {
+    font-size: 18px;
+    margin-top: 10px;
+    padding-bottom: 20px;
+}
+@media (max-width: 767px) {
+    .section-title.settings {
+        margin-top: -22px;
+    }
+}
+        .about-title {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+        margin-top: 0;
+        margin-bottom: 8px;
         }
 
         /* =========================================
@@ -239,13 +361,14 @@
             cursor: pointer;
             transition: all 0.1s;
             text-align: center;
+            white-space: nowrap; /* ボタン内のテキストが改行されないようにする */
         }
         @media (hover: hover) { 
             button:not(:disabled):hover { opacity: 0.7; } 
         }
         button:not(:disabled):active {
            filter: brightness(0.9);
-            transform: scale(0.95);
+            transform: scale(0.98);
         }
         button:disabled {
             cursor: not-allowed;
@@ -263,100 +386,68 @@
 
         .btn-blue:not(:disabled):active {
            filter: brightness(1.2);
-            transform: scale(0.95);
+            transform: scale(0.98);
         }
 
         /* =========================================
-   UIパーツ：ドラッグ＆ドロップ
-========================================= */
-.drop-zone {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    border-radius: 24px;
-    padding: 30px 20px;
-    box-sizing: border-box; 
-    text-align: center;
-    background-color: #fff;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-@media (hover: hover) { 
-    .drop-zone:hover { 
-     opacity: 0.7;
-    } 
-}
-
-.drop-zone p {
-    margin: 0;
-    font-weight: bold;
-    color: #000;
-    pointer-events: none;
-    font-size: 16px;
-}
-
-.drop-zone span {
-    font-size: 14px;
-    font-weight: normal;
-    color: #666;
-    pointer-events: none;
-}
-
-        /* =========================================
-           戻るボタン (左上)
+           UIパーツ：ドラッグ＆ドロップ
         ========================================= */
-        .back-btn {
+        .drop-zone {
             display: flex;
+            flex-direction: column;
+            justify-content: center;    
             align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            border-radius: 24px;
+            padding: 30px 20px;
+            box-sizing: border-box; 
+            text-align: center;
+            background-color: #fff;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        @media (hover: hover) { 
+            .drop-zone:hover { 
+             opacity: 0.7;
+            } 
+        }
+
+        .drop-zone p {
             margin: 0;
-            padding: 0;
-            flex-shrink: 0;
-            font-size: 28px;
-            position: fixed;
-            top: 16px;
-            left: 16px;
-            z-index: 1000;
-            background-color: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-weight: bold;
+            color: #000;
+            pointer-events: none;
+            font-size: 16px;
         }
 
-        body.has-image-state .header-title-row > div:first-child h2 {
-            margin-left: 48px;
+        .drop-zone span {
+            font-size: 14px;
+            font-weight: normal;
+            color: #666;
+            pointer-events: none;
         }
-
-        body.dark-mode .back-btn {
-            background-color: rgba(49, 49, 51, 0.8);
-        }
-
         /* =========================================
            表示切り替え用 (has-image-state)
         ========================================= */
-        body:not(.has-image-state) .back-btn { display: none !important; }
-        body:not(.has-image-state) .bottom-action-bar { display: none !important; }
+        body:not(.has-image-state) .back-btn,
+body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
+
         body:not(.has-image-state) .controls-wrap,
         body:not(.has-image-state) .panel-divider,
         body:not(.has-image-state) .panel-preview { display: none !important; }
 
         body.has-image-state #dropZoneFieldset { display: none !important; }
-        body.has-image-state #tab-main.panel-body { margin-bottom: 270px; }
+        body.has-image-state #about-section { display: none !important; } /* 画像選択後は非表示 */
+        body.has-image-state #main-content.panel-body { margin-bottom: 20px; }
 
-        body:not(.has-image-state) #tab-main {
+        body:not(.has-image-state) #main-content {
             justify-content: center;
             align-items: center;
             min-height: 55vh;
         }
         body:not(.has-image-state) .panel-controls {
-            max-width: 500px;
+            max-width: 800px;
             width: 100%;
             margin: 0 auto;
         }
@@ -371,48 +462,6 @@
             font-size: 20px;
         }
 
-        /* =========================================
-           固定アクションバー (新規追加)
-        ========================================= */
-        .bottom-action-bar {
-            position: fixed;
-            bottom: 24px;
-            left: 0;
-            right: 0;
-            margin: 0 auto;
-            width: 88%;
-            max-width: 600px;
-            background-color: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border-radius: 64px;
-            padding: 12px 16px;
-            box-sizing: border-box;
-            display: none; 
-            gap: 15px;
-            z-index: 1000;
-            justify-content: center;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-        }
-        @supports (padding-bottom: env(safe-area-inset-bottom)) {
-            .bottom-action-bar {
-                padding-bottom: calc(12px + env(safe-area-inset-bottom));
-            }
-        }
-        .bottom-action-bar.active {
-            display: flex;
-        }
-        .bottom-action-bar button {
-            flex: 1;
-            max-width: 300px;
-            padding: 14px 10px;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-        }
-
         /* iOS風トグルスイッチ */
         .checkbox-label input[type="checkbox"] {
             -webkit-appearance: none;
@@ -420,7 +469,7 @@
             position: relative;
             width: 52px;
             height: 30px;
-            background-color: #e9e9ea;
+            background-color: #d1d1d6;
             border-radius: 16px;
             cursor: pointer;
             outline: none;
@@ -438,7 +487,7 @@
             background-color: #fff;
             top: 2px;
             left: 2px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s ease;
         }
         .checkbox-label input[type="checkbox"]:checked {
@@ -599,21 +648,20 @@
         
         .val-display {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 5px 12px;
             border: 1px solid #e3e3e3;
             background-color: #fff;
             border-radius: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             cursor: pointer;
             font-size: 14px; 
-            min-width: 24px;
+            min-width: 36px;
             text-align: center;
             transition: background-color 0.1s;
             user-select: none;
         }
         @media (hover: hover) { .val-display:hover { opacity: 0.7; } }
-        .val-display:active { filter: brightness(0.85);
-            transform: scale(0.9); }
+        .val-display:active { filter: brightness(0.85); transform: scale(0.9); }
 
         .slider-track {
             position: absolute;
@@ -641,8 +689,8 @@
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             border: 1px solid #e3e3e3;
             border-radius: 28px;
             background-color: #fff;          
@@ -746,13 +794,10 @@
             box-sizing: border-box;
             margin-bottom: 10px;
             color: #000;
-        }
-        
-        .about-text strong { font-size: 18px; }
-        
+        }       
+        .about-text strong { font-size: 16px; }      
         .info-panel div { display: flex; justify-content: flex-start; }
-        .info-panel strong { width: 115px; color: #444; font-weight: bold; }
-        
+        .info-panel strong { width: 115px; color: #444; font-weight: bold; }      
         .hint-box {
             font-size: 14px;
             line-height: 1.5;
@@ -768,26 +813,41 @@
         /* =========================================
            モーダル（テンキー ＆ パレット ＆ アラート）
         ========================================= */
+        /* 背景スクロールをロックするためのクラスを追加 */
+        body.modal-open {
+            overflow: hidden;
+        }
+
         .numpad-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: transparent !important;
+            background-color: rgba(0, 0, 0, 0.4) !important; /* 透明ハックを削除し背景色を設定 */
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* centerから変更し、上揃えに */
+            padding: 40px 0; /* 上下に余白を持たせる */
+            box-sizing: border-box;
+            overflow-y: auto; /* はみ出した時にスクロール可能にする */
             z-index: 9999;
         }
+        
+        /* ダークモード用の暗転背景色を追加 */
+        body.dark-mode .numpad-overlay {
+            background-color: rgba(0, 0, 0, 0.6) !important;
+        }
+
         .numpad-modal {
             background-color: #fafafc;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15), 0 0 0 100vmax rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15); /* 100vmaxのハックを削除 */
             border-radius: 24px;
             box-sizing: border-box;
             animation: numpadPop 0.15s ease-out;
             max-width: 95vw;
             overflow: hidden;
+            margin: auto; /* flex-startと組み合わせて、通常時は中央寄せにする */
         }
 
         @keyframes numpadPop {
@@ -844,47 +904,37 @@
         .num-btn.round-btn { width: 60px; height: 60px; border-radius: 30px; }
         .num-btn.rect-btn { width: 100px; height: 60px; border-radius: 30px; font-size: 14px; }
         
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 5px;
-            margin:0 -12px ;
-        }
-        .btn-group button {
-            flex: 1;
-            padding: 12px 8px;
-            min-width: 45%;
+        #saveFileNameInput {
+            border-color: #e3e3e3;
         }
 
         /* =========================================
-   画面全体のドラッグ＆ドロップ用ハイライト
-========================================= */
-body::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 136, 255, 0.15); /* 全体を少し青くする */
-    
-    box-sizing: border-box;
-    z-index: 99999;
-    pointer-events: none; /* マウスイベントを邪魔しないようにする */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s, visibility 0.2s;
-}
+           画面全体のドラッグ＆ドロップ用ハイライト
+        ========================================= */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 136, 255, 0.15); 
+            box-sizing: border-box;
+            z-index: 99999;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+        }
 
-body.dragover-active::after {
-    opacity: 1;
-    visibility: visible;
-}
+        body.dragover-active::after {
+            opacity: 1;
+            visibility: visible;
+        }
 
-body.dark-mode::after {
-    background-color: rgba(0, 145, 255, 0.15);
-}
+        body.dark-mode::after {
+            background-color: rgba(0, 145, 255, 0.15);
+        }
 
         /* =========================================
            ダークモード用スタイル
@@ -893,16 +943,12 @@ body.dark-mode::after {
             --slider-fill: #0091ff;
             --slider-bg: #333;
 
-            background-color: #000;
+            background-color: #1b1b1d;
             color: #e0e0e0;
         }
-        body.dark-mode .panel-body {
-            background-color: #1b1b1d;
-            border-color: #333;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-        }
-        body.dark-mode .panel-header h2 { color: #e0e0e0; }
-        body.dark-mode .panel-header h2 span { color: #aaa !important; }
+        
+        body.dark-mode .top-bar-left h2 { color: #e0e0e0; }
+        body.dark-mode .top-bar-left h2 span { color: #aaa !important; }
         body.dark-mode .section-title,
         body.dark-mode .info-panel,
         body.dark-mode .numpad-header h3,
@@ -911,14 +957,9 @@ body.dark-mode::after {
         body.dark-mode .custom-select-trigger,
         body.dark-mode .custom-option,
         body.dark-mode button,
-        body.dark-mode .drop-zone p {
+        body.dark-mode .drop-zone p,
+        body.dark-mode #saveFileNameInput {
             color: #f4f4f4;
-        }
-        body.dark-mode .tab-btn { color: #888; background: transparent; border-bottom-color: #000;}
-        body.dark-mode .tab-btn:hover:not(.active) { color: #bbb; }
-        body.dark-mode .tab-btn.active {
-            color: #0091ff;
-            border-bottom-color: #0091ff;
         }
         body.dark-mode a { color: #0091ff; }
         
@@ -929,7 +970,8 @@ body.dark-mode::after {
         body.dark-mode .val-display,
         body.dark-mode .num-btn,
         body.dark-mode .info-panel,
-        body.dark-mode .hint-box {
+        body.dark-mode .hint-box,
+        body.dark-mode #saveFileNameInput {
             background-color: #313133;
             border-color: #444;
         }
@@ -955,13 +997,10 @@ body.dark-mode::after {
         body.dark-mode button:disabled {
             background-color: #222;
             color: #666;
+            border-color: #444;
         }
         
         body.dark-mode .info-panel {
-            color: #e0e0e0;
-        }
-
-        body.dark-mode .header-controls span {
             color: #e0e0e0;
         }
         
@@ -972,21 +1011,20 @@ body.dark-mode::after {
         body.dark-mode .slider::-webkit-slider-thumb { background-color: #e0e0e0; border-color: #666; }
         
         body.dark-mode #numpad-display.is-initial { color: #777 !important; }
-        @media (hover: hover) { body.dark-mode body.dark-mode .slider-btn:hover { background-color: #3a3a3a; } }
+        @media (hover: hover) { body.dark-mode .slider-btn:hover { background-color: #3a3a3a; } }
         
         body.dark-mode .numpad-modal { 
             background-color: #1b1b1d;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 100vmax rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4); /* 100vmaxを削除 */
         }
-
         body.dark-mode .color-cell { border-color: #555; }
         body.dark-mode .preview-label { color: #bbb; }
         body.dark-mode .preview-box:nth-child(2) .preview-label { color: #4da3ff; }
         
         body.dark-mode .panel-divider { background-color: #444; }
-        body.dark-mode .tab-container { border-bottom-color: #444; }
         body.dark-mode .fieldset { border-top-color: #444; }
-        
+        body.dark-mode #extraSettingsBlock .fieldset:first-of-type { border-top-color: #444; }
+
         body.dark-mode .checkbox-label input[type="checkbox"] { background-color: #444; }
         body.dark-mode .checkbox-label input[type="checkbox"]:checked { background-color: #34c759; }
         
@@ -999,62 +1037,71 @@ body.dark-mode::after {
         }
         body.dark-mode .info-panel strong { color: #ccc; }
         body.dark-mode #custom-alert-message { color: #e0e0e0 !important; }
-
-        body.dark-mode .bottom-action-bar {
-            background-color: rgba(27, 27, 29, 0.4);
-            border-top-color: #444;      
-        }
-        body.dark-mode #saveFileNameInput {
-            background-color: #313133;
-            border-color: #444;
-            color: #f4f4f4;
-        }
     </style>
 </head>
 <body ontouchstart="">
 
-<div class="panel-header">
-    <div class="header-title-row">
-        <div style="display: flex; align-items: center;">
-            <h2 data-i18n="title">GBG Texture Converter<br><span style='font-size: 0.6em; font-weight: normal; color: #666;'>～はじプロドット絵変換ツール～</span></h2>
-        </div>
-        <div class="header-controls">
-        <button type="button" id="backToHomeBtn" class="back-btn"><span class="material-symbols-rounded" style="position: relative; left: -1px;">arrow_back_ios_new</span></button>
-            <span data-i18n="themeLabel" style="font-size: 14px; font-weight: bold; white-space: nowrap;">テーマ</span>
-            <div style="width: 130px;">
-                <select id="themeSelect" class="styled-select">
-                    <option value="system" data-i18n="themeSys">システム</option>
-                    <option value="light" data-i18n="themeLight">ライト</option>
-                    <option value="dark" data-i18n="themeDark">ダーク</option>
-                </select>
+<div class="top-nav-bar">
+    <div class="top-bar-controls">
+        <div class="top-bar-left">
+            <button type="button" id="backToHomeBtn" class="back-btn"><span class="material-symbols-rounded" style="position: relative; left: -1px;">arrow_back_ios_new</span></button>
+            <h2 data-i18n="title">GBG Texture Converter</h2>
+            
+            <div class="action-buttons-wrap">
+                <button type="button" id="selectImageBtn" style="width: 140px"><span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">upload</span><span style="font-weight: bold;" data-i18n="selImgBtn">画像を選択</span></button>
+                <button type="button" id="openSaveModalBtn" class="btn-blue" style="width: 140px"><span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">download</span><span style="font-weight: bold;" data-i18n="openSaveModal">保存</span></button>
             </div>
-            <button id="langToggleBtn" data-i18n="langBtn">English</button>
         </div>
+        <div class="top-bar-right">
+            <button type="button" id="settingsMenuBtn" class="menu-btn"><span class="material-symbols-rounded">settings</span></button>
+            
+            <div id="settingsDropdown" class="settings-dropdown">
+                <div class="settings-dropdown-item">
+                    <span data-i18n="themeLabel">テーマ</span>
+                    <div style="width: 115px">
+                        <select id="themeSelect" class="styled-select">
+                            <option value="system" data-i18n="themeSys">システム</option>
+                            <option value="light" data-i18n="themeLight">ライト</option>
+                            <option value="dark" data-i18n="themeDark">ダーク</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="settings-dropdown-item">
+                    <span data-i18n="langLabel">言語</span>
+                    <button id="langToggleBtn" data-i18n="langBtn">English</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>       
     </div>
 </div>
-    <div class="tab-container">
-        <button class="tab-btn active" data-target="tab-main" data-i18n="tabMain">メインツール</button>
-        <button class="tab-btn" data-target="tab-help" data-i18n="tabHelp">使い方・ヘルプ</button>
-    </div>
+</div>
 
-<div class="panel-body tab-content active" id="tab-main">
+<div class="panel-body" id="main-content">
     <div class="panel-controls">
         <fieldset class="fieldset" id="dropZoneFieldset">
             <div style="text-align: center; margin-bottom: 16px;">
                 <span data-i18n="welcomeTitle" style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 6px;">画像をはじプロ仕様のドット絵に変換</span>
-                <span data-i18n="welcomeSub" style="font-size: 15px; display: block; max-width: 420px; margin: 0 auto; line-height: 1.4;">お気に入りの写真やイラストをアップロードするだけで、簡単にゲーム内で使えるテクスチャデータを作成できます。</span>
+                <span data-i18n="welcomeSub" style="font-size: 15px; display: block; max-width: 420px; margin: 0 auto; line-height: 1.4;">はじプロ用のテクスチャを簡単に作成できます</span>
             </div>
-            <h3 class="section-title"data-i18n="selImg">画像を選択</h3>
+            <h3 class="section-title" data-i18n="selImg">画像を選択</h3>
             <label id="dropZone" class="drop-zone">
-    <span class="material-symbols-rounded" style="font-size: 48px; color: var(--slider-fill); margin-bottom: 12px; margin-top: -12px; display: block;">upload</span>
-    <p data-i18n="drop" style="font-size: 18px;">画像をドロップするか、クリックして選択</p>
-    <span data-i18n="imgHint" style="display: block; margin-top: 8px;">(png, jpg, webp, heic など)</span>
-    <input type="file" id="imageInput" accept="image/*,.heic,.HEIC" style="display: none;">
-</label>
+                <span class="material-symbols-rounded" style="font-size: 48px; color: var(--slider-fill); margin-bottom: 12px; margin-top: -12px; display: block;">upload</span>
+                <p data-i18n="drop" style="font-size: 18px;">画像をドロップするか、クリックして選択</p>
+                <span data-i18n="imgHint" style="display: block; margin-top: 8px;">(png, jpg, webp, heic など)</span>
+                <input type="file" id="imageInput" accept="image/*,.heic,.HEIC" style="display: none;">
+            </label>
         </fieldset>
 
+        <div id="about-section" style="margin-top: 30px; margin-bottom: 20px;">
+            <h3 class="about-title" data-i18n="aboutTitle">このツールについて</h3>
+            <div style="line-height: 1.8; font-size: 15px; padding-left: 5px;" data-i18n="aboutText" class="about-text">ここに説明
+            </div>
+        </div>
+
         <div class="controls-wrap" style="margin-top: -2px;">
-            <h3 class="section-title settings" data-i18n="settings"style="padding-bottom: 20px; margin-top:-12px; font-size: 18px;">設定</h3>
+            <h3 class="section-title settings" data-i18n="settings">設定</h3>
             <fieldset class="fieldset">
                 <h3 class="section-title" data-i18n="fitMode">画像のフィット方法</h3>
                 <div style="margin-top: 10px; margin-bottom: 10px;">
@@ -1199,6 +1246,155 @@ body.dark-mode::after {
                     </label>
                 </div>
             </fieldset>
+<fieldset class="fieldset">
+    <h3 class="section-title" data-i18n="extSet">6. エクストラ設定 (AGTD2)</h3>
+    <div style="margin-top: 10px;">
+        <label class="checkbox-label" style="display: flex; align-items: center;">
+            <span style="font-size: 15px;" data-i18n="agtd2Switch">AGTD2用の設定とCSVエンコードを有効にする</span>
+            <input type="checkbox" id="enableExtraCb">
+        </label>
+    </div>
+    <div class="hint-box" data-i18n="exSub">AGTD2を使って自動描画するときはオンにしてください<br>それ以外のときはオフにしてください</div> 
+    
+    <div id="extraSettingsBlock" style="display: none; flex-direction: column; width: 100%;">
+        
+        <fieldset class="fieldset">
+            <h4 class="section-title" style="margin-bottom: 10px;" data-i18n="textureFaces">貼り付ける面</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 14px;">
+                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">X-</span><input type="checkbox" id="ex_faceXm" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Y-</span><input type="checkbox" id="ex_faceYm" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Z-</span><input type="checkbox" id="ex_faceZm" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">X+</span><input type="checkbox" id="ex_faceXp" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Y+</span><input type="checkbox" id="ex_faceYp" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Z+</span><input type="checkbox" id="ex_faceZp" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span data-i18n="xCenter" style="margin-right: 4px;">X中央</span><input type="checkbox" id="ex_faceXc" style="margin-right: 0;"></label>          
+                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span data-i18n="yCenter" style="margin-right: 4px;">Y中央</span><input type="checkbox" id="ex_faceYc" style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span data-i18n="zCenter" style="margin-right: 4px;">Z中央</span><input type="checkbox" id="ex_faceZc" style="margin-right: 0;"></label>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+            <h4 class="section-title" style="margin-bottom: 10px;" data-i18n="textureSize">おおきさ</h4>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="slider-container" style="margin: 0;">
+                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                        <span>X</span>
+                        <span><span id="val-ex_sizex" class="val-display">0.8</span>m</span>
+                    </p>
+                    <div class="slider-row">
+                        <button type="button" id="dec-ex_sizex" class="material-symbols-rounded slider-btn">remove</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-track" id="track-ex_sizex"></div>
+                            <input type="range" id="ex_sizex" class="slider" min="0.1" max="10" step="any" data-step="0.1" value="0.8">
+                        </div>
+                        <button type="button" id="inc-ex_sizex" class="material-symbols-rounded slider-btn">add</button>
+                    </div>
+                </div>
+                <div class="slider-container" style="margin: 0;">
+                    <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                        <span>Y</span>
+                        <span><span id="val-ex_sizey" class="val-display">0.8</span>m</span>
+                    </p>
+                    <div class="slider-row">
+                        <button type="button" id="dec-ex_sizey" class="material-symbols-rounded slider-btn">remove</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-track" id="track-ex_sizey"></div>
+                            <input type="range" id="ex_sizey" class="slider" min="0.1" max="10" step="any" data-step="0.1" value="0.8">
+                        </div>
+                        <button type="button" id="inc-ex_sizey" class="material-symbols-rounded slider-btn">add</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+            <h4 class="section-title" style="margin-bottom: 10px;" data-i18n="texturePosition">位置</h4>
+            <div style="display: flex; flex-direction: column; gap: 15px; font-size: 14px;">
+                <div class="slider-container" style="margin: 0;">
+                    <div style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span style="font-size: 14px; width: 12px;">X</span>
+                            <label class="checkbox-label" style="display: flex; align-items: center; margin: 0; font-size: 13px;">
+                                <span data-i18n="enable" style="margin-right: 8px;">有効</span>
+                                <input type="checkbox" id="ex_en_posx" style="margin-right: 0;">
+                            </label>
+                        </div>
+                        <span><span id="val-ex_posx" class="val-display">0</span>m</span>
+                    </div>
+                    <div class="slider-row">
+                        <button type="button" id="dec-ex_posx" class="material-symbols-rounded slider-btn">remove</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-track" id="track-ex_posx"></div>
+                            <input type="range" id="ex_posx" class="slider" min="-100" max="100" step="any" data-step="0.1" value="0">
+                        </div>
+                        <button type="button" id="inc-ex_posx" class="material-symbols-rounded slider-btn">add</button>
+                    </div>
+                </div>
+                
+                <div class="slider-container" style="margin: 0;">
+                    <div style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span style="font-size: 14px; width: 12px;">Y</span>
+                            <label class="checkbox-label" style="display: flex; align-items: center; margin: 0; font-size: 13px;">
+                                <span data-i18n="enable" style="margin-right: 8px;">有効</span>
+                                <input type="checkbox" id="ex_en_posy" style="margin-right: 0;">
+                            </label>
+                        </div>
+                        <span><span id="val-ex_posy" class="val-display">0</span>m</span>
+                    </div>
+                    <div class="slider-row">
+                        <button type="button" id="dec-ex_posy" class="material-symbols-rounded slider-btn">remove</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-track" id="track-ex_posy"></div>
+                            <input type="range" id="ex_posy" class="slider" min="-100" max="100" step="any" data-step="0.1" value="0">
+                        </div>
+                        <button type="button" id="inc-ex_posy" class="material-symbols-rounded slider-btn">add</button>
+                    </div>
+                </div>
+                
+                <div class="slider-container" style="margin: 0;">
+                    <div style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span style="font-size: 14px; width: 12px;">Z</span>
+                            <label class="checkbox-label" style="display: flex; align-items: center; margin: 0; font-size: 13px;">
+                                <span data-i18n="enable" style="margin-right: 8px;">有効</span>
+                                <input type="checkbox" id="ex_en_posz" style="margin-right: 0;">
+                            </label>
+                        </div>
+                        <span><span id="val-ex_posz" class="val-display">0</span>m</span>
+                    </div>
+                    <div class="slider-row">
+                        <button type="button" id="dec-ex_posz" class="material-symbols-rounded slider-btn">remove</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-track" id="track-ex_posz"></div>
+                            <input type="range" id="ex_posz" class="slider" min="-100" max="100" step="any" data-step="0.1" value="0">
+                        </div>
+                        <button type="button" id="inc-ex_posz" class="material-symbols-rounded slider-btn">add</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+            <h4 class="section-title" style="margin-bottom: 10px;" data-i18n="textureRotation">回転</h4>
+            <div class="slider-container" style="margin: 0;">
+                <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                    <span></span>
+                    <span><span id="val-ex_rot" class="val-display">0</span>°</span>
+                </p>
+                <div class="slider-row">
+                    <button type="button" id="dec-ex_rot" class="material-symbols-rounded slider-btn">remove</button>
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="track-ex_rot"></div>
+                        <input type="range" id="ex_rot" class="slider" min="-180" max="180" step="any" data-step="1.0" value="0">
+                    </div>
+                    <button type="button" id="inc-ex_rot" class="material-symbols-rounded slider-btn">add</button>
+                </div>
+            </div>
+        </fieldset>
+        
+    </div>
+</fieldset>
         </div>
     </div>
 
@@ -1221,7 +1417,7 @@ body.dark-mode::after {
             <div class="preview-box">
                 <div class="preview-label" data-i18n="prevBefore">変換前（元の画像）</div>
                 <div class="canvas-wrapper" title="画像をドラッグ＆ドロップで保存できます">
-                    <img id="originalImg" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="256" height="256" style="image-rendering: auto; max-width: 100%; height: auto; display: block;">
+                    <img id="originalImg" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="256" height="256" style="image-rendering: pixelated; max-width: 100%; height: auto; display: block;">
                 </div>
             </div>
 
@@ -1255,19 +1451,6 @@ body.dark-mode::after {
     </div>
 </div>
 
-<div class="panel-body tab-content" id="tab-help">
-    <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 0; margin-bottom: 6px;" data-i18n="aboutTitle">このツールについて</h3>
-    <ol style="line-height: 1.8; font-size: 16px; padding-left: 5px;" data-i18n="aboutText" class="about-text">      
-    <p style="font-size: 16px; margin-top: 0;">
-    ここに説明が表示されますよ    
-    </p>       
-    </ol>
-</div>
-
-<div id="bottomActionBar" class="bottom-action-bar active">
-    <button type="button" id="selectImageBtn"><span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">upload</span><span data-i18n="selImgBtn">画像を選択</span></button>
-    <button type="button" id="openSaveModalBtn" class="btn-blue"><span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">download</span><span data-i18n="openSaveModal">ドット絵を保存</span></button>
-</div>
 
 <div id="palette-overlay" class="numpad-overlay" style="display: none;">
     <div class="numpad-modal" style="max-width: 95vw;">
@@ -1341,14 +1524,14 @@ body.dark-mode::after {
             
             <div style="margin-bottom: 15px; text-align: left;">
                 <p style="margin: 0 0 10px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="saveFileName">ファイル名</p>
-                <input type="text" id="saveFileNameInput" style="width: 100%; padding: 10px 16px; border-radius: 24px; border: 1px solid #e3e3e3; font-size: 16px; font-family: inherit; box-sizing: border-box; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" placeholder="ファイル名を入力">
+                <input type="text" id="saveFileNameInput" style="width: 100%; padding: 10px 16px; border-radius: 24px; font-size: 16px; font-family: inherit; box-sizing: border-box; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" placeholder="ファイル名を入力">
             </div>
             <div style="margin-bottom: 5px; text-align: left;">
                 <p style="margin: 0 0 10px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="saveFormat">保存形式</p>
                 <div style="margin-bottom: 15px;">
                     <select id="saveFormatSelect" class="styled-select">
-                        <option value="png" selected>PNG</option>
-                        <option value="csv">CSV</option>
+                    <option value="csv" selected>CSV</option>
+                        <option value="png">PNG</option>
                     </select>
                 </div>
 <div id="scaleOptions" style="margin-bottom: 5px; text-align: left;">
@@ -1377,17 +1560,55 @@ body.dark-mode::after {
                 </div>
 
                 <div id="csvOptions" style="display: none;">
-    <label class="checkbox-label" style="display: flex; align-items: center;">
-        <span style="font-size: 15px;" data-i18n="csvCombine">5枚ごとに結合</span><input type="checkbox" id="combineCsvCb">
-    </label>
-    
-    <div id="copyRangeContainer" style="display: none; margin-top: 15px; padding-left: 2px;">
-        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="copyTexture">
-            コピーするテクスチャ <span style="font-size: 12px; font-weight: normal; color: #666;">(コピー時のみ)</span>
-        </p>
-        <select id="copyRangeSelect" class="styled-select"></select>
-    </div>
-</div>
+                    <label class="checkbox-label" style="display: flex; align-items: center;">
+                        <span style="font-size: 15px;" data-i18n="csvCombine">5枚ごとに結合</span><input type="checkbox" id="combineCsvCb">
+                    </label>
+                    
+                    <div id="copyRangeContainer" style="display: none; margin-top: 15px; padding-left: 2px;">
+                        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="copyTexture">
+                            コピーするテクスチャ <span style="font-size: 12px; font-weight: normal; color: #666;">(コピー時のみ)</span>
+                        </p>
+                        <select id="copyRangeSelect" class="styled-select"></select>
+                    </div>
+                </div>
+
+                <div id="extraCsvOptions" style="display: none; margin-bottom: 15px; text-align: left;">
+                    <label class="checkbox-label" style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <span style="font-size: 15px;" data-i18n="rangeSpecify">範囲指定</span>
+                        <input type="checkbox" id="extraRangeCb">
+                    </label>
+                    
+                    <div id="extraRangeContainer" style="display: none; flex-direction: column; gap: 10px; padding-left: 2px;">
+                        <div class="slider-container" style="margin: 0;">
+                            <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                                <span data-i18n="rangeStart">開始</span>
+                                <span><span id="val-extraRangeStart" class="val-display">1</span><span data-i18n="sheetSuffix"> 枚目</span></span>
+                            </p>
+                            <div class="slider-row">
+                                <button type="button" id="dec-extraRangeStart" class="material-symbols-rounded slider-btn">remove</button>
+                                <div class="slider-wrapper">
+                                    <div class="slider-track" id="track-extraRangeStart"></div>
+                                    <input type="range" id="extraRangeStart" class="slider" min="1" max="1" value="1">
+                                </div>
+                                <button type="button" id="inc-extraRangeStart" class="material-symbols-rounded slider-btn">add</button>
+                            </div>
+                        </div>
+                        <div class="slider-container" style="margin: 0;">
+                            <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
+                                <span data-i18n="rangeEnd">終了</span>
+                                <span><span id="val-extraRangeEnd" class="val-display">1</span><span data-i18n="sheetSuffix"> 枚目</span></span>
+                            </p>
+                            <div class="slider-row">
+                                <button type="button" id="dec-extraRangeEnd" class="material-symbols-rounded slider-btn">remove</button>
+                                <div class="slider-wrapper">
+                                    <div class="slider-track" id="track-extraRangeEnd"></div>
+                                    <input type="range" id="extraRangeEnd" class="slider" min="1" max="1" value="1">
+                                </div>
+                                <button type="button" id="inc-extraRangeEnd" class="material-symbols-rounded slider-btn">add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -1405,6 +1626,31 @@ body.dark-mode::after {
     let baseFileNameForSave = "pixelart";
     let isFileNameEdited = false;
 
+    // =========================================
+    // スクロールロック用関数 (Safari対策)
+    // =========================================
+    let scrollPosition = 0;
+
+    function lockScroll() {
+        // 現在のスクロール位置を保存
+        scrollPosition = window.pageYOffset;
+        // bodyを固定してスクロールを無効化
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollPosition}px`;
+        document.body.style.width = '100%';
+        document.body.classList.add('modal-open');
+    }
+
+    function unlockScroll() {
+        // 固定を解除
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        // 元のスクロール位置に復元
+        window.scrollTo(0, scrollPosition);
+        document.body.classList.remove('modal-open');
+    }
+    
     // =========================================
     // テーマ（ダーク/ライトモード）設定
     // =========================================
@@ -1455,16 +1701,15 @@ body.dark-mode::after {
     // =========================================
     const i18n = {
         ja: {
-            title: "GBG Texture Converter <br><span style='font-size: 0.65em; font-weight: normal;'>～はじプロドット絵変換ツール～</span>",
+            title: "GBG Texture Converter <br><span style='font-size: 0.7em; font-weight: normal;'>～はじプロドット絵変換ツール～ v1.1</span>",
             welcomeTitle: "画像をはじプロ仕様のドット絵に変換",
             welcomeSub: "はじプロ用のテクスチャを簡単に作成できます",
             themeLabel: "テーマ",
             themeSys: "システム",
             themeLight: "ライト",
             themeDark: "ダーク",
+            langLabel: "言語",
             langBtn: "English",
-            tabMain: "変換ツール",
-            tabHelp: "このツールについて",
             selImg: "画像を選択",
             selImgBtn: "画像を選択",
             drop: "画像をドロップするか、クリックして選択",
@@ -1491,6 +1736,17 @@ body.dark-mode::after {
             dRand: "ランダム",
             dNone: "なし",
             checkerAlpha: "市松模様で半透明風にする",
+            extSet: "6. エクストラ設定(AGTD2)",
+            agtd2Switch: "AGTD2用の設定とCSVエンコードを有効にする",
+            exSub: "AGTD2を使って自動描画するときはオンにしてください<br>v0.7-beta以前のAGTDを使って自動描画するときはオフにしてください",
+            textureFaces: "貼り付ける面",
+            xCenter: "X中央",
+            yCenter: "Y中央",
+            zCenter: "Z中央",
+            textureSize: "おおきさ",
+            textureRotation: "回転",
+            texturePosition: "位置",
+            enable: "有効",
             scale: "拡大率",
             scaleUnit: "倍",
             scaleHint: "拡大倍率を上げるとドットがぼやけずくっきりとします",
@@ -1504,6 +1760,10 @@ body.dark-mode::after {
             copyTexture:"コピーするテクスチャ（コピー時のみ）",        
             copyClipboard:"クリップボードにコピー",
             msgCopied: "コピーしました",
+            rangeSpecify: "範囲指定",
+            rangeStart: "開始",
+            rangeEnd: "終了",
+            sheetSuffix: " 枚目",
             saveHint: "PNGを選ぶと、変換したドット絵の画像を保存できます<br>CSVを選ぶと、変換したドット絵を自動描画ツールで使う用のデータとして保存できます",
             preview: "プレビュー",
             sheetSingle: "{0} 枚目",
@@ -1521,7 +1781,7 @@ body.dark-mode::after {
             showGrid: "64×64グリッド線を表示",
             seamlessCheck: "ループ確認 (2x2)",
             aboutTitle: "このツールについて",
-            aboutText: "<span style='font-size: 16px; margin-top: 0;'>このツールは、画像を「はじめてゲームプログラミング」仕様のドット絵（テクスチャ）に変換するツールです。<br>好きな画像をアップロードするだけで、簡単にはじプロ風のドット絵を作成できます。<br>変換したドット絵は、画像として保存したり、<a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>自動描画ツール</a>を使ってはじプロのゲーム内に取り込んだりできます。<br>画像はすべてブラウザ内で処理され、外部に送信されることはありません。</span><br><br><strong>使い方</strong><ol><li>変換したい画像をアップロード</li><li>ドット絵の大きさや色合いなどの調整</li><li>変換したドット絵をダウンロード(画像として保存するならPNG、自動描画用のテクスチャデータとして保存するならCSV)</li></ol><br><strong>作者</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Githubリポジトリ</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>※良識の範囲内でご使用ください。<br>※このツールはAIを使用して作成されました。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。",
+            aboutText: "<span>このツールは、画像を「はじめてゲームプログラミング」仕様のドット絵（テクスチャ）に変換するツールです。<br>好きな画像をアップロードするだけで、簡単にはじプロ風のドット絵を作成できます。<br>変換したドット絵は、画像として保存したり、それを参考にしてテクスチャを打ったり、CSVデータを保存し自動描画ツール（AGTD2など）を使ってはじプロ内に取り込んだりできます。<br><br>自動描画ツールについての詳しい説明や使い方、ファイルなどはこちらにあります。（Zertさん作成）<br><a href='https://github.com/zertolurian/gbg-texturetools' target='_blank'>https://github.com/zertolurian/gbg-texturetools</a><br><br>画像はすべてブラウザ内で処理され、外部に送信されることはありません。</span><br><br><h3 class=about-title>使い方</h3><ol><li>変換したい画像をアップロード</li><li>ドット絵の大きさや色合いなどの調整</li><li>変換したドット絵をダウンロード(画像として保存するならPNG、自動描画用のテクスチャデータとして保存するならCSV)</li></ol><h3 class=about-title>作者</h3>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><h3 class=about-title>Githubリポジトリ</h3><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br><h3 class=about-title>バージョン履歴</h3><strong>V1.0</strong><br>初回リリース<br><strong>V1.1</strong><br>・AGTD2用のエクストラ設定とCSVエンコード方式の追加（AGTD2対応の提案、協力をしてくれたZertさんに感謝）<br>・設定や下のアクションバーをすべてトップバーに統合<br>・全体を囲む大きなパネルの枠を削除<br>・選択された画像がはじプロのパレットの場合はディザリングをしないように変更<br>・通常の誤差拡散と端補正の誤差拡散で色味が微妙に変わることがあった問題を修正<br>・その他細かい修正や変更<br><br>※良識の範囲内でご使用ください。<br>※このツールはAIを使用して作成されました。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。",
             palAll: "すべて選択",
             palClear: "すべて解除",
             palMono: "白黒・透明",
@@ -1534,18 +1794,22 @@ body.dark-mode::after {
             npTitleTexY: "テクスチャ枚数：Y",
             npTitleScale: "拡大倍率",
             npTitlePalette: "パレット設定",
+            npTitleSizeX: "おおきさ：X",
+            npTitleSizeY: "おおきさ：Y",
+            npTitlePosX: "位置：X",
+            npTitlePosY: "位置：Y",
+            npTitlePosZ: "位置：Z",
         },
         en: {
-            title: "GBG Texture Converter <br><span style='font-size: 0.65em; font-weight: normal; '>～はじプロドット絵変換ツール～</span>",
+            title: "GBG Texture Converter <br><span style='font-size: 0.7em; font-weight: normal;'>～はじプロドット絵変換ツール～ v1.1</span>",
             welcomeTitle: "Convert Images to GBG Textures",
             welcomeSub: "You can easily create textures for Game Builder Garage",
             themeLabel: "Theme",
             themeSys: "System",
             themeLight: "Light",
             themeDark: "Dark",
+            langLabel: "Language",
             langBtn: "日本語",
-            tabMain: "Conversion",
-            tabHelp: " About",
             selImg: "Select Image",
             selImgBtn: "Select Image",
             drop: "Drag & drop an image here or click to browse",
@@ -1565,13 +1829,24 @@ body.dark-mode::after {
             texCount: "2. Number of Textures",
             texSub: "1 Texture = 64x64 pixels",
             dither: "5. Dithering Settings",
-            dFloyd: "Floyd Steinberg",
-            dFloydMirror: "Floyd Steinberg (Edge Correction)",
+            dFloyd: "Floyd-Steinberg",
+            dFloydMirror: "Floyd-Steinberg (Edge Correction)",
             dOrd4: "Ordered (4x4)",
             dOrd8: "Ordered (8x8)",
             dRand: "Random",
             dNone: "None",
             checkerAlpha: "Make semi-transparent with checkerboard pattern",
+            extSet: "6. Extra Settings (AGTD2)",
+            agtd2Switch: "Enable settings and CSV encoding for AGTD2.",
+            exSub: "Turn this on when using AGTD2 for automatic drawing<br>Turn this off when using AGTD v0.7-beta or earlier for automatic drawing",
+            textureFaces: "Texture Faces",
+            xCenter: "X Center",
+            yCenter: "Y Center",
+            zCenter: "Z Center",
+            textureSize: "Size",
+            textureRotation: "Rotation",
+            texturePosition: "Position",
+            enable: "Enable",
             scale: "Scale",
             scaleUnit: "x",
             scaleHint: "Increasing the scale factor makes the pixels sharp and not blurry.",
@@ -1579,12 +1854,16 @@ body.dark-mode::after {
             saveTitle: "Save Menu",
             saveFormat: "Save Format",
             saveFileName: "File Name", 
-            openSaveModal: "Save pixel art",
+            openSaveModal: "Save",
             pngSplit: "Divided into individual sheets",
             csvCombine: "Combine every 5 sheets",
             copyTexture:"Copy Texture (Only When Copying)",
             copyClipboard:"Copy to clipboard",
             msgCopied: "Copied",
+            rangeSpecify: "Specify Range",
+            rangeStart: "Start",
+            rangeEnd: "End",
+            sheetSuffix: " sheet(s)",
             saveHint: "If you select PNG, you can save the converted pixel art image.<br>If you select CSV, you can save the data for use with the Automatic Drawing Tool.",
             preview: "Preview",
             sheetSingle: "Sheet {0}",
@@ -1601,7 +1880,7 @@ body.dark-mode::after {
             showGrid: "Show 64x64 Grid Lines",
             seamlessCheck: "Loop Check (2x2)",
             aboutTitle: "About this tool",
-            aboutText: "<span style='font-size: 16px; margin-top: 0;'>This tool converts images into pixel art (textures) formatted for Game Builder Garage.<br>Simply upload your favorite image to easily create pixel art in the style of GBG.<br>Converted pixel art can be saved as images, or imported into your GBG games using the <a href='https://note.com/yossy_kun/n/n5658e55dce01' target='_blank'>Automatic Drawing Tool</a>.<br>All images are processed within the browser and are never sent externally.</span><br><br><strong>How to Use</strong><ol><li>Upload the image you want to convert.</li><li>Adjust the size and colors of the pixel art.</li><li>Download the converted pixel art (PNG to save as an image, CSV to save as texture data for automatic drawing)</li></ol><br><strong>Author</strong><br>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><strong>Github Repository</strong><br><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br>* Please use this tool within the bounds of common sense.<br>* This tool was made using AI.<br>* This is an unofficial, fan-made tool and is not affiliated with Nintendo Co., Ltd.</p>",
+            aboutText: "<span style='font-size: 16px; margin-top: 0;'>This tool converts images into pixel art (textures) formatted for Game Builder Garage.<br>Simply upload your favorite image to easily create pixel art in the style of GBG.<br>Converted pixel art can be saved as images, used as a reference to create textures, or saved as CSV data and imported into your GBG games using the GBG Texture Tools (such as AGTD2).<br><br>Detailed information on the GBG Texture Tools, instructions on how to use it, and relevant files can be found here (by Zert).<br><a href='https://github.com/zertolurian/gbg-texturetools' target='_blank'>https://github.com/zertolurian/gbg-texturetools</a><br><br>All images are processed within the browser and are never sent externally.</span><br><br><h3 class=about-title>How to Use</h3><ol><li>Upload the image you want to convert.</li><li>Adjust the size and colors of the pixel art.</li><li>Download the converted pixel art (PNG to save as an image, CSV to save as texture data for automatic drawing)</li></ol><h3 class=about-title>Author</h3>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><h3 class=about-title>Github Repository</h3><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br><h3 class=about-title>Version History</h3><strong>V1.0</strong><br>Initial release<br><strong>V1.1</strong><br>- Added extra settings and CSV encoding methods for AGTD2 (Thanks to Zert for suggesting and cooperating with the AGTD2 compatibility)<br>- Consolidated settings and the bottom action bar into the top bar<br>- Removed the large panel frame that surrounds the entire thing<br>- Changed to disable dithering when the selected image is a Game Builder Garage palette<br>- Fixed an issue where the color tone would sometimes differ slightly between standard Floyd-Steinberg and edge corrected Floyd-Steinberg<br>- Other minor corrections and changes<br><br>* Please use this tool within the bounds of common sense.<br>* This tool was made using AI.<br>* This is an unofficial, fan-made tool and is not affiliated with Nintendo Co., Ltd.</p>",
             palAll: "Select All",
             palClear: "Deselect All",
             palMono: "Monochrome",
@@ -1614,6 +1893,11 @@ body.dark-mode::after {
             npTitleTexY: "Number of Textures: Y",
             npTitleScale: "Export Scale",
             npTitlePalette: "Palette Settings",
+            npTitleSizeX: "Size: X",
+            npTitleSizeY: "Size: Y",
+            npTitlePosX: "Position: X",
+            npTitlePosY: "Position: Y",
+            npTitlePosZ: "Position: Z",
         }
     };
 
@@ -1718,31 +2002,15 @@ body.dark-mode::after {
         });
     });
 
-    // タブ切り替えとボトムバーの連動
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
-            const target = e.currentTarget; 
-            target.classList.add('active');
-            const targetId = target.getAttribute('data-target');
-            document.getElementById(targetId).classList.add('active');
-
-            if(targetId === 'tab-main') {
-                document.getElementById('bottomActionBar').classList.add('active');
-            } else {
-                document.getElementById('bottomActionBar').classList.remove('active');
-            }
-        });
-    });
-
     // 「戻る」ボタンの処理
     document.getElementById('backToHomeBtn').addEventListener('click', () => {
         currentImage = null;
         document.getElementById('imageInput').value = '';
         document.body.classList.remove('has-image-state');
         updateDownloadButtons();
+        
+        // ▼ この1行を追加（一番上へスクロール）
+        window.scrollTo({ top: 0 }); 
     });
 
     function showCustomAlert(message) {
@@ -1750,11 +2018,13 @@ body.dark-mode::after {
             const overlay = document.getElementById('custom-alert-overlay');
             document.getElementById('custom-alert-message').textContent = message;
             overlay.style.display = 'flex';
+            lockScroll(); // ★変更
             
             const okBtn = document.getElementById('custom-alert-ok');
             const handler = () => {
                 okBtn.removeEventListener('click', handler);
                 overlay.style.display = 'none';
+                unlockScroll(); // ★変更
                 resolve();
             };
             okBtn.addEventListener('click', handler);
@@ -1803,16 +2073,25 @@ body.dark-mode::after {
         document.getElementById("numpad-title").textContent = t(titleTextKey);
         setInitialValue(input.value);
         numpadOverlay.style.display = "flex";
+        lockScroll(); // ★変更
         setTimeout(() => numpadDisplay.focus(), 50);
     }
-    function closeNumpad() { numpadOverlay.style.display = "none"; currentTargetInput = null; }
+
+    function closeNumpad() { 
+        numpadOverlay.style.display = "none"; 
+        unlockScroll(); // ★変更
+        currentTargetInput = null; 
+    }
     
     numpadOverlay.addEventListener("click", (e) => { if (e.target === numpadOverlay) closeNumpad(); });
 
     function handleInputChar(char) {
         if (isFirstInput) { numpadDisplay.value = ""; clearInitialState(); }
         let cur = numpadDisplay.value;
-        if (/[0-9]/.test(char) && (cur.match(/[0-9]/g) || []).length >= 8) return;
+        if (/[0-9]/.test(char)) {
+            if ((cur.match(/[0-9]/g) || []).length >= 8) return;
+            if (cur.includes('.') && cur.split('.')[1].length >= 7) return; 
+        }
         if (char === ".") {
             if (!cur.includes(".")) numpadDisplay.value = (cur === "" || cur === "-") ? cur + "0." : cur + ".";
         } else {
@@ -1827,14 +2106,11 @@ body.dark-mode::after {
     document.getElementById("np-back").addEventListener("click", () => {
         if (isFirstInput) clearInitialState();
         let cur = numpadDisplay.value;
-        
         if (cur === "-" || cur.length <= 1) {
             numpadDisplay.value = "";
         } else {
             numpadDisplay.value = cur.slice(0, -1);
-            if (numpadDisplay.value === "-") {
-                numpadDisplay.value = "";
-            }
+            if (numpadDisplay.value === "-") numpadDisplay.value = "";
         }
     });
     document.getElementById("np-clear").addEventListener("click", () => setInitialValue("0"));
@@ -1846,13 +2122,24 @@ body.dark-mode::after {
         numpadDisplay.value = cur.startsWith("-") ? cur.slice(1) : "-" + cur;
     });
     document.getElementById("np-cancel").addEventListener("click", closeNumpad);
+    
     document.getElementById("np-ok").addEventListener("click", () => {
         if (currentTargetInput) {
             let val = parseFloat(numpadDisplay.value);
             if (isNaN(val)) val = numpadMin;
-            val = Math.floor(val);
+            
+            const snapAttr = currentTargetInput.getAttribute("data-step") || currentTargetInput.getAttribute("step");
+            const isFloat = snapAttr && snapAttr.includes(".");
+            
+            if (!isFloat) {
+                val = Math.floor(val);
+            } else {
+                val = parseFloat(val.toFixed(7));
+            }
+            
             if (val < numpadMin) val = numpadMin;
             if (val > numpadMax) val = numpadMax;
+            
             currentTargetInput.value = val;
             currentTargetInput.dispatchEvent(new Event("change"));
             currentTargetInput.dispatchEvent(new Event("input"));
@@ -1873,23 +2160,139 @@ body.dark-mode::after {
         }
     });
 
+    // =========================================
+    // AGTD エクストラ生成ロジック (v1.3準拠)
+    // =========================================
+    const AGTD_SCALE = 10000000;
+
+    function agtdChooseBpp(n){ let b=1; while((1<<b)<n) b++; return b; }
+
+    function agtdPackPixels(grid){
+        let bg = grid[0], counts = {};
+        for (let i=1; i<=4096; i++){
+            let v = grid[i];
+            if (v === bg) continue;
+            counts[v] = (counts[v]||0) + 1;
+        }
+        let distinct = Object.keys(counts).map(Number);
+        distinct.sort((a,b) => {
+            let d = counts[b]-counts[a];
+            return d!==0 ? d : (a-b);
+        });
+        let palSize = distinct.length;
+        if (palSize === 0) return [bg, 0];
+
+        let total = palSize + 1;
+        let bpp = agtdChooseBpp(total);
+        let out = [bg, palSize];
+        for (let i=0; i<palSize; i++) out.push(distinct[i]);
+        let code = {};
+        for (let i=0; i<palSize; i++) code[distinct[i]] = i;
+        code[bg] = palSize;
+        
+        let bitbuf=0, bitcnt=0;
+        for (let p=0; p<4096; p++){
+            bitbuf = (bitbuf<<bpp) | code[grid[1+p]];
+            bitcnt += bpp;
+            while (bitcnt>=8){ bitcnt-=8; out.push((bitbuf>>bitcnt)&0xFF); }
+            bitbuf &= (1<<bitcnt)-1;
+        }
+        if (bitcnt>0) out.push((bitbuf<<(8-bitcnt))&0xFF);
+        return out;
+    }
+
+    function agtdEncodeSettings(s){
+        let flags=0, body=[];
+        function pushLong(v){ let n=v|0; body.push(n&255,(n>>8)&255,(n>>16)&255,(n>>24)&255); }
+        if (s.hasFaces){ flags|=1; let fp=(s.faceX&7)|((s.faceY&7)<<3)|((s.faceZ&7)<<6); body.push(fp&255,(fp>>8)&255); }
+        if (s.hasSize){ flags|=2; pushLong(s.sizeX); pushLong(s.sizeY); }
+        if (s.hasRot ){ flags|=4; pushLong(s.rot); }
+        if (s.hasPosX){ flags|=8; pushLong(s.posX); }
+        if (s.hasPosY){ flags|=16; pushLong(s.posY); }
+        if (s.hasPosZ){ flags|=32; pushLong(s.posZ); }
+        return [flags].concat(body);
+    }
+
+    function agtdReadSettings(){
+        function fv(id){ return parseFloat(document.getElementById(id).value) || 0; }
+        function ck(id){ return document.getElementById(id).checked; }
+        let fX=(ck("ex_faceXm")?1:0)+(ck("ex_faceXp")?2:0)+(ck("ex_faceXc")?4:0);
+        let fY=(ck("ex_faceYm")?1:0)+(ck("ex_faceYp")?2:0)+(ck("ex_faceYc")?4:0);
+        let fZ=(ck("ex_faceZm")?1:0)+(ck("ex_faceZp")?2:0)+(ck("ex_faceZc")?4:0);
+        let sx=Math.round(fv("ex_sizex")*AGTD_SCALE), sy=Math.round(fv("ex_sizey")*AGTD_SCALE);
+        let rt=Math.round(fv("ex_rot")*AGTD_SCALE);
+        let DEF=Math.round(0.8*AGTD_SCALE);
+        return {
+            hasFaces:(fX!=3||fY!=3||fZ!=3), faceX:fX, faceY:fY, faceZ:fZ,
+            hasSize:(sx!=DEF||sy!=DEF), sizeX:sx, sizeY:sy,
+            hasRot:(rt!=0), rot:rt,
+            hasPosX:ck("ex_en_posx"), posX:Math.round(fv("ex_posx")*AGTD_SCALE),
+            hasPosY:ck("ex_en_posy"), posY:Math.round(fv("ex_posy")*AGTD_SCALE),
+            hasPosZ:ck("ex_en_posz"), posZ:Math.round(fv("ex_posz")*AGTD_SCALE)
+        };
+    }
+
+    function agtdBuildBlob_index4(startIdx = 0, endIdx = Infinity){
+        let w = offscreenCanvas.width, h = offscreenCanvas.height;
+        let data = offCtx.getImageData(0,0,w,h).data;
+        let sX = w/64, sY = h/64;
+        let settings = agtdReadSettings();
+        let blob = [];
+        let i = 0;
+        for (let v=0; v<sY; v++) {
+            for (let u=0; u<sX; u++) {
+                if (i >= startIdx && i <= endIdx) {
+                    let grid = getCsvData(u, v, w, h, data);
+                    blob = blob.concat(agtdPackPixels(grid)).concat(agtdEncodeSettings(settings));
+                }
+                i++;
+            }
+        }
+        return blob;
+    }
+
+    document.getElementById('enableExtraCb').addEventListener('change', function() {
+        document.getElementById('extraSettingsBlock').style.display = this.checked ? 'flex' : 'none';
+        updateDownloadButtons();
+    });
+
     function initSlider(sliderId, valId, trackId, decId, incId) {
         const slider = document.getElementById(sliderId);
         const valDisplay = document.getElementById(valId);
         const track = document.getElementById(trackId);
         
-        const updateSlider = () => {
-            const val = parseFloat(slider.value);
-            const min = parseFloat(slider.min) || 0; const max = parseFloat(slider.max) || 100;
+        const getSnapStep = () => parseFloat(slider.getAttribute('data-step')) || parseFloat(slider.getAttribute('step')) || 1;
+
+        const updateSlider = (e) => {
+            let val = parseFloat(slider.value);
+            
+            if (e && e.isTrusted && slider.getAttribute('step') === 'any') {
+                const snap = getSnapStep();
+                val = Math.round(val / snap) * snap;
+                let decimals = (snap.toString().split('.')[1] || '').length;
+                val = parseFloat(val.toFixed(decimals));
+                slider.value = val;
+            }
+
+            const min = parseFloat(slider.min) || 0; 
+            const max = parseFloat(slider.max) || 100;
             if (valDisplay) valDisplay.textContent = val;
             const percent = ((val - min) / (max - min)) * 100;
             track.style.background = `linear-gradient(to right, var(--slider-fill) 0%, var(--slider-fill) ${percent}%, var(--slider-bg) ${percent}%, var(--slider-bg) 100%)`;
         };
+        
         const stepSlider = (delta) => {
-            let val = parseInt(slider.value, 10);
-            const min = parseInt(slider.min, 10) || 0; const max = parseInt(slider.max, 10) || 100;
-            val += delta;
-            if (val < min) val = min; if (val > max) val = max;
+            const snap = getSnapStep();
+            let val = parseFloat(slider.value);
+            const min = parseFloat(slider.min) || 0; 
+            const max = parseFloat(slider.max) || 100;
+            val += delta * snap;
+            
+            let decimals = (snap.toString().split('.')[1] || '').length;
+            val = parseFloat(val.toFixed(decimals));
+            
+            if (val < min) val = min; 
+            if (val > max) val = max;
             slider.value = val;
             slider.dispatchEvent(new Event('input')); 
         };
@@ -1936,7 +2339,15 @@ body.dark-mode::after {
         { id: "hueRotate", min: 0, max: 360, titleKey: "hue" },
         { id: "saturate", min: 0, max: 200, titleKey: "sat" },
         { id: "brightness", min: 0, max: 200, titleKey: "bri" },
-        { id: "contrast", min: 0, max: 200, titleKey: "con" }
+        { id: "contrast", min: 0, max: 200, titleKey: "con" },
+        { id: "ex_sizex", min: 0.1, max: 10, titleKey: "npTitleSizeX" },
+        { id: "ex_sizey", min: 0.1, max: 10, titleKey: "npTitleSizeY" },
+        { id: "ex_rot", min: -180, max: 180, titleKey: "textureRotation" },
+        { id: "ex_posx", min: -100, max: 100, titleKey: "npTitlePosX" },
+        { id: "ex_posy", min: -100, max: 100, titleKey: "npTitlePosY" },
+        { id: "ex_posz", min: -100, max: 100, titleKey: "npTitlePosZ" },
+        { id: "extraRangeStart", min: 1, max: 16, titleKey: "rangeStart" },
+        { id: "extraRangeEnd", min: 1, max: 16, titleKey: "rangeEnd" }
     ];
 
     allSliders.forEach(s => {
@@ -1947,6 +2358,32 @@ body.dark-mode::after {
                 openNumpad(document.getElementById(s.id), s.min, s.max, s.titleKey);
             });
         }
+    });
+
+    // 範囲指定スライダーの連動
+    document.getElementById('extraRangeCb').addEventListener('change', function() {
+        document.getElementById('extraRangeContainer').style.display = this.checked ? 'flex' : 'none';
+        updateDefaultFileName();
+    });
+    
+    document.getElementById('extraRangeStart').addEventListener('change', function() {
+        const start = parseInt(this.value);
+        const endSlider = document.getElementById('extraRangeEnd');
+        if (start > parseInt(endSlider.value)) {
+            endSlider.value = start;
+            endSlider.dispatchEvent(new Event('input'));
+        }
+        updateDefaultFileName();
+    });
+    
+    document.getElementById('extraRangeEnd').addEventListener('change', function() {
+        const end = parseInt(this.value);
+        const startSlider = document.getElementById('extraRangeStart');
+        if (end < parseInt(startSlider.value)) {
+            startSlider.value = end;
+            startSlider.dispatchEvent(new Event('input'));
+        }
+        updateDefaultFileName();
     });
 
     ['hueRotate', 'saturate', 'brightness', 'contrast'].forEach(id => {
@@ -2009,25 +2446,43 @@ body.dark-mode::after {
         const scaleOptions = document.getElementById('scaleOptions');
         const copyRangeContainer = document.getElementById('copyRangeContainer');
         const copyRangeSelect = document.getElementById('copyRangeSelect');
+        const extraCsvOptions = document.getElementById('extraCsvOptions');
         
         if (saveFormatSelect && pngOptions && csvOptions) {
+            const isExtra = document.getElementById('enableExtraCb') && document.getElementById('enableExtraCb').checked;
+
             if (saveFormatSelect.value === 'png') {
                 pngOptions.style.display = isOneByOne ? 'none' : 'block';
                 csvOptions.style.display = 'none';
                 if (executeCopyBtn) executeCopyBtn.style.display = 'none';
                 if (scaleOptions) scaleOptions.style.display = 'block'; 
-                if (copyRangeContainer) copyRangeContainer.style.display = 'none'; 
+                if (copyRangeContainer) copyRangeContainer.style.display = 'none';
+                if (extraCsvOptions) extraCsvOptions.style.display = 'none';
             } else {
                 pngOptions.style.display = 'none';
-                csvOptions.style.display = isOneByOne ? 'none' : 'block';
+                csvOptions.style.display = (isOneByOne || isExtra) ? 'none' : 'block';
                 if (executeCopyBtn) executeCopyBtn.style.display = 'block';
                 if (scaleOptions) scaleOptions.style.display = 'none'; 
                 
-                // プルダウンの表示制御とオプションの動的生成
-                if (total > 1) {
+                if (isExtra && total > 1) {
+                    if (extraCsvOptions) {
+                        extraCsvOptions.style.display = 'block';
+                        const startSlider = document.getElementById('extraRangeStart');
+                        const endSlider = document.getElementById('extraRangeEnd');
+                        if (startSlider.max != total) {
+                            startSlider.max = total;
+                            endSlider.max = total;
+                            startSlider.dispatchEvent(new Event('input'));
+                            endSlider.dispatchEvent(new Event('input'));
+                        }
+                    }
+                } else {
+                    if (extraCsvOptions) extraCsvOptions.style.display = 'none';
+                }
+                
+                if (total > 1 && !isExtra) {
                     if (copyRangeContainer) {
                         copyRangeContainer.style.display = 'block';
-                        
                         const currentVal = copyRangeSelect.value;
                         copyRangeSelect.innerHTML = '';
                         
@@ -2038,17 +2493,14 @@ body.dark-mode::after {
                                 const end = Math.min((i + 1) * 5, total);
                                 const option = document.createElement('option');
                                 option.value = i;
-                                // ▼ 翻訳対応
                                 option.textContent = t('sheetRange').replace('{0}', start).replace('{1}', end);
                                 if (i.toString() === currentVal) option.selected = true;
                                 copyRangeSelect.appendChild(option);
                             }
                         } else {
-                            // 単体コピーの場合
                             for (let i = 0; i < total; i++) {
                                 const option = document.createElement('option');
                                 option.value = i;
-                                // ▼ 翻訳対応
                                 option.textContent = t('sheetSingle').replace('{0}', i + 1);
                                 if (i.toString() === currentVal) option.selected = true;
                                 copyRangeSelect.appendChild(option);
@@ -2064,7 +2516,6 @@ body.dark-mode::after {
         updateDefaultFileName();
     }
     
-    // 入力欄の初期値を動的に生成する関数
     function updateDefaultFileName() {
         if (isFileNameEdited) return;
 
@@ -2093,12 +2544,19 @@ body.dark-mode::after {
                 defaultName += `_${w}x${h}`;
             }
         } else if (format === 'csv') {
-            if (total > 1) {
+            const isExtra = document.getElementById('enableExtraCb') && document.getElementById('enableExtraCb').checked;
+            if (isExtra) {
+                if (total > 1 && document.getElementById('extraRangeCb') && document.getElementById('extraRangeCb').checked) {
+                    const start = document.getElementById('extraRangeStart').value;
+                    const end = document.getElementById('extraRangeEnd').value;
+                    defaultName += `_${start}-${end}`;
+                }
+            } else if (total > 1) {
                 if (isCombine) {
                     if (total <= 5) {
                         defaultName += `_combined_1-${total}`;
                     } else {
-                        defaultName += `_combined_csv`;
+                        defaultName += `_combined`;
                     }
                 }
             }
@@ -2221,16 +2679,22 @@ body.dark-mode::after {
             if (cb) backupPaletteState[i] = cb.checked;
         }
         paletteOverlay.style.display = 'flex';
+        lockScroll(); // ★変更
     });
+    
     document.getElementById('paletteCancelBtn').addEventListener('click', () => {
         for (let i = 0; i < gbgColors.length; i++) {
             const cb = document.getElementById('color-cb-' + i);
             if (cb && backupPaletteState[i] !== undefined) { cb.checked = backupPaletteState[i]; }
         }
         paletteOverlay.style.display = 'none';
+        unlockScroll(); // ★変更
     });
+    
     document.getElementById('paletteOkBtn').addEventListener('click', () => {
-        updateActiveColors(); processImage(); paletteOverlay.style.display = 'none';
+        updateActiveColors(); processImage(); 
+        paletteOverlay.style.display = 'none';
+        unlockScroll(); // ★変更
     });
     paletteOverlay.addEventListener('click', (e) => {
         if (e.target === paletteOverlay) document.getElementById('paletteCancelBtn').click();
@@ -2279,6 +2743,16 @@ body.dark-mode::after {
         return getClosestActiveColor(r,g,b).index;
     }
 
+    // 元の色がパレット色と完全に一致しているかを判定する関数
+    function isExactActiveColor(r, g, b, a) {
+        if (a < 128 && activeColors[47]) return true;
+        for (let i = 0; i < parsedActiveColors.length; i++) {
+            const pc = parsedActiveColors[i];
+            if (pc.r === r && pc.g === g && pc.b === b) return true;
+        }
+        return false;
+    }
+
     const originalImg = document.getElementById('originalImg'); const previewImg = document.getElementById('previewImg');
     
     const originalCanvas = document.createElement('canvas'); 
@@ -2312,7 +2786,6 @@ body.dark-mode::after {
         let countX = parseInt(document.getElementById('countX').value) || 1;
         let countY = parseInt(document.getElementById('countY').value) || 1;
         
-        // グリッド線表示トグルの表示・非表示を制御
         const showGridLabel = showGridCb.closest('label');
         if (countX === 1 && countY === 1 && !isSeamless) {
             showGridLabel.style.display = 'none';
@@ -2485,6 +2958,8 @@ body.dark-mode::after {
 
         workCtx.filter = 'none';
         originalCtx.filter = 'none';
+        workCtx.imageSmoothingEnabled = false;       // 追加
+        originalCtx.imageSmoothingEnabled = false;   // 追加
 
         if (fitMode === 'stretch') {
             workCtx.drawImage(currentImage, 0, 0, origW, origH);
@@ -2571,7 +3046,12 @@ body.dark-mode::after {
             }
 
             for (let y = 0; y < fullH; y++) {
+                let origY = (y < padY) ? (padY - 1 - y) : (y - padY);
                 for (let x = 0; x < fullW; x++) {
+                    let origX = (x < padX) ? (padX - 1 - x) : (x - padX);
+                    let origIdx = (origY * targetX + origX) * 4;
+                    const baseR = data[origIdx], baseG = data[origIdx+1], baseB = data[origIdx+2], baseA = data[origIdx+3];
+
                     const idx = (y * fullW + x) * 4;
                     const oldA = paddedData[idx+3];
 
@@ -2581,39 +3061,47 @@ body.dark-mode::after {
                     }
 
                     const oldR = paddedData[idx], oldG = paddedData[idx+1], oldB = paddedData[idx+2];
-                    const closest = getClosestActiveColor(oldR, oldG, oldB);
+                    let closest;
+                    let errR = 0, errG = 0, errB = 0;
+
+                    if (isExactActiveColor(baseR, baseG, baseB, baseA)) {
+                        closest = { r: baseR, g: baseG, b: baseB };
+                    } else {
+                        closest = getClosestActiveColor(oldR, oldG, oldB);
+                        errR = oldR - closest.r;
+                        errG = oldG - closest.g;
+                        errB = oldB - closest.b;
+                    }
 
                     paddedData[idx] = closest.r;
                     paddedData[idx+1] = closest.g;
                     paddedData[idx+2] = closest.b;
                     paddedData[idx+3] = 255;
 
-                    const errR = oldR - closest.r;
-                    const errG = oldG - closest.g;
-                    const errB = oldB - closest.b;
-
-                    if (x + 1 < fullW) {
-                        const tIdx = (y * fullW + x + 1) * 4;
-                        if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
-                            paddedData[tIdx] += errR * (7/16); paddedData[tIdx+1] += errG * (7/16); paddedData[tIdx+2] += errB * (7/16);
+                    if (errR !== 0 || errG !== 0 || errB !== 0) {
+                        if (x + 1 < fullW) {
+                            const tIdx = (y * fullW + x + 1) * 4;
+                            if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
+                                paddedData[tIdx] += errR * (7/16); paddedData[tIdx+1] += errG * (7/16); paddedData[tIdx+2] += errB * (7/16);
+                            }
                         }
-                    }
-                    if (x - 1 >= 0 && y + 1 < fullH) {
-                        const tIdx = ((y + 1) * fullW + x - 1) * 4;
-                        if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
-                            paddedData[tIdx] += errR * (3/16); paddedData[tIdx+1] += errG * (3/16); paddedData[tIdx+2] += errB * (3/16);
+                        if (x - 1 >= 0 && y + 1 < fullH) {
+                            const tIdx = ((y + 1) * fullW + x - 1) * 4;
+                            if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
+                                paddedData[tIdx] += errR * (3/16); paddedData[tIdx+1] += errG * (3/16); paddedData[tIdx+2] += errB * (3/16);
+                            }
                         }
-                    }
-                    if (y + 1 < fullH) {
-                        const tIdx = ((y + 1) * fullW + x) * 4;
-                        if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
-                            paddedData[tIdx] += errR * (5/16); paddedData[tIdx+1] += errG * (5/16); paddedData[tIdx+2] += errB * (5/16);
+                        if (y + 1 < fullH) {
+                            const tIdx = ((y + 1) * fullW + x) * 4;
+                            if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
+                                paddedData[tIdx] += errR * (5/16); paddedData[tIdx+1] += errG * (5/16); paddedData[tIdx+2] += errB * (5/16);
+                            }
                         }
-                    }
-                    if (x + 1 < fullW && y + 1 < fullH) {
-                        const tIdx = ((y + 1) * fullW + x + 1) * 4;
-                        if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
-                            paddedData[tIdx] += errR * (1/16); paddedData[tIdx+1] += errG * (1/16); paddedData[tIdx+2] += errB * (1/16);
+                        if (x + 1 < fullW && y + 1 < fullH) {
+                            const tIdx = ((y + 1) * fullW + x + 1) * 4;
+                            if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
+                                paddedData[tIdx] += errR * (1/16); paddedData[tIdx+1] += errG * (1/16); paddedData[tIdx+2] += errB * (1/16);
+                            }
                         }
                     }
                 }
@@ -2631,53 +3119,89 @@ body.dark-mode::after {
             }
 
         } else {
+            const originalData = new Uint8ClampedArray(data); // 元の色を保持
+            const workData = new Float32Array(data); // 誤差蓄積用のFloat32Array（精度を端補正に合わせるため追加）
+
             for (let y = 0; y < targetY; y++) {
                 for (let x = 0; x < targetX; x++) {
                     const i = (y * targetX + x) * 4;
-                    const oldR = data[i], oldG = data[i+1], oldB = data[i+2], oldA = data[i+3];
+                    // 計算中の誤差を含んだ値は workData から取得するように変更
+                    const oldR = workData[i], oldG = workData[i+1], oldB = workData[i+2], oldA = workData[i+3];
+                    const baseR = originalData[i], baseG = originalData[i+1], baseB = originalData[i+2], baseA = originalData[i+3];
 
                     if (oldA < 128) {
-                        if (activeColors[47]) { data[i]=0; data[i+1]=0; data[i+2]=0; data[i+3]=0; continue; }
+                        if (activeColors[47]) { 
+                            data[i]=0; data[i+1]=0; data[i+2]=0; data[i+3]=0; 
+                            continue; 
+                        }
                     }
 
+                    const isExact = isExactActiveColor(baseR, baseG, baseB, baseA);
+
                     if (ditherMode.startsWith('tb_')) {
-                        let weight = 0;
-                        if (ditherMode === 'tb_ordered') weight = tb_orderMatrix[x%8][y%8] / 64 - 0.5;
-                        else if (ditherMode === 'tb_random') weight = Math.random() - 0.5;
-                        let clampR = Math.min(Math.max(oldR * (1 + weight * tb_averageR), 0), 255);
-                        let clampG = Math.min(Math.max(oldG * (1 + weight * tb_averageG), 0), 255);
-                        let clampB = Math.min(Math.max(oldB * (1 + weight * tb_averageB), 0), 255);
-                        const closest = getClosestActiveColor(clampR, clampG, clampB);
+                        let closest;
+                        let errR = 0, errG = 0, errB = 0;
+
+                        if (isExact) {
+                            closest = { r: baseR, g: baseG, b: baseB };
+                        } else {
+                            let weight = 0;
+                            if (ditherMode === 'tb_ordered') weight = tb_orderMatrix[x%8][y%8] / 64 - 0.5;
+                            else if (ditherMode === 'tb_random') weight = Math.random() - 0.5;
+                            let clampR = Math.min(Math.max(oldR * (1 + weight * tb_averageR), 0), 255);
+                            let clampG = Math.min(Math.max(oldG * (1 + weight * tb_averageG), 0), 255);
+                            let clampB = Math.min(Math.max(oldB * (1 + weight * tb_averageB), 0), 255);
+                            closest = getClosestActiveColor(clampR, clampG, clampB);
+                            errR = oldR - closest.r;
+                            errG = oldG - closest.g;
+                            errB = oldB - closest.b;
+                        }
+                        
                         data[i] = closest.r; data[i+1] = closest.g; data[i+2] = closest.b; data[i+3] = 255;
                         
-                        if (ditherMode === 'tb_floyd') {
-                            const errR = oldR - closest.r, errG = oldG - closest.g, errB = oldB - closest.b;
+                        if (ditherMode === 'tb_floyd' && !isExact && (errR !== 0 || errG !== 0 || errB !== 0)) {
                             const dist = (xO, yO, rt) => {
                                 if (x+xO>=0 && x+xO<targetX && y+yO<targetY) {
                                     const idx = ((y+yO)*targetX + x+xO)*4;
-                                    if (data[idx+3]>=128 || !activeColors[47]) {
-                                        data[idx]=Math.min(255,Math.max(0,data[idx]+errR*rt)); data[idx+1]=Math.min(255,Math.max(0,data[idx+1]+errG*rt)); data[idx+2]=Math.min(255,Math.max(0,data[idx+2]+errB*rt));
+                                    if (workData[idx+3]>=128 || !activeColors[47]) {
+                                        // Math.min/max の丸め処理をなくし、workDataにそのまま蓄積する
+                                        workData[idx] += errR*rt; 
+                                        workData[idx+1] += errG*rt; 
+                                        workData[idx+2] += errB*rt;
                                     }
                                 }
                             };
                             dist(1,0,7/16); dist(-1,1,3/16); dist(0,1,5/16); dist(1,1,1/16);
                         }
                     } else {
-                        let r=oldR, g=oldG, b=oldB;
-                        if (ditherMode === 'ordered') {
-                            const th = (bayerMatrix[y%4][x%4]/16 - 0.5)*64;
-                            r=Math.min(255,Math.max(0,r+th)); g=Math.min(255,Math.max(0,g+th)); b=Math.min(255,Math.max(0,b+th));
+                        let closest;
+                        let errR = 0, errG = 0, errB = 0;
+
+                        if (isExact) {
+                            closest = { r: baseR, g: baseG, b: baseB };
+                        } else {
+                            let r=oldR, g=oldG, b=oldB;
+                            if (ditherMode === 'ordered') {
+                                const th = (bayerMatrix[y%4][x%4]/16 - 0.5)*64;
+                                r=Math.min(255,Math.max(0,r+th)); g=Math.min(255,Math.max(0,g+th)); b=Math.min(255,Math.max(0,b+th));
+                            }
+                            closest = getClosestActiveColor(r,g,b);
+                            errR = oldR - closest.r;
+                            errG = oldG - closest.g;
+                            errB = oldB - closest.b;
                         }
-                        const closest = getClosestActiveColor(r,g,b);
+
                         data[i] = closest.r; data[i+1] = closest.g; data[i+2] = closest.b; data[i+3] = 255;
                         
-                        if (ditherMode === 'floyd') {
-                            const errR = oldR - closest.r, errG = oldG - closest.g, errB = oldB - closest.b;
+                        if (ditherMode === 'floyd' && !isExact && (errR !== 0 || errG !== 0 || errB !== 0)) {
                             const dist = (xO, yO, rt) => {
                                 if (x+xO>=0 && x+xO<targetX && y+yO<targetY) {
                                     const idx = ((y+yO)*targetX + x+xO)*4;
-                                    if (data[idx+3]>=128 || !activeColors[47]) {
-                                        data[idx]=Math.min(255,Math.max(0,data[idx]+errR*rt)); data[idx+1]=Math.min(255,Math.max(0,data[idx+1]+errG*rt)); data[idx+2]=Math.min(255,Math.max(0,data[idx+2]+errB*rt));
+                                    if (workData[idx+3]>=128 || !activeColors[47]) {
+                                        // Math.min/max の丸め処理をなくし、workDataにそのまま蓄積する
+                                        workData[idx] += errR*rt; 
+                                        workData[idx+1] += errG*rt; 
+                                        workData[idx+2] += errB*rt;
                                     }
                                 }
                             };
@@ -2758,27 +3282,27 @@ body.dark-mode::after {
     imageInput.addEventListener('click', (e) => { e.target.value = ''; });
     
     // 画面全体へのドラッグ＆ドロップ対応
-document.body.addEventListener('dragover', (e) => { 
-    e.preventDefault(); 
-    document.body.classList.add('dragover-active'); 
-});
+    document.body.addEventListener('dragover', (e) => { 
+        e.preventDefault(); 
+        document.body.classList.add('dragover-active'); 
+    });
 
-document.body.addEventListener('dragleave', (e) => { 
-    if (!e.relatedTarget) {
+    document.body.addEventListener('dragleave', (e) => { 
+        if (!e.relatedTarget) {
+            document.body.classList.remove('dragover-active'); 
+        }
+    });
+
+    document.body.addEventListener('drop', (e) => {
+        e.preventDefault(); 
         document.body.classList.remove('dragover-active'); 
-    }
-});
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) { 
+            imageInput.files = e.dataTransfer.files; 
+            handleFile(e.dataTransfer.files[0]); 
+        }
+    });
 
-document.body.addEventListener('drop', (e) => {
-    e.preventDefault(); 
-    document.body.classList.remove('dragover-active'); 
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) { 
-        imageInput.files = e.dataTransfer.files; 
-        handleFile(e.dataTransfer.files[0]); 
-    }
-});
-
-    // ボトムアクションバーの「画像を選択」ボタンの処理
+    // トップバーの「画像を選択」ボタンの処理
     document.getElementById('selectImageBtn').addEventListener('click', () => {
         document.getElementById('imageInput').click();
     });
@@ -2818,7 +3342,7 @@ document.body.addEventListener('drop', (e) => {
         }
         let maxC = -1, maxI = 0;
         for (let i=0; i<colorCount.length; i++) {
-            if (i===47 || gbgColors[i].startsWith("-") || gbgColors[i]==="00000000") continue;
+            if (gbgColors[i].startsWith("-")) continue;
             if (colorCount[i]>maxC) { maxC = colorCount[i]; maxI = i; }
         }
         grid[0] = maxI; return grid;
@@ -3001,6 +3525,8 @@ document.body.addEventListener('drop', (e) => {
     // =========================================
     document.getElementById('executeSaveBtn').addEventListener('click', async () => {
         const format = document.getElementById('saveFormatSelect').value;
+        const isExtra = document.getElementById('enableExtraCb') && document.getElementById('enableExtraCb').checked;
+
         if (format === 'png') {
             if (document.getElementById('splitPngCb').checked) {
                 await handleDownloadPngSplit();
@@ -3008,24 +3534,93 @@ document.body.addEventListener('drop', (e) => {
                 await handleDownloadPngAll();
             }
         } else {
-            if (document.getElementById('combineCsvCb').checked) {
-                await handleDownloadCsvCombined();
+            if (isExtra) {
+                const currentFileName = getSaveFileName();
+                const countX = parseInt(document.getElementById('countX').value) || 1;
+                const countY = parseInt(document.getElementById('countY').value) || 1;
+                const total = countX * countY;
+                const isRangeSpecified = document.getElementById('extraCsvOptions').style.display !== 'none' && document.getElementById('extraRangeCb').checked;
+
+                if (total >= 2 && !isRangeSpecified) {
+                    // 範囲指定オフかつ複数枚の場合はZIPでまとめる
+                    const zip = new JSZip();
+                    let i = 0;
+                    for (let v = 0; v < countY; v++) {
+                        for (let u = 0; u < countX; u++) {
+                            const blobData = agtdBuildBlob_index4(i, i); // 対象の1枚だけを指定
+                            zip.file(`${currentFileName}_${u+1}-${v+1}.csv`, "\ufeff" + blobData.join(","));
+                            i++;
+                        }
+                    }
+                    const zipBlob = await zip.generateAsync({type: "blob"});
+                    const link = document.createElement("a");
+                    link.download = `${currentFileName}.zip`;
+                    link.href = URL.createObjectURL(zipBlob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                } else {
+                    // 範囲指定オン、または1枚のみの場合は単一CSVで保存
+                    let startIdx = 0;
+                    let endIdx = Infinity;
+                    
+                    if (isRangeSpecified) {
+                        startIdx = parseInt(document.getElementById('extraRangeStart').value) - 1;
+                        endIdx = parseInt(document.getElementById('extraRangeEnd').value) - 1;
+                    }
+                    
+                    const blobData = agtdBuildBlob_index4(startIdx, endIdx);
+                    const blob = new Blob(["\ufeff", blobData.join(",")], { type: "text/csv" });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a"); link.href = url;
+                    
+                    let outFileName = currentFileName;
+                    if (!outFileName.toLowerCase().endsWith('.csv')) {
+                        outFileName += '.csv';
+                    }
+                    
+                    link.download = outFileName;
+                    link.click(); 
+                    URL.revokeObjectURL(url);
+                }
             } else {
-                await handleDownloadCsvSingle();
+                if (document.getElementById('combineCsvCb').checked) {
+                    await handleDownloadCsvCombined();
+                } else {
+                    await handleDownloadCsvSingle();
+                }
             }
         }
     });
 
     document.getElementById('executeCopyBtn').addEventListener('click', async function() {
         const btn = this;
-        // 連打防止
         if (btn.disabled) return; 
         
+        const isExtra = document.getElementById('enableExtraCb') && document.getElementById('enableExtraCb').checked;
         let success = false;
-        if (document.getElementById('combineCsvCb').checked) {
-            success = await handleCopyCsvCombined();
+
+        if (isExtra) {
+            let startIdx = 0;
+            let endIdx = Infinity;
+            
+            if (document.getElementById('extraCsvOptions').style.display !== 'none' && document.getElementById('extraRangeCb').checked) {
+                startIdx = parseInt(document.getElementById('extraRangeStart').value) - 1;
+                endIdx = parseInt(document.getElementById('extraRangeEnd').value) - 1;
+            }
+            
+            const blobData = agtdBuildBlob_index4(startIdx, endIdx);
+            try {
+                await navigator.clipboard.writeText(blobData.join(","));
+                success = true; 
+            } catch (e) { 
+                showCustomAlert("Copy failed"); 
+            }
         } else {
-            success = await handleCopyCsvSingle();
+            if (document.getElementById('combineCsvCb').checked) {
+                success = await handleCopyCsvCombined();
+            } else {
+                success = await handleCopyCsvSingle();
+            }
         }
 
         if (success) {
@@ -3051,14 +3646,38 @@ document.body.addEventListener('drop', (e) => {
         isFileNameEdited = false;
         updateDownloadButtons();
         saveOverlay.style.display = 'flex';
+        lockScroll(); // ★変更
     });
+    
     document.getElementById('saveCancelBtn').addEventListener('click', () => {
         saveOverlay.style.display = 'none';
+        unlockScroll(); // ★変更
     });
+    
     saveOverlay.addEventListener('click', (e) => {
-        if (e.target === saveOverlay) saveOverlay.style.display = 'none';
+        if (e.target === saveOverlay) {
+            saveOverlay.style.display = 'none';
+            unlockScroll(); // ★変更
+        }
     });
 
+// =========================================
+    // 言語・テーマ設定メニューの開閉
+    // =========================================
+    const settingsMenuBtn = document.getElementById('settingsMenuBtn');
+    const settingsDropdown = document.getElementById('settingsDropdown');
+
+    settingsMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        settingsDropdown.classList.toggle('open');
+    });
+
+    // メニューの外側をクリックしたら閉じる
+    document.addEventListener('click', (e) => {
+        if (!settingsDropdown.contains(e.target) && e.target !== settingsMenuBtn) {
+            settingsDropdown.classList.remove('open');
+        }
+    });
 </script>
 
 </body>
