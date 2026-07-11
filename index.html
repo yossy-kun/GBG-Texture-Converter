@@ -10,132 +10,43 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=add,arrow_back_ios_new,check,close,content_copy,download,remove,settings,upload" />
     <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-   
+
     <style>
-        /* =========================================
-           ベース設定
-        ========================================= */
         body {
-            --slider-fill: #0088ff;
-            --slider-bg: #d1d1d6;
+            --slider-fill: #0088ff; --slider-bg: #d1d1d6;
             font-family: '-apple-system', 'BlinkMacSystemv', 'Noto Sans JP', sans-serif;
-            background-color: #fbfbfd;
-            color: #000;
-            margin: 0;
-            padding: 80px 16px 20px 16px; /* トップバーの高さ分余白を確保 */
+            background-color: #fafafc; color: #000;
+            margin: 0; padding: 80px 16px 20px 16px;
             transition: background-color 0.1s;
         }
-        html {
-            touch-action: manipulation;
-        }
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
-        a { color: #0088ff; }
-        
-        /* =========================================
-           トップナビゲーションバー
-        ========================================= */
-        .top-nav-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(244, 244, 248, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-        }
-        body.dark-mode .top-nav-bar {
-            background-color: rgba(30, 30, 33, 0.8);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            border-bottom: 1px solid #333;
-        }
-        .top-bar-controls {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            gap: 8px;
-        }
-        .top-bar-left {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            flex: 1; /* 追加 */
-            gap: 20px; /* 追加 */
-            width: auto;
-            position: relative;
-            padding-left: 50px;
-            padding-right: 0; /* 変更: 50px -> 0 */
-        }
-        .top-bar-left h2 {
-            margin: 0;
-            font-size: 20px;
-            line-height: 1.2;
-            color: #000;
-            font-weight: bold;
-            text-align: center;
-            flex-shrink: 0; /* 追加 */
-        }
-        .top-bar-left .back-btn {
-            position: absolute;
-            left: 0;
-        }        
-        /* ボタンをまとめるためのラッパーを追加 */
-        .action-buttons-wrap {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        /* =========================================
-           戻るボタン
-        ========================================= */
-        .back-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            margin: 0;
-            padding: 0;
-            flex-shrink: 0;
-            font-size: 24px;
-        }
-        
-        /* =========================================
-           設定メニュー (ドロップダウン)
-        ========================================= */
-        .menu-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            margin: 0;
-            padding: 0;
-            flex-shrink: 0;
-        }
-        @media (hover: hover) { .menu-btn:hover { opacity: 0.7; } }
-        .menu-btn:active { transform: scale(0.98); }
-        body.dark-mode .menu-btn { color: #e0e0e0; }
+        html { touch-action: manipulation; }
+        * { -webkit-tap-highlight-color: transparent; }
+        a { color: #0088ff; } 
 
+        /* トップナビゲーションバー */
+        .top-nav-bar { position: fixed; top: 0; left: 0; right: 0;
+            background-color: rgba(244, 244, 248, 0.7);
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column;
+        }
+        body.dark-mode .top-nav-bar { background-color: rgba(30, 30, 33, 0.7); box-shadow: 0 2px 10px rgba(0,0,0,0.5); border-bottom: 1px solid #333; }
+        .top-bar-controls { display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 10px 15px; gap: 8px; }
+        .top-bar-left { display: flex; align-items: center; justify-content: flex-start; flex: 1; gap: 20px; width: auto; position: relative; padding-left: 50px; padding-right: 0; }
+        .top-bar-left h2 { margin: 0; font-size: 20px; line-height: 1.2; color: #000; font-weight: bold; text-align: center; flex-shrink: 0; }
+        .top-bar-left .back-btn { position: absolute; left: 0; }        
+        .action-buttons-wrap { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .back-btn { font-size: 24px; }
+              
+        /* 設定メニュー (ドロップダウン) */
         .settings-dropdown {
             position: absolute;
-            top: 60px;
-            right: 20px;
-            width: 200px;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            top: 60px; right: 20px;
+            width: 250px;
+            background: #fafafc;
+            border-radius: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
             padding: 15px;
             display: flex;
             flex-direction: column;
@@ -145,118 +56,15 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.2s ease;
-            border: 1px solid #e3e3e3;
+            border: 1px solid #ddd;
         }
-        .settings-dropdown.open {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        body.dark-mode .settings-dropdown {
-            background: #202022;
-            border-color: #444;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-            color: #e0e0e0;
-        }
-        .settings-dropdown-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            font-size: 14px;
-        }
-        #langToggleBtn {
-            width: 115px;
-            padding: 8px 12px;
-            margin: 0;
-            font-size: 14px;
-        }
-        /* レスポンシブ対応 (モバイル表示) */
-        @media (max-width: 767px) {
-            body { padding-top: 150px; }
-            /* ▼ この1行を追加（画像選択前の余白を小さくする） */
-            body:not(.has-image-state) { padding-top: 80px; }
-            .top-bar-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .top-bar-left { 
-                flex-direction: column; /* 縦並びに変更 */
-                gap: 10px;
-                justify-content: center; 
-                margin-bottom: 5px; 
-                width: 100%;
-                padding-left: 0;
-                padding-right: 0;
-            }
-            .top-bar-left h2 {
-                text-align: center;
-                margin: 0 45px;
-            }
-            .top-bar-left .back-btn {
-                top: 0;
-                transform: none;
-            }
-            .action-buttons-wrap {
-                width: 100%;
-                justify-content: center;
-            }
-            .top-bar-right { 
-                position: absolute;
-                top: 10px;
-                right: 15px;
-            }
-            .settings-dropdown {
-                top: 50px;
-                right: 0;
-            }
-            #selectImageBtn, #openSaveModalBtn { 
-                flex: 1; 
-                display: flex; 
-                justify-content: center; 
-                align-items: center;
-                min-width: 140px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .top-bar-left h2 { font-size: 18px; }
-        }
-         
-     /*   .panel-body {
-            background: #fafafc;
-            border-radius: 24px;
-            border: 2px solid #fff;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            padding: 14px;
-            box-sizing: border-box;
-            width: 100%;
-        }
-*/
-        #main-content {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            gap: 20px;
-        }
-
-        .panel-controls {
-            flex: 1;
-            min-width: 300px;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .panel-divider {
-            display: block;
-            width: 1px;
-            background-color: #d1d1d6;
-            align-self: stretch;
-            margin:-20px 0 -20px 0 ;
-        }
-        
+        .settings-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+        body.dark-mode .settings-dropdown { background: #202022; border-color: #444; box-shadow: 0 4px 16px rgba(0,0,0,0.5); color: #e0e0e0; }
+        .settings-dropdown-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 14px;}
+        #langToggleBtn { width: 140px; margin: 0; text-align: left;}
+        #main-content { display: flex; flex-direction: row; align-items: stretch; gap: 20px; }
+        .panel-controls { flex: 1; min-width: 300px; max-width: 440px; display: flex; flex-direction: column; gap: 15px; }       
+        .panel-divider { display: block; width: 1px; background-color: #d1d1d6; align-self: stretch; }        
         .panel-preview {
             box-shadow: none;
             padding: 0 0 0 10px;
@@ -265,217 +73,125 @@
             display: flex;
             flex-direction: column;
             position: sticky;
-            top: 150px;
+            top: 80px;
             align-self: flex-start;
-            max-height: calc(100vh - 170px);
+            max-height: calc(100vh - 100px);
             overflow-y: auto;
         }
-
-        @media (max-width: 767px) {
-            #main-content { 
-                display: flex;
-                flex-direction: column; 
-            }
-            .panel-preview { 
-                order: -1;
-                position: static; 
-                max-height: none;
-            } 
-            .panel-divider { order: 0; }
-            .panel-controls { order: 1; }
-            
-            .panel-divider {
-                width: calc(100% + 40px);
-                height: 1px;
-                margin: 20px -20px;
-            }
-            
-            .panel-controls, .panel-preview {
-                max-width: 100%;
-                width: 100%;
-                padding: 0;
-                overflow-y: visible;
-            }
-        }
-
         .fieldset {
             border: none;
             border-radius: 0;
             max-width: none;
             padding: 15px 20px 0 20px;
-            margin: 10px -16px 0 -16px;
+            margin: 10px -20px 0 -16px;
             display: flex;
             flex-direction: column;
             gap: 10px;
             border-top: 1px solid #ddd;
         }
-        .fieldset:first-of-type {
-            border-top: none;
-            padding-top: 0;
-            margin-top: 0;
-        }
-        /* エクストラ設定内の最初のfieldsetにはボーダーを適用する */
-#extraSettingsBlock .fieldset:first-of-type {
-    border-top: 1px solid #ddd;
-    padding-top: 15px;
-    margin-top: 10px;
-}
-        .section-title {
-            margin: 0;
-            font-size: 16px;
-            font-weight: bold;
-            color: #000;
-        }
-        
-        /*「設定」タイトルの余白調整 */
-.section-title.settings {
-    font-size: 18px;
-    margin-top: 10px;
-    padding-bottom: 20px;
-}
-@media (max-width: 767px) {
-    .section-title.settings {
-        margin-top: -22px;
-    }
-}
-        .about-title {
-        border-bottom: 1px solid #ccc;
-        padding-bottom: 5px;
-        margin-top: 0;
-        margin-bottom: 8px;
-        }
+        .section-title { margin: 0; font-size: 16px; font-weight: bold; color: #000; }
+        .section-title.settings { font-size: 18px; margin-top: 0; padding-bottom: 0; }
+        .about-title { border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 0; margin-bottom: 8px; }
 
+        /* スマホ用レイアウト */
+        @media (max-width: 767px) {
+            body { padding-top: 140px; }
+            body:not(.has-image-state) { padding-top: 80px; }
+            .top-bar-controls { flex-direction: column; align-items: stretch; }
+            .top-bar-left {  flex-direction: column; gap: 10px; justify-content: center; margin-bottom: 5px; width: 100%; padding-left: 0; padding-right: 0; }
+            .top-bar-left h2 { text-align: center; margin: 0 45px; }
+            .top-bar-left .back-btn { top: 0; transform: none; }
+            .action-buttons-wrap { width: 100%; justify-content: center; }
+            .top-bar-right {  position: absolute; top: 10px; right: 15px; }
+            .settings-dropdown { top: 50px; right: 0; }
+            #selectImageBtn, #openSaveModalBtn {  flex: 1;  display: flex; justify-content: center; align-items: center; min-width: 140px; }
+            #main-content { display: flex; flex-direction: column; }
+            .panel-preview {  order: -1; position: static;  max-height: none; } 
+            .panel-divider { order: 0; width: calc(100% + 32px); height: 1px; margin: 20px -16px;}
+            .panel-controls { order: 1; }
+            .panel-controls, .panel-preview { max-width: 100%; width: 100%; padding: 0; overflow-y: visible; }
+            .fieldset { margin: 10px -16px 0 -16px; }
+            .section-title.settings { margin-top: -22px; }
+        }        
+        @media (max-width: 480px) { .top-bar-left h2 { font-size: 18px; } }
         /* =========================================
-           UIパーツ：ボタン
+           ボタン
         ========================================= */
         button{
-            background-color: #fff;
-            color: #000;
+            background-color: #fff; color: #000;
             padding: 10px 12px;
             border-radius: 32px;
-            border: 1px solid #e3e3e3;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            font-size: 15px;
-            font-family: inherit;         
-            box-sizing: border-box;  
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            font-size: 15px; font-family: inherit;
+            box-sizing: border-box;
             cursor: pointer;
             transition: all 0.1s;
-            text-align: center;
-            white-space: nowrap; /* ボタン内のテキストが改行されないようにする */
+            text-align: center; white-space: nowrap;
         }
-        @media (hover: hover) { 
-            button:not(:disabled):hover { opacity: 0.7; } 
-        }
-        button:not(:disabled):active {
-           filter: brightness(0.9);
-            transform: scale(0.98);
-        }
-        button:disabled {
-            cursor: not-allowed;
-            box-shadow: none;
-            background-color: #fff;
-            border: 1px solid #e3e3e3;
-            color: #bbb;
-        }
+        @media (hover: hover) { button:not(:disabled):hover { opacity: 0.7; } }
+        button:not(:disabled):active { filter: brightness(0.9); transform: scale(0.98); }
+        button:disabled { cursor: not-allowed; box-shadow: none; background-color: #fff; border: 1px solid #ddd; color: #bbb; }        
+        .btn-blue { background-color: #0088ff; color: #84ffff; border: 1px solid #21c8ff; }
+        .btn-blue:not(:disabled):active { filter: brightness(1.2); transform: scale(0.98); }
+        .btn-circle { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; margin: 0; padding: 0; flex-shrink: 0; }
         
-        .btn-blue {
-            background-color: #0088ff;
-            color: #84ffff;
-            border: 1px solid #21c8ff;
-        }
-
-        .btn-blue:not(:disabled):active {
-           filter: brightness(1.2);
-            transform: scale(0.98);
-        }
-
-        /* =========================================
-           UIパーツ：ドラッグ＆ドロップ
-        ========================================= */
+        /* ドラッグ＆ドロップ */
         .drop-zone {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;    
-            align-items: center;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            border-radius: 24px;
-            padding: 30px 20px;
-            box-sizing: border-box; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+            border: 1px solid #ddd;
+            border-radius: 32px;
+            width: 100%;
+            max-width: 550px;
+            padding: 20px;
+            margin: 0 auto;
+            box-sizing: border-box;
             text-align: center;
             background-color: #fff;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-
-        @media (hover: hover) { 
-            .drop-zone:hover { 
-             opacity: 0.7;
-            } 
-        }
-
-        .drop-zone p {
-            margin: 0;
-            font-weight: bold;
-            color: #000;
-            pointer-events: none;
-            font-size: 16px;
-        }
-
-        .drop-zone span {
-            font-size: 14px;
-            font-weight: normal;
-            color: #666;
-            pointer-events: none;
-        }
+        @media (hover: hover) { .drop-zone:hover { opacity: 0.7; } }
+        .drop-zone p { margin: 0; font-weight: bold; color: #000; pointer-events: none; font-size: 18px; }
+        .drop-zone span { font-size: 14px; font-weight: normal; color: #666; pointer-events: none; }
         /* =========================================
            表示切り替え用 (has-image-state)
         ========================================= */
+        body.has-image-state #welcomeHeader { display: none !important; }
+        body.has-image-state #modeFieldset { display: none !important; }
+        body:not(.has-image-state) #settingsTitle { display: none !important; }
         body:not(.has-image-state) .back-btn,
-body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
-
+        body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         body:not(.has-image-state) .controls-wrap,
         body:not(.has-image-state) .panel-divider,
         body:not(.has-image-state) .panel-preview { display: none !important; }
-
         body.has-image-state #dropZoneFieldset { display: none !important; }
-        body.has-image-state #about-section { display: none !important; } /* 画像選択後は非表示 */
+        body.has-image-state #about-section { display: none !important; }
         body.has-image-state #main-content.panel-body { margin-bottom: 20px; }
-
-        body:not(.has-image-state) #main-content {
-            justify-content: center;
-            align-items: center;
-            min-height: 55vh;
-        }
-        body:not(.has-image-state) .panel-controls {
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-        }
-        body:not(.has-image-state) #dropZoneFieldset {
-            border-top: none;
-            padding: 0;
-            margin: 0;
-        }
-        body:not(.has-image-state) #dropZoneFieldset .section-title {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 20px;
-        }
+        body:not(.has-image-state) #main-content { justify-content: center; align-items: center; min-height: 55vh; }
+        body:not(.has-image-state) .panel-controls { max-width: 800px; width: 100%; margin: 0 auto; }
+        body:not(.has-image-state) #modeFieldset { border-top: none; padding: 0; margin: 0 0 20px 0; align-items: center; }
+        body:not(.has-image-state) #modeFieldset .section-title { text-align: center; margin-bottom: 10px; font-size: 20px; }
+        body:not(.has-image-state) #modeFieldset .hint-box { text-align: center; }
+        body:not(.has-image-state) #dropZoneFieldset { border-top: none; padding: 0; margin: 0; }
+        body:not(.has-image-state) #dropZoneFieldset .section-title { text-align: center; margin-bottom: 20px; font-size: 20px; }
 
         /* iOS風トグルスイッチ */
+        .checkbox-label { display: flex; align-items: center; }
         .checkbox-label input[type="checkbox"] {
             -webkit-appearance: none;
             appearance: none;
             position: relative;
             width: 52px;
             height: 30px;
-            background-color: #d1d1d6;
+            background-color: #c5c5c7;
             border-radius: 16px;
             cursor: pointer;
             outline: none;
             transition: background-color 0.2s ease;
             vertical-align: middle;
-            margin-right: 8px;
+            margin-left: 6px;
             flex-shrink: 0;
         }
         .checkbox-label input[type="checkbox"]::after {
@@ -487,19 +203,14 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             background-color: #fff;
             top: 2px;
             left: 2px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: none;
             transition: transform 0.2s ease;
         }
-        .checkbox-label input[type="checkbox"]:checked {
-            background-color: #34c759;
-        }
-        .checkbox-label input[type="checkbox"]:checked::after {
-            transform: translateX(22px);
-        }
-
-        /* =========================================
-           UIパーツ：プルダウン（セレクトボックス）
-        ========================================= */
+        .checkbox-label input[type="checkbox"]:checked { background-color: #34c759; }
+        .checkbox-label input[type="checkbox"]:checked::after { transform: translateX(22px); }
+        /* ====================================
+           プルダウン（セレクトボックス）
+        ==================================== */
         .styled-select {
             padding: 8px 12px;
             border-radius: 8px;
@@ -510,45 +221,29 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             border-radius: 24px;
             max-width: 300px;
             background-color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             color: #333;
             cursor: pointer;
             outline: none;
         }
-        .styled-select:focus {
-            border-color: #0088ff;
-            box-shadow: 0 0 0 2px rgba(0, 113, 255, 0.2);
-        }  
-        
-        .custom-select-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 300px;
-            user-select: none;
-        }
+        .styled-select:focus { border-color: #0088ff; box-shadow: 0 0 0 2px rgba(0, 113, 255, 0.2); }         
+        .custom-select-wrapper { position: relative; width: 100%; max-width: 300px; user-select: none; }
         .custom-select-trigger {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #e3e3e3;
+            border: 1px solid #ddd;
             padding: 10px 16px;
             border-radius: 24px;
             background-color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             color: #000;
             font-size: 15px;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .custom-select-trigger:after {
-            content: "▼";
-            font-size: 10px;
-            color: #888;
-            transition: transform 0.2s;
-        }
-        .custom-select-wrapper.open .custom-select-trigger:after {
-            transform: rotate(180deg);
-        }
+        .custom-select-trigger:after { content: "▼"; font-size: 10px; color: #888; transition: transform 0.2s; }
+        .custom-select-wrapper.open .custom-select-trigger:after { transform: rotate(180deg); }
         .custom-options {
             position: absolute;
             display: block;
@@ -557,7 +252,7 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             right: 0;
             margin-top: 6px;
             border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
             opacity: 0;
             background-color: #fff;
             visibility: hidden;
@@ -570,12 +265,7 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             padding: 6px;
             box-sizing: border-box;
         }
-        .custom-select-wrapper.open .custom-options {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: all;
-            transform: translateY(0);
-        }
+        .custom-select-wrapper.open .custom-options { opacity: 1; visibility: visible; pointer-events: all; transform: translateY(0); }
         .custom-option {
             padding: 9px 2px 9px 32px;
             cursor: pointer;
@@ -596,26 +286,13 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             font-size: 18px;
             font-weight: normal;
         }
-        .custom-option.selected::before {
-            opacity: 1;
-        }
-        .custom-option:hover {
-            background-color: #f5f5f5;
-        }
-        .custom-option.selected {
-            color: #000000; 
-            background-color: #eaeaea;
-        }
-
+        .custom-option.selected::before { opacity: 1; }
+        .custom-option:hover { background-color: #f5f5f5; }
+        .custom-option.selected { color: #000000;  background-color: #eaeaea; }
         /* =========================================
-           UIパーツ：スライダー関連
+           スライダー関連
         ========================================= */
-        .slider-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-        }
+        .slider-row { display: flex; align-items: center; gap: 10px; width: 100%; }
         .slider-btn {
             display: flex;
             align-items: center;
@@ -629,30 +306,23 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             cursor: pointer;
             margin: 0;
             padding: 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
             user-select: none;
             transition: all 0.1s;
             flex-shrink: 0;
         }
         @media (hover: hover) { .slider-btn:hover { opacity: 0.7; } }
-        .slider-btn:active { filter: brightness(0.85); transform: scale(1.15); }
-
-        .slider-container { width: 100%; margin: 5px 0 15px 0; }
-        
-        .slider-wrapper {
-            position: relative;
-            flex: 1;
-            display: flex;
-            align-items: center;
-        }
-        
+        .slider-btn:active { filter: brightness(0.9); transform: scale(1.15); }
+        .slider-container { width: 100%; margin: 5px 0 15px 0; }        
+        .slider-wrapper { position: relative; flex: 1; display: flex; align-items: center; }        
         .val-display {
             display: inline-block;
             padding: 5px 12px;
-            border: 1px solid #e3e3e3;
+            margin-right: 4px;
+            border: 1px solid #ddd;
             background-color: #fff;
             border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             cursor: pointer;
             font-size: 14px; 
             min-width: 36px;
@@ -661,7 +331,7 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             user-select: none;
         }
         @media (hover: hover) { .val-display:hover { opacity: 0.7; } }
-        .val-display:active { filter: brightness(0.85); transform: scale(0.9); }
+        .val-display:active { filter: brightness(0.9); transform: scale(0.98); }
 
         .slider-track {
             position: absolute;
@@ -691,174 +361,106 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             appearance: none;
             width: 28px;
             height: 28px;
-            border: 1px solid #e3e3e3;
+            border: 1px solid #ddd;
             border-radius: 28px;
-            background-color: #fff;          
+            background-color: #fff;
             box-sizing: border-box;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: all 0.1s;
         }
         .slider:active::-webkit-slider-thumb { filter: brightness(0.85); transform: scale(1.1); }
 
-        /* =========================================
-           UIパーツ：カラーパレット
-        ========================================= */
-        .palette-btn-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
+        /* カラーパレット */
+        .palette-btn-group { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
         .palette-table { border-collapse: collapse; margin: 0 auto; }
         .palette-table tr { display: flex; justify-content: center;}
         .palette-table th { display: block; width: 36px; height: 36px; padding: 0; box-sizing: border-box; }
         .color-cell { border: 1px solid #999; border-radius: 24px; overflow: hidden; transition: all 0.2s; cursor: pointer; }
-        .color-cell:active { filter: brightness(0.7); transform: scale(0.85);}
+        .color-cell:active { filter: brightness(0.7); transform: scale(0.9);}
+        .palette-table.read-only .color-cell:active { filter: none !important; transform: none !important; }
         .color-cell input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 100%; height: 100%; margin: 0; cursor: pointer; outline: none; background-color: transparent; }
         .color-cell input[type="checkbox"]:checked {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 12l5 5L20 6' fill='none' stroke='black' stroke-width='5.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M4 12l5 5L20 6' fill='none' stroke='rgb(0 255 161)' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-            background-size: 64%; background-position: center; background-repeat: no-repeat;    
+            background-size: 64%; background-position: center; background-repeat: no-repeat;
         }
-
         /* =========================================
            プレビュー＆キャンバス
         ========================================= */
-        .preview-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .preview-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .preview-label {
-            font-size: 16px;
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 5px;
-        }
+        .preview-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; margin-top: 10px; }
+        .preview-box { display: flex; flex-direction: column; align-items: center; }
+        .preview-label { font-size: 16px; font-weight: bold; color: #555; margin-bottom: 5px; }
         .canvas-wrapper {
-            background-position: 0px 0px, 6px 6px;
-            background-size: 12px 12px; 
+            background-position: 0px 0px, 6px 6px; background-size: 12px 12px; 
             background-image: linear-gradient(45deg, #f1f1f1 25%, transparent 25%, transparent 75%, #f1f1f1 75%, #f1f1f1 100%), linear-gradient(45deg, #f1f1f1 25%, #fcfcfc 25%, #fcfcfc 75%, #f1f1f1 75%, #f1f1f1 100%);
-            border: 1px solid #b2b2b2;
-            display: inline-block;
-            position: relative; 
-            max-width: 100%;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-        .pixel-canvas {
-            image-rendering: pixelated;
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-        #gridCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; 
-            image-rendering: pixelated;
-        }
-        
-        #seamlessGrid {
-            display: none;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            line-height: 0;
-        }
-        .seamless-item {
-            width: 100%;
-            height: auto;
-            display: block;
-            image-rendering: pixelated;
-        }
-
+            border: 1px solid #b2b2b2; display: inline-block; position: relative; max-width: 100%; overflow: hidden; box-sizing: border-box; }
+        .pixel-canvas { image-rendering: pixelated; max-width: 100%; height: auto; display: block; }
+        #gridCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; image-rendering: pixelated; }        
+        #seamlessGrid { display: none; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; line-height: 0; }
+        .seamless-item { width: 100%; height: auto; display: block; image-rendering: pixelated; }
         .info-panel {
             background: #fff;
-            padding: 12px 12px;
-            border-radius: 16px;
+            padding: 12px;
+            border-radius: 24px;
             border: 1px solid #e2e4e7;
+            max-width: 880px;
             font-size: 13px;
             line-height: 1.6;
             text-align: left;
+            justify-content: center;
             width: 100%;
             box-sizing: border-box;
             margin-bottom: 10px;
             color: #000;
-        }       
-        .about-text strong { font-size: 16px; }      
-        .info-panel div { display: flex; justify-content: flex-start; }
-        .info-panel strong { width: 115px; color: #444; font-weight: bold; }      
-        .hint-box {
-            font-size: 14px;
-            line-height: 1.5;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 8px 12px;
-            border-radius: 16px;
-            display: inline-block;
-            color: #555;
-            margin-top: 5px;
-        }
-
-        /* =========================================
-           モーダル（テンキー ＆ パレット ＆ アラート）
-        ========================================= */
-        /* 背景スクロールをロックするためのクラスを追加 */
-        body.modal-open {
-            overflow: hidden;
-        }
-
-        .numpad-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.4) !important; /* 透明ハックを削除し背景色を設定 */
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* centerから変更し、上揃えに */
-            padding: 40px 0; /* 上下に余白を持たせる */
-            box-sizing: border-box;
-            overflow-y: auto; /* はみ出した時にスクロール可能にする */
-            z-index: 9999;
+            margin: 0 auto;
+            
+            /* ▼ ここから追加 */
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            column-gap: 20px;
+            /* ▲ ここまで */
         }
         
-        /* ダークモード用の暗転背景色を追加 */
-        body.dark-mode .numpad-overlay {
-            background-color: rgba(0, 0, 0, 0.6) !important;
-        }
+        .about-text strong { font-size: 16px; }
+        .info-panel div { display: flex; justify-content: flex-start; }
+        .info-panel strong { width: 115px; color: #444; font-weight: bold; }
 
+        /* ▼ ここから新規追加 */
+        #texCountWarning {
+            grid-column: 1 / -1; /* 警告文は分割せず、常に横幅いっぱいに広げる */
+        }
+        .hint-box { font-size: 14px; line-height: 1.5; background-color: #fff; border: 1px solid #ccc; padding: 8px 12px; border-radius: 16px; display: inline-block; color: #555; margin-top: 5px; }
+        /* =========================================
+           モーダル（テンキー＆パレット＆アラート）
+        ========================================= */
+        body.modal-open { overflow: hidden; }
+        .numpad-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            right: 0; bottom: 0; /* ★追加 */
+            width: 100%; height: 100%; /* ★変更 */
+            height: 100dvh; /* ★追加 */
+            background-color: rgba(0, 0, 0, 0.4) !important;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            z-index: 9999;
+        }
+        body.dark-mode .numpad-overlay { background-color: rgba(0, 0, 0, 0.6) !important; }
         .numpad-modal {
             background-color: #fafafc;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15); /* 100vmaxのハックを削除 */
-            border-radius: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border-radius: 34px;
             box-sizing: border-box;
             animation: numpadPop 0.15s ease-out;
             max-width: 95vw;
             overflow: hidden;
-            margin: auto; /* flex-startと組み合わせて、通常時は中央寄せにする */
+            margin: auto;
         }
-
-        @keyframes numpadPop {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .numpad-header {
-            padding: 15px 20px;
-            color: #000;
-            text-align: center;
-        }
+        @keyframes numpadPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .numpad-header { padding: 15px 20px; color: #000; text-align: center; }
         .numpad-header h3 { margin: 0; font-size: 18px; font-weight: bold; }
         .numpad-body {
             padding: 2px 20px 20px 20px;
@@ -882,13 +484,8 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             outline: none;
             font-family: inherit;
         }
-        #numpad-display.is-initial { color: #888 !important; }
-        
-        .numpad-grid {
-            display: grid;
-            grid-template-columns: 60px 60px 60px 100px;
-            gap: 10px;
-        }
+        #numpad-display.is-initial { color: #888 !important; }        
+        .numpad-grid { display: grid; grid-template-columns: 60px 60px 60px 100px; gap: 10px; }
         .num-btn {
             font-size: 20px;
             cursor: pointer;
@@ -899,25 +496,29 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             padding: 0;
             user-select: none;
             font-family: inherit;
-            transition: all 0.1s;
         }
         .num-btn.round-btn { width: 60px; height: 60px; border-radius: 30px; }
-        .num-btn.rect-btn { width: 100px; height: 60px; border-radius: 30px; font-size: 14px; }
-        
+        .num-btn.rect-btn { width: 100px; height: 60px; border-radius: 30px; font-size: 14px; }        
         #saveFileNameInput {
-            border-color: #e3e3e3;
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 24px;
+            font-size: 16px;
+            font-family: inherit;
+            box-sizing: border-box;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #ddd;
         }
+        #saveFileNameInput:focus { outline: none; }
 
-        /* =========================================
-           画面全体のドラッグ＆ドロップ用ハイライト
-        ========================================= */
+        /* 画面全体のドラッグ＆ドロップ用ハイライト */
         body::after {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            right: 0; bottom: 0; /* ★追加 */
+            width: 100%; height: 100%; /* ★変更 */
+            height: 100dvh; /* ★追加 */
             background-color: rgba(0, 136, 255, 0.15); 
             box-sizing: border-box;
             z-index: 99999;
@@ -926,27 +527,41 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             visibility: hidden;
             transition: opacity 0.2s, visibility 0.2s;
         }
+        body.dragover-active::after { opacity: 1; visibility: visible; }
+        body.dark-mode::after { background-color: rgba(0, 145, 255, 0.15); }
+/* =========================================
+   スマホ用ミニプレビュー（フローティング）
+========================================= */
+#floating-preview {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 128px;
+    height: 128px;
+    background-position: 0px 0px, 3px 3px; background-size: 6px 6px; 
+            background-image: linear-gradient(45deg, #f1f1f1 25%, transparent 25%, transparent 75%, #f1f1f1 75%, #f1f1f1 100%), linear-gradient(45deg, #f1f1f1 25%, #fcfcfc 25%, #fcfcfc 75%, #f1f1f1 75%, #f1f1f1 100%);
+    border: 1px solid #b2b2b2;
+    border-radius: 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    z-index: 999;
+    display: none;
+    overflow: hidden;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+#floating-preview.visible { opacity: 1; transform: translateY(0); }
+#floating-preview img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
 
-        body.dragover-active::after {
-            opacity: 1;
-            visibility: visible;
-        }
+#floating-preview.pos-left { left: 20px; right: auto; }
+#floating-preview.pos-right { left: auto; right: 20px; }
 
-        body.dark-mode::after {
-            background-color: rgba(0, 145, 255, 0.15);
-        }
-
-        /* =========================================
-           ダークモード用スタイル
-        ========================================= */
-        body.dark-mode {
-            --slider-fill: #0091ff;
-            --slider-bg: #333;
-
-            background-color: #1b1b1d;
-            color: #e0e0e0;
-        }
-        
+body.dark-mode #floating-preview { background: #1b1b1d; border-color: #444; box-shadow: 0 4px 16px rgba(0,0,0,0.6); }
+/* PCサイズでは強制的に非表示 */
+@media (min-width: 768px) { #floating-preview { display: none !important; } }
+        /* ダークモード用スタイル */
+        body.dark-mode { --slider-fill: #0091ff; --slider-bg: #333; background-color: #1b1b1d; color: #e0e0e0; }
         body.dark-mode .top-bar-left h2 { color: #e0e0e0; }
         body.dark-mode .top-bar-left h2 span { color: #aaa !important; }
         body.dark-mode .section-title,
@@ -958,11 +573,9 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         body.dark-mode .custom-option,
         body.dark-mode button,
         body.dark-mode .drop-zone p,
-        body.dark-mode #saveFileNameInput {
-            color: #f4f4f4;
-        }
+        body.dark-mode #saveFileNameInput
+        { color: #fff; }
         body.dark-mode a { color: #0091ff; }
-        
         body.dark-mode button,
         body.dark-mode .drop-zone,
         body.dark-mode .custom-select-trigger,
@@ -971,70 +584,34 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         body.dark-mode .num-btn,
         body.dark-mode .info-panel,
         body.dark-mode .hint-box,
-        body.dark-mode #saveFileNameInput {
-            background-color: #313133;
-            border-color: #444;
-        }
-
-        body.dark-mode .custom-options {
-            background-color: #28282a;
-        }
-
-        body.dark-mode #numpad-display {
-            background-color: rgba(60, 60, 60, 0.9);
-        }
-
-        body.dark-mode .hint-box {
-            color: #aaa;
-        }
-        
-        body.dark-mode .btn-blue {
-            background-color: #0092ff;
-            color: #7effff;
-            border: 1px solid #00b7ff;
-        }
-        
-        body.dark-mode button:disabled {
-            background-color: #222;
-            color: #666;
-            border-color: #444;
-        }
-        
-        body.dark-mode .info-panel {
-            color: #e0e0e0;
-        }
-        
-        body.dark-mode .drop-zone p { color: #f4f4f4; }
-        body.dark-mode .drop-zone span { color: #aaa; }
-    
+        body.dark-mode #saveFileNameInput { background-color: #2c2c2e; border-color: #444; }
+        body.dark-mode .custom-options { background-color: #28282a; }
+        body.dark-mode #numpad-display { background-color: rgba(60, 60, 60, 0.9); }
+        body.dark-mode .hint-box { color: #aaa; }
+        body.dark-mode .btn-blue { background-color: #0092ff; color: #7effff; border: 1px solid #00b7ff; }
+        body.dark-mode button:disabled { background-color: #222; color: #666; border-color: #444; }     
+        body.dark-mode .info-panel { color: #e0e0e0; }       
+        body.dark-mode .drop-zone span { color: #aaa; }   
         body.dark-mode .slider-track { background-color: #000; }
-        body.dark-mode .slider::-webkit-slider-thumb { background-color: #e0e0e0; border-color: #666; }
-        
+        body.dark-mode .slider::-webkit-slider-thumb { background-color: #e0e0e0; border-color: #666; }        
         body.dark-mode #numpad-display.is-initial { color: #777 !important; }
-        @media (hover: hover) { body.dark-mode .slider-btn:hover { background-color: #3a3a3a; } }
-        
-        body.dark-mode .numpad-modal { 
-            background-color: #1b1b1d;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4); /* 100vmaxを削除 */
-        }
+        @media (hover: hover) { body.dark-mode .slider-btn:hover { background-color: #3a3a3a; } } 
+        body.dark-mode .numpad-modal { background-color: #1b1b1d; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
         body.dark-mode .color-cell { border-color: #555; }
         body.dark-mode .preview-label { color: #bbb; }
         body.dark-mode .preview-box:nth-child(2) .preview-label { color: #4da3ff; }
-        
         body.dark-mode .panel-divider { background-color: #444; }
         body.dark-mode .fieldset { border-top-color: #444; }
         body.dark-mode #extraSettingsBlock .fieldset:first-of-type { border-top-color: #444; }
-
-        body.dark-mode .checkbox-label input[type="checkbox"] { background-color: #444; }
-        body.dark-mode .checkbox-label input[type="checkbox"]:checked { background-color: #34c759; }
-        
+        body.dark-mode .checkbox-label input[type="checkbox"] { background-color: #5a5a5e; }
+        body.dark-mode .checkbox-label input[type="checkbox"]:checked { background-color: #30d158; }       
         body.dark-mode .custom-option:hover { background-color: #3a3a3a; }
-        body.dark-mode .custom-option.selected { background-color: #535355; color: #fff; }
-        
+        body.dark-mode .custom-option.selected { background-color: #535355; color: #f4f4f4; }       
         body.dark-mode .canvas-wrapper {
             background-image: linear-gradient(45deg, #2a2a2a 25%, transparent 25%, transparent 75%, #2a2a2a 75%, #2a2a2a 100%), linear-gradient(45deg, #2a2a2a 25%, #333 25%, #333 75%, #2a2a2a 75%, #2a2a2a 100%);
             border-color: #444;
         }
+       body.dark-mode #floating-preview { background-position: 0px 0px, 3px 3px; background-size: 6px 6px; background-image: linear-gradient(45deg, #2a2a2a 25%, transparent 25%, transparent 75%, #2a2a2a 75%, #2a2a2a 100%), linear-gradient(45deg, #2a2a2a 25%, #333 25%, #333 75%, #2a2a2a 75%, #2a2a2a 100%); border-color: #444; }
         body.dark-mode .info-panel strong { color: #ccc; }
         body.dark-mode #custom-alert-message { color: #e0e0e0 !important; }
     </style>
@@ -1044,7 +621,7 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
 <div class="top-nav-bar">
     <div class="top-bar-controls">
         <div class="top-bar-left">
-            <button type="button" id="backToHomeBtn" class="back-btn"><span class="material-symbols-rounded" style="position: relative; left: -1px;">arrow_back_ios_new</span></button>
+            <button type="button" id="backToHomeBtn" class="back-btn btn-circle"><span class="material-symbols-rounded" style="position: relative; left: -1px;">arrow_back_ios_new</span></button>
             <h2 data-i18n="title">GBG Texture Converter</h2>
             
             <div class="action-buttons-wrap">
@@ -1053,12 +630,12 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             </div>
         </div>
         <div class="top-bar-right">
-            <button type="button" id="settingsMenuBtn" class="menu-btn"><span class="material-symbols-rounded">settings</span></button>
+            <button type="button" id="settingsMenuBtn" class="btn-circle"><span class="material-symbols-rounded">settings</span></button>
             
             <div id="settingsDropdown" class="settings-dropdown">
                 <div class="settings-dropdown-item">
                     <span data-i18n="themeLabel">テーマ</span>
-                    <div style="width: 115px">
+                    <div style="width: 140px">
                         <select id="themeSelect" class="styled-select">
                             <option value="system" data-i18n="themeSys">システム</option>
                             <option value="light" data-i18n="themeLight">ライト</option>
@@ -1070,39 +647,54 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                     <span data-i18n="langLabel">言語</span>
                     <button id="langToggleBtn" data-i18n="langBtn">English</button>
                 </div>
+                <div class="settings-dropdown-item">
+                    <span data-i18n="miniPreviewLabel">ミニプレビュー</span>
+                    <div style="width: 140px">
+                        <select id="miniPreviewSelect" class="styled-select">
+                            <option value="right" data-i18n="mpRight" selected>右下</option>
+                            <option value="left" data-i18n="mpLeft">左下</option>
+                            <option value="hidden" data-i18n="mpHidden">非表示</option>
+                        </select>
+                    </div>
+                </div>
+                </div>
             </div>
         </div>
     </div>
-</div>       
-    </div>
-</div>
 </div>
 
 <div class="panel-body" id="main-content">
     <div class="panel-controls">
-        <fieldset class="fieldset" id="dropZoneFieldset">
-            <div style="text-align: center; margin-bottom: 16px;">
-                <span data-i18n="welcomeTitle" style="font-size: 18px; font-weight: bold; display: block; margin-bottom: 6px;">画像をはじプロ仕様のドット絵に変換</span>
-                <span data-i18n="welcomeSub" style="font-size: 15px; display: block; max-width: 420px; margin: 0 auto; line-height: 1.4;">はじプロ用のテクスチャを簡単に作成できます</span>
+        <div id="welcomeHeader" style="text-align: center; margin-bottom: 16px;">
+    <span id="welcomeTitleEl" data-i18n="welcomeTitleNormal" style="font-size: 20px; font-weight: bold; display: block; margin-bottom: 6px;">画像をはじプロ仕様のドット絵に変換</span>
+    <span id="welcomeSubEl" data-i18n="welcomeSubNormal" style="font-size: 16px; display: block; max-width: 420px; margin: 0 auto; line-height: 1.4;">はじプロ用のテクスチャを簡単に作成できます</span>
+</div>
+
+        <h3 id="settingsTitle" class="section-title settings" data-i18n="settings">設定</h3>
+
+        <fieldset class="fieldset" id="modeFieldset" style="border-top: none; padding-top: 5px; margin-top: -10px;">
+            <h3 class="section-title" data-i18n="operationMode">動作モード</h3>
+            <div style="margin-top: -5px; margin-bottom: 0; width: 100%; max-width: 300px;"> <select id="operationModeSelect" class="styled-select">
+                    <option value="normal" data-i18n="modeNormal" selected>テクスチャ変換</option>
+                    <option value="extract" data-i18n="modeExtract">テクスチャ抽出</option>
+                </select>
             </div>
-            <h3 class="section-title" data-i18n="selImg">画像を選択</h3>
+        </fieldset>
+
+        <fieldset class="fieldset" id="dropZoneFieldset">
             <label id="dropZone" class="drop-zone">
                 <span class="material-symbols-rounded" style="font-size: 48px; color: var(--slider-fill); margin-bottom: 12px; margin-top: -12px; display: block;">upload</span>
-                <p data-i18n="drop" style="font-size: 18px;">画像をドロップするか、クリックして選択</p>
+                <p data-i18n="drop">クリックして画像を選択、またはドラッグ&ドロップ</p>
                 <span data-i18n="imgHint" style="display: block; margin-top: 8px;">(png, jpg, webp, heic など)</span>
                 <input type="file" id="imageInput" accept="image/*,.heic,.HEIC" style="display: none;">
             </label>
         </fieldset>
-
         <div id="about-section" style="margin-top: 30px; margin-bottom: 20px;">
-            <h3 class="about-title" data-i18n="aboutTitle">このツールについて</h3>
-            <div style="line-height: 1.8; font-size: 15px; padding-left: 5px;" data-i18n="aboutText" class="about-text">ここに説明
-            </div>
+            <div style="line-height: 1.8; font-size: 16px; padding-left: 5px;" data-i18n="aboutText" class="about-text">ここに説明</div>
         </div>
 
         <div class="controls-wrap" style="margin-top: -2px;">
-            <h3 class="section-title settings" data-i18n="settings">設定</h3>
-            <fieldset class="fieldset">
+            <fieldset class="fieldset" id="fitModeFieldset" style="border-top: none; padding-top: 0;">
                 <h3 class="section-title" data-i18n="fitMode">画像のフィット方法</h3>
                 <div style="margin-top: 10px; margin-bottom: 10px;">
                     <select id="fitModeSelect" class="styled-select">
@@ -1110,9 +702,9 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                         <option value="stretch" data-i18n="fitStr">キャンバスにフィット</option>
                     </select>
                 </div>
-            </fieldset>
+                </fieldset>
 
-            <fieldset class="fieldset">
+            <fieldset class="fieldset" id="texCountFieldset">
                 <p class="section-title" data-i18n="texCount">テクスチャ枚数</p>
                 
                 <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 10px;">
@@ -1144,11 +736,11 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                             <button type="button" id="inc-countY" class="material-symbols-rounded slider-btn">add</button>
                         </div>
                     </div>
-                    <div class="hint-box" data-i18n="texSub" style="margin-bottom: 5px;"></div> 
+                    <div class="hint-box" data-i18n="texSub" style="margin-bottom: 5px;"></div>
                 </div>
             </fieldset>
 
-           <fieldset class="fieldset">
+           <fieldset class="fieldset" id="adjustFieldset">
                 <h3 class="section-title" data-i18n="imgAdj">画像の調整</h3>
                 
                 <div style="display: flex; flex-direction: column; gap: 5px;">
@@ -1219,16 +811,25 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                 </div>
             </fieldset>
 
-            <fieldset class="fieldset">
-                <h3 class="section-title" data-i18n="palSet">パレット設定</h3>
+            <fieldset class="fieldset" id="paletteFieldset">
+    <h3 class="section-title" data-i18n="palSet">パレット設定</h3>
                 <div style="margin-top: 5px; margin-bottom: 5px;">
                     <button type="button" id="openPaletteBtn" data-i18n="palBtn">パレット設定を開く</button>
                 </div>
             </fieldset>
+            <fieldset class="fieldset" id="colorMetricFieldset">
+    <h3 class="section-title" data-i18n="colorMetric">色差計算方法</h3>
+    <div style="margin-top: 10px; margin-bottom: 5px;">
+        <select id="colorMetricSelect" class="styled-select">
+        <option value="euclidean" data-i18n="metricEuclidean" selected>RGB ユークリッド (高速)</option>
+            <option value="ciede2000" data-i18n="metricCiede2000">CIEDE2000 (視覚に近い)</option>
+        </select>
+    </div>
+</fieldset>
 
-            <fieldset class="fieldset">
+            <fieldset class="fieldset" id="ditherFieldset">
                 <h3 class="section-title" data-i18n="dither">ディザリング設定</h3>
-                <div style="margin-top: 10px;">
+                <div id="ditherSelectWrapper" style="margin-top: 10px;">
                     <select id="ditherModeSelect" class="styled-select">
                         <option value="floyd_mirror" data-i18n="dFloydMirror" selected>誤差拡散(端補正)</option>
                         <option value="floyd" data-i18n="dFloyd">誤差拡散</option>
@@ -1238,38 +839,49 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                         <option value="none" data-i18n="dNone">なし</option>
                     </select>
                 </div>
-                
                 <div style="margin-top: 15px;">
                     <label class="checkbox-label">
-                        <span data-i18n="checkerAlpha">市松模様で半透明風にする</span>
+                        <span style="font-size: 15px;" data-i18n="checkerAlpha">市松模様で半透明風にする</span>
                         <input type="checkbox" id="checkerAlphaCb">
                     </label>
                 </div>
+                <div>
+                    <label class="checkbox-label">
+                        <span style="font-size: 15px;" data-i18n="smoothResize">縮小時にピクセルを平均化する</span>
+                        <input type="checkbox" id="smoothResizeCb" checked>
+                    </label>
+                </div>
+                <div id="clampErrorWrapper">
+                    <label class="checkbox-label">
+                        <span style="font-size: 15px;" data-i18n="clampError">誤差を0〜255の範囲内に収める(クランプ)</span>
+                        <input type="checkbox" id="clampErrorCb">
+                    </label>
+                </div>
             </fieldset>
+                </fieldset>
 <fieldset class="fieldset">
     <h3 class="section-title" data-i18n="extSet">6. エクストラ設定 (AGTD2)</h3>
     <div style="margin-top: 10px;">
-        <label class="checkbox-label" style="display: flex; align-items: center;">
+        <label class="checkbox-label">
             <span style="font-size: 15px;" data-i18n="agtd2Switch">AGTD2用の設定とCSVエンコードを有効にする</span>
-            <input type="checkbox" id="enableExtraCb">
-        </label>
+            <input type="checkbox" id="enableExtraCb" checked> </label>
     </div>
     <div class="hint-box" data-i18n="exSub">AGTD2を使って自動描画するときはオンにしてください<br>それ以外のときはオフにしてください</div> 
     
-    <div id="extraSettingsBlock" style="display: none; flex-direction: column; width: 100%;">
+    <div id="extraSettingsBlock" style="display: flex; flex-direction: column; width: 100%;">
         
         <fieldset class="fieldset">
             <h4 class="section-title" style="margin-bottom: 10px;" data-i18n="textureFaces">貼り付ける面</h4>
             <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 14px;">
-                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">X-</span><input type="checkbox" id="ex_faceXm" checked style="margin-right: 0;"></label>
-                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Y-</span><input type="checkbox" id="ex_faceYm" checked style="margin-right: 0;"></label>
-                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Z-</span><input type="checkbox" id="ex_faceZm" checked style="margin-right: 0;"></label>
-                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">X+</span><input type="checkbox" id="ex_faceXp" checked style="margin-right: 0;"></label>
-                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Y+</span><input type="checkbox" id="ex_faceYp" checked style="margin-right: 0;"></label>
-                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Z+</span><input type="checkbox" id="ex_faceZp" checked style="margin-right: 0;"></label>
-                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span data-i18n="xCenter" style="margin-right: 4px;">X中央</span><input type="checkbox" id="ex_faceXc" style="margin-right: 0;"></label>          
-                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span data-i18n="yCenter" style="margin-right: 4px;">Y中央</span><input type="checkbox" id="ex_faceYc" style="margin-right: 0;"></label>
-                <label class="checkbox-label" style="display: flex; align-items: center; justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span data-i18n="zCenter" style="margin-right: 4px;">Z中央</span><input type="checkbox" id="ex_faceZc" style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">X-</span><input type="checkbox" id="ex_faceXm" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Y-</span><input type="checkbox" id="ex_faceYm" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Z-</span><input type="checkbox" id="ex_faceZm" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">X+</span><input type="checkbox" id="ex_faceXp" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Y+</span><input type="checkbox" id="ex_faceYp" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span style="margin-right: 4px;">Z+</span><input type="checkbox" id="ex_faceZp" checked style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span data-i18n="xCenter" style="margin-right: 4px;">X中央</span><input type="checkbox" id="ex_faceXc" style="margin-right: 0;"></label>          
+                <label class="checkbox-label" style="justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span data-i18n="yCenter" style="margin-right: 4px;">Y中央</span><input type="checkbox" id="ex_faceYc" style="margin-right: 0;"></label>
+                <label class="checkbox-label" style="justify-content: flex-end; width: calc(33% - 10px); min-width: 90px;"><span data-i18n="zCenter" style="margin-right: 4px;">Z中央</span><input type="checkbox" id="ex_faceZc" style="margin-right: 0;"></label>
             </div>
         </fieldset>
 
@@ -1314,8 +926,8 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                     <div style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
                         <div style="display: flex; align-items: center; gap: 15px;">
                             <span style="font-size: 14px; width: 12px;">X</span>
-                            <label class="checkbox-label" style="display: flex; align-items: center; margin: 0; font-size: 13px;">
-                                <span data-i18n="enable" style="margin-right: 8px;">有効</span>
+                            <label class="checkbox-label" style="margin: 0; font-size: 13px;">
+                                <span data-i18n="enable">有効</span>
                                 <input type="checkbox" id="ex_en_posx" style="margin-right: 0;">
                             </label>
                         </div>
@@ -1335,8 +947,8 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                     <div style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
                         <div style="display: flex; align-items: center; gap: 15px;">
                             <span style="font-size: 14px; width: 12px;">Y</span>
-                            <label class="checkbox-label" style="display: flex; align-items: center; margin: 0; font-size: 13px;">
-                                <span data-i18n="enable" style="margin-right: 8px;">有効</span>
+                            <label class="checkbox-label" style="margin: 0; font-size: 13px;">
+                                <span data-i18n="enable">有効</span>
                                 <input type="checkbox" id="ex_en_posy" style="margin-right: 0;">
                             </label>
                         </div>
@@ -1356,8 +968,8 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                     <div style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
                         <div style="display: flex; align-items: center; gap: 15px;">
                             <span style="font-size: 14px; width: 12px;">Z</span>
-                            <label class="checkbox-label" style="display: flex; align-items: center; margin: 0; font-size: 13px;">
-                                <span data-i18n="enable" style="margin-right: 8px;">有効</span>
+                            <label class="checkbox-label" style="margin: 0; font-size: 13px;">
+                                <span data-i18n="enable">有効</span>
                                 <input type="checkbox" id="ex_en_posz" style="margin-right: 0;">
                             </label>
                         </div>
@@ -1408,22 +1020,24 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             <div><strong data-i18n="origSize">元の画像サイズ:</strong> <span id="infoOrigSize">-</span></div>
             <div><strong data-i18n="convSize">変換後画像サイズ:</strong> <span id="infoPreviewSize">-</span></div>
             <div><strong data-i18n="saveSize">保存サイズ:</strong> <span id="infoSaveSize">-</span></div>
+            <div><strong data-i18n="csvByteSize">CSVサイズ:</strong> <span id="infoCsvByteSize">-</span></div>
             <div><strong data-i18n="texCountInfo">テクスチャ枚数:</strong> <span id="infoTexCount">-</span></div>
-        <div id="texCountWarning" style="display: none; padding-top: 4px; color: #0088ff;" data-i18n="texWarning">※テクスチャノードンは128体しか呼び出せません
+            <div><strong data-i18n="colorCountInfo">使用色数:</strong> <span id="infoColorCount">-</span></div>
+            <div id="texCountWarning" style="display: none; padding-top: 4px; color: #0088ff;" data-i18n="texWarning">※テクスチャノードンは128体しか呼び出せません
             </div>
         </div>
 
         <div class="preview-container">
             <div class="preview-box">
                 <div class="preview-label" data-i18n="prevBefore">変換前（元の画像）</div>
-                <div class="canvas-wrapper" title="画像をドラッグ＆ドロップで保存できます">
+                <div class="canvas-wrapper">
                     <img id="originalImg" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="256" height="256" style="image-rendering: pixelated; max-width: 100%; height: auto; display: block;">
                 </div>
             </div>
 
             <div class="preview-box">
                 <div class="preview-label" style="color: #0088ff;" data-i18n="prevAfter">変換後（ドット絵）</div>
-                <div class="canvas-wrapper" id="previewWrapper" title="画像をドラッグ＆ドロップで保存できます">
+                <div class="canvas-wrapper" id="previewWrapper">
                     <img id="previewImg" class="pixel-canvas" draggable="true" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="256" height="256">
                     
                     <div id="seamlessGrid">
@@ -1437,6 +1051,7 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                 </div>
                 
                 <div id="gridToggleContainer" style="display: none; margin-top: 15px; width: 100%;">
+                <button type="button" id="viewUsedColorsBtn" style="margin-bottom: 10px;" data-i18n="viewColorsBtn">使われている色を確認</button>
                     <label class="checkbox-label" style="display: block;">
                         <span data-i18n="seamlessCheck">ループ確認 (2x2)</span>
                         <input type="checkbox" id="seamlessCb">
@@ -1451,13 +1066,12 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
     </div>
 </div>
 
-
 <div id="palette-overlay" class="numpad-overlay" style="display: none;">
     <div class="numpad-modal" style="max-width: 95vw;">
-        <div class="numpad-header" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; box-sizing: border-box;">
-            <button type="button" id="paletteCancelBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%;"><span class="material-symbols-rounded" style="font-size: 32px;">close</span></button>
+        <div class="numpad-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; box-sizing: border-box;">
+            <button type="button" id="paletteCancelBtn" class="btn-circle"><span class="material-symbols-rounded" style="font-size: 32px;">close</span></button>
             <h3 data-i18n="npTitlePalette" style="margin: 0; text-align: center; font-size: 16px; font-weight: bold;">パレット設定</h3>
-            <button type="button" id="paletteOkBtn" class="btn-blue" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%;"><span class="material-symbols-rounded" style="font-size: 34px">check</span></button>
+            <button type="button" id="paletteOkBtn" class="btn-blue btn-circle"><span class="material-symbols-rounded" style="font-size: 34px">check</span></button>
         </div>
         <div class="numpad-body">
             <div class="palette-btn-group">
@@ -1516,15 +1130,15 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
 
 <div id="save-overlay" class="numpad-overlay" style="display: none;">
     <div class="numpad-modal" style="width: 90vw; max-width: 400px; overflow: visible;">
-        <div class="numpad-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; box-sizing: border-box;">
+        <div class="numpad-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; box-sizing: border-box;">
             <button type="button" style="visibility: hidden; width: 44px;"></button> <h3 data-i18n="saveTitle" style="margin: 0; text-align: center; font-size: 16px; font-weight: bold;">保存メニュー</h3>
-            <button type="button" id="saveCancelBtn" style="display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%;"><span class="material-symbols-rounded" style="font-size: 32px;">close</span></button>
+            <button type="button" id="saveCancelBtn" class="btn-circle"><span class="material-symbols-rounded" style="font-size: 32px;">close</span></button>
         </div>
         <div class="numpad-body" style="padding: 10px 20px 25px 20px; align-items: stretch; overflow: visible;">
             
             <div style="margin-bottom: 15px; text-align: left;">
                 <p style="margin: 0 0 10px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="saveFileName">ファイル名</p>
-                <input type="text" id="saveFileNameInput" style="width: 100%; padding: 10px 16px; border-radius: 24px; font-size: 16px; font-family: inherit; box-sizing: border-box; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" placeholder="ファイル名を入力">
+                <input type="text" id="saveFileNameInput" placeholder="ファイル名を入力">
             </div>
             <div style="margin-bottom: 5px; text-align: left;">
                 <p style="margin: 0 0 10px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="saveFormat">保存形式</p>
@@ -1553,58 +1167,55 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             </div>
             
                 <div id="pngOptions">
-                    <label class="checkbox-label" style="display: flex; align-items: center;">
+                    <label class="checkbox-label">
                         <span style="font-size: 15px;" data-i18n="pngSplit">1枚ごとに分割</span>
                         <input type="checkbox" id="splitPngCb">
                     </label>
                 </div>
 
-                <div id="csvOptions" style="display: none;">
-                    <label class="checkbox-label" style="display: flex; align-items: center;">
-                        <span style="font-size: 15px;" data-i18n="csvCombine">5枚ごとに結合</span><input type="checkbox" id="combineCsvCb">
-                    </label>
-                    
-                    <div id="copyRangeContainer" style="display: none; margin-top: 15px; padding-left: 2px;">
-                        <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="copyTexture">
-                            コピーするテクスチャ <span style="font-size: 12px; font-weight: normal; color: #666;">(コピー時のみ)</span>
-                        </p>
-                        <select id="copyRangeSelect" class="styled-select"></select>
+                <div id="csvOptions" style="display: none; margin-bottom: 15px; text-align: left;">
+                    <p style="margin: 0 0 10px 0; font-size: 15px; font-weight: bold; color: inherit;" data-i18n="saveRange">保存範囲</p>
+                    <div style="margin-bottom: 10px;">
+                        <select id="csvSaveMethodSelect" class="styled-select">
+                            <option value="all" data-i18n="saveAll" selected>すべて</option>
+                            <option value="range" data-i18n="rangeSpecify">範囲指定</option>
+                        </select>
                     </div>
-                </div>
-
-                <div id="extraCsvOptions" style="display: none; margin-bottom: 15px; text-align: left;">
-                    <label class="checkbox-label" style="display: flex; align-items: center; margin-bottom: 10px;">
-                        <span style="font-size: 15px;" data-i18n="rangeSpecify">範囲指定</span>
-                        <input type="checkbox" id="extraRangeCb">
-                    </label>
                     
-                    <div id="extraRangeContainer" style="display: none; flex-direction: column; gap: 10px; padding-left: 2px;">
+                    <div id="csvAllOptions" style="margin-top: 15px; margin-bottom: 5px;">
+                        <label class="checkbox-label">
+                            <span style="font-size: 15px;" data-i18n="saveSplit">一枚ごとに分割</span>
+                            <input type="checkbox" id="csvSplitCb">
+                        </label>
+                    </div>
+
+                    <div id="csvRangeContainer" style="display: none; flex-direction: column; gap: 10px; padding-left: 2px;">
                         <div class="slider-container" style="margin: 0;">
                             <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
                                 <span data-i18n="rangeStart">開始</span>
-                                <span><span id="val-extraRangeStart" class="val-display">1</span><span data-i18n="sheetSuffix"> 枚目</span></span>
+                                <span><span id="val-csvRangeStart" class="val-display">1</span><span data-i18n="sheetSuffix"> 枚目</span></span>
                             </p>
                             <div class="slider-row">
-                                <button type="button" id="dec-extraRangeStart" class="material-symbols-rounded slider-btn">remove</button>
+                                <button type="button" id="dec-csvRangeStart" class="material-symbols-rounded slider-btn">remove</button>
                                 <div class="slider-wrapper">
-                                    <div class="slider-track" id="track-extraRangeStart"></div>
-                                    <input type="range" id="extraRangeStart" class="slider" min="1" max="1" value="1">
+                                    <div class="slider-track" id="track-csvRangeStart"></div>
+                                    <input type="range" id="csvRangeStart" class="slider" min="1" max="1" value="1">
                                 </div>
-                                <button type="button" id="inc-extraRangeStart" class="material-symbols-rounded slider-btn">add</button>
+                                <button type="button" id="inc-csvRangeStart" class="material-symbols-rounded slider-btn">add</button>
                             </div>
                         </div>
                         <div class="slider-container" style="margin: 0;">
                             <p style="margin: 0 0 5px 0; font-size: 13px; display: flex; justify-content: space-between;">
                                 <span data-i18n="rangeEnd">終了</span>
-                                <span><span id="val-extraRangeEnd" class="val-display">1</span><span data-i18n="sheetSuffix"> 枚目</span></span>
+                                <span><span id="val-csvRangeEnd" class="val-display">1</span><span data-i18n="sheetSuffix"> 枚目</span></span>
                             </p>
                             <div class="slider-row">
-                                <button type="button" id="dec-extraRangeEnd" class="material-symbols-rounded slider-btn">remove</button>
+                                <button type="button" id="dec-csvRangeEnd" class="material-symbols-rounded slider-btn">remove</button>
                                 <div class="slider-wrapper">
-                                    <div class="slider-track" id="track-extraRangeEnd"></div>
-                                    <input type="range" id="extraRangeEnd" class="slider" min="1" max="1" value="1">
+                                    <div class="slider-track" id="track-csvRangeEnd"></div>
+                                    <input type="range" id="csvRangeEnd" class="slider" min="1" max="1" value="1">
                                 </div>
-                                <button type="button" id="inc-extraRangeEnd" class="material-symbols-rounded slider-btn">add</button>
+                                <button type="button" id="inc-csvRangeEnd" class="material-symbols-rounded slider-btn">add</button>
                             </div>
                         </div>
                     </div>
@@ -1615,11 +1226,12 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                 <button id="executeSaveBtn" class="btn-blue" style="padding: 12px; font-size: 15px; font-weight: bold;"><span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">download</span><span data-i18n="save">保存</span></button>
                 <button id="executeCopyBtn" style="padding: 12px; font-size: 15px; font-weight: bold; display: none;"><span class="material-symbols-rounded" style="vertical-align: text-bottom; font-size: 20px; margin-right: 4px;">content_copy</span><span data-i18n="copyClipboard">クリップボードにコピー</span></button>
             </div>
-            
         </div>
     </div>
 </div>
-
+<div id="floating-preview">
+    <img id="floating-preview-img" src="">
+</div>
 <script>
     let currentImage = null; 
     let fileName = "pixelart";
@@ -1630,23 +1242,72 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
     // スクロールロック用関数 (Safari対策)
     // =========================================
     let scrollPosition = 0;
+    let scrollbarWidth = 0;
 
     function lockScroll() {
-        // 現在のスクロール位置を保存
+        scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
         scrollPosition = window.pageYOffset;
-        // bodyを固定してスクロールを無効化
+        
         document.body.style.position = 'fixed';
         document.body.style.top = `-${scrollPosition}px`;
-        document.body.style.width = '100%';
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        
+        if (scrollbarWidth > 0) {
+            document.body.style.paddingRight = `calc(16px + ${scrollbarWidth}px)`;
+            const topNavBar = document.querySelector('.top-nav-bar');
+            if (topNavBar) {
+                topNavBar.style.paddingRight = `${scrollbarWidth}px`;
+            }
+            
+            // ▼ここから追加：PC等の狭いウィンドウ時に右寄せ要素がズレるのを防ぐ
+            const topBarRight = document.querySelector('.top-bar-right');
+            if (topBarRight && window.innerWidth <= 767) {
+                topBarRight.style.marginRight = `${scrollbarWidth}px`;
+            }
+            const settingsDropdown = document.getElementById('settingsDropdown');
+            if (settingsDropdown && window.innerWidth <= 767) {
+                 settingsDropdown.style.marginRight = `${scrollbarWidth}px`;
+            }
+            const floatingPreview = document.getElementById('floating-preview');
+            if (floatingPreview && floatingPreview.classList.contains('pos-right')) {
+                floatingPreview.style.marginRight = `${scrollbarWidth}px`;
+            }
+            // ▲ここまで追加
+        }
+        
         document.body.classList.add('modal-open');
     }
 
     function unlockScroll() {
-        // 固定を解除
         document.body.style.position = '';
         document.body.style.top = '';
-        document.body.style.width = '';
-        // 元のスクロール位置に復元
+        document.body.style.left = '';
+        document.body.style.right = '';
+        
+        if (scrollbarWidth > 0) {
+            document.body.style.paddingRight = '';
+            const topNavBar = document.querySelector('.top-nav-bar');
+            if (topNavBar) {
+                topNavBar.style.paddingRight = '';
+            }
+            
+            // ▼ここから追加：ズレ補正のリセット
+            const topBarRight = document.querySelector('.top-bar-right');
+            if (topBarRight) {
+                topBarRight.style.marginRight = '';
+            }
+            const settingsDropdown = document.getElementById('settingsDropdown');
+            if (settingsDropdown) {
+                 settingsDropdown.style.marginRight = '';
+            }
+            const floatingPreview = document.getElementById('floating-preview');
+            if (floatingPreview) {
+                floatingPreview.style.marginRight = '';
+            }
+            // ▲ここまで追加
+        }
+        
         window.scrollTo(0, scrollPosition);
         document.body.classList.remove('modal-open');
     }
@@ -1701,9 +1362,11 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
     // =========================================
     const i18n = {
         ja: {
-            title: "GBG Texture Converter <br><span style='font-size: 0.7em; font-weight: normal;'>～はじプロドット絵変換ツール～ v1.1</span>",
-            welcomeTitle: "画像をはじプロ仕様のドット絵に変換",
-            welcomeSub: "はじプロ用のテクスチャを簡単に作成できます",
+            title: "GBG Texture Converter <br><span style='font-size: 0.7em; font-weight: normal;'>～はじプロドット絵変換ツール～ v1.2</span>",
+            welcomeTitleNormal: "はじプロテクスチャ変換",
+            welcomeSubNormal: "画像をはじプロ仕様のドット絵に変換できます",
+            welcomeTitleExtract: "はじプロテクスチャ抽出",
+            welcomeSubExtract: "テクスチャ画面のスクショからドット絵を抽出できます",
             themeLabel: "テーマ",
             themeSys: "システム",
             themeLight: "ライト",
@@ -1712,23 +1375,31 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             langBtn: "English",
             selImg: "画像を選択",
             selImgBtn: "画像を選択",
-            drop: "画像をドロップするか、クリックして選択",
+            drop: "クリックして画像を選択、またはドラッグ&ドロップ",
             imgHint: "(png, jpg, heic, svg など)",
             settings: "設定",
-            imgAdj: "3. 画像の調整",
+            operationMode: "モード",
+            modeNormal: "テクスチャ変換モード",
+            modeExtract: "テクスチャ抽出モード",
+            colorMetric: "色差計算方法",
+            metricEuclidean: "RGBユークリッド (高速)",
+            metricCiede2000: "CIEDE2000 (視覚に近い)",
+            metricSub: "ディザリング設定が誤差拡散のときはRGBユークリッド、それ以外のときはCIEDE2000にするのがおすすめです",
+            imgAdj: "画像の調整",
             hue: "色相",
             sat: "彩度",
             bri: "明るさ",
             con: "コントラスト",
             reset: "リセット",
-            palSet: "4. パレット設定",
+            palSet: "パレット設定",
             palBtn: "パレット設定を開く",
-            fitMode: "1. 画像のフィット方法",
+            fitMode: "画像のフィット方法",
             fitCon: "元の比率を保持（余白を作る）",
             fitStr: "全体にフィット（比率を変える）",
-            texCount: "2. テクスチャ枚数",
+            smoothResize: "縮小時にピクセルを平均化する",
+            texCount: "テクスチャ枚数",
             texSub: "1枚 = 64×64ドットです",
-            dither: "5. ディザリング設定",
+            dither: "ディザリング設定",
             dFloyd: "誤差拡散",
             dFloydMirror: "誤差拡散(端補正)", 
             dOrd4: "配列 (4x4)",
@@ -1736,7 +1407,8 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             dRand: "ランダム",
             dNone: "なし",
             checkerAlpha: "市松模様で半透明風にする",
-            extSet: "6. エクストラ設定(AGTD2)",
+            clampError: "誤差を0〜255の範囲内に収める(クランプ)",
+            extSet: "エクストラ設定(AGTD2)",
             agtd2Switch: "AGTD2用の設定とCSVエンコードを有効にする",
             exSub: "AGTD2を使って自動描画するときはオンにしてください<br>v0.7-beta以前のAGTDを使って自動描画するときはオフにしてください",
             textureFaces: "貼り付ける面",
@@ -1755,16 +1427,16 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             saveFormat: "保存形式",
             saveFileName: "ファイル名", 
             openSaveModal: "保存",
+            saveRange: "保存範囲",
+            saveAll: "すべて",
+            saveSplit: "一枚ごとに分割",
             pngSplit: "1枚ごとに分割",
-            csvCombine: "5枚ごとに結合",
-            copyTexture:"コピーするテクスチャ（コピー時のみ）",        
             copyClipboard:"クリップボードにコピー",
             msgCopied: "コピーしました",
             rangeSpecify: "範囲指定",
             rangeStart: "開始",
             rangeEnd: "終了",
             sheetSuffix: " 枚目",
-            saveHint: "PNGを選ぶと、変換したドット絵の画像を保存できます<br>CSVを選ぶと、変換したドット絵を自動描画ツールで使う用のデータとして保存できます",
             preview: "プレビュー",
             sheetSingle: "{0} 枚目",
             sheetRange: "{0} 〜 {1} 枚目",
@@ -1772,7 +1444,11 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             origSize: "元の画像サイズ:",
             convSize: "変換後画像サイズ:",
             saveSize: "保存サイズ:",
+            csvByteSize: "CSVサイズ:",
+            perFileMax: "(1ファイル最大)",
             texCountInfo: "テクスチャ枚数:",
+            colorCountInfo: "使用色数:",
+            colorUnit: " 色",
             mai: " 枚",
             msgTotalSheets: "合計 {0} 枚",
             texWarning: "※テクスチャノードンは128体しか呼び出せません",
@@ -1780,8 +1456,7 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             prevAfter: "変換後（ドット絵）",
             showGrid: "64×64グリッド線を表示",
             seamlessCheck: "ループ確認 (2x2)",
-            aboutTitle: "このツールについて",
-            aboutText: "<span>このツールは、画像を「はじめてゲームプログラミング」仕様のドット絵（テクスチャ）に変換するツールです。<br>好きな画像をアップロードするだけで、簡単にはじプロ風のドット絵を作成できます。<br>変換したドット絵は、画像として保存したり、それを参考にしてテクスチャを打ったり、CSVデータを保存し自動描画ツール（AGTD2など）を使ってはじプロ内に取り込んだりできます。<br><br>自動描画ツールについての詳しい説明や使い方、ファイルなどはこちらにあります。（Zertさん作成）<br><a href='https://github.com/zertolurian/gbg-texturetools' target='_blank'>https://github.com/zertolurian/gbg-texturetools</a><br><br>画像はすべてブラウザ内で処理され、外部に送信されることはありません。</span><br><br><h3 class=about-title>使い方</h3><ol><li>変換したい画像をアップロード</li><li>ドット絵の大きさや色合いなどの調整</li><li>変換したドット絵をダウンロード(画像として保存するならPNG、自動描画用のテクスチャデータとして保存するならCSV)</li></ol><h3 class=about-title>作者</h3>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><h3 class=about-title>Githubリポジトリ</h3><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br><h3 class=about-title>バージョン履歴</h3><strong>V1.0</strong><br>初回リリース<br><strong>V1.1</strong><br>・AGTD2用のエクストラ設定とCSVエンコード方式の追加（AGTD2対応の提案、協力をしてくれたZertさんに感謝）<br>・設定や下のアクションバーをすべてトップバーに統合<br>・全体を囲む大きなパネルの枠を削除<br>・選択された画像がはじプロのパレットの場合はディザリングをしないように変更<br>・通常の誤差拡散と端補正の誤差拡散で色味が微妙に変わることがあった問題を修正<br>・その他細かい修正や変更<br><br>※良識の範囲内でご使用ください。<br>※このツールはAIを使用して作成されました。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。",
+            aboutText: "<h3 class=about-title>このツールについて</h3>このツールは、画像を「はじめてゲームプログラミング」仕様のドット絵（テクスチャ）に変換するツールです。<br><br><strong>「テクスチャ変換モード」</strong>では、好きな画像をアップロードすると、簡単にはじプロ仕様のドット絵を作成できます。<br><br><strong>「テクスチャ抽出モード」</strong>では、テクスチャノードンの設定画面のスクリーンショットをアップロードすると、そのスクショの真ん中のテクスチャ部分だけを切り抜いてドット絵に変換できます。<br><br>変換・抽出したドット絵は、画像として保存したり、それを参考にしてテクスチャを打ったり、CSVデータを保存して自動描画ツール（AGTD2など）を使ってはじプロ内に取り込んだりできます。<br><br>自動描画ツールについての詳しい説明や使い方、ファイルなどはこちらにあります。（Zertさん作成）<br><a href='https://github.com/zertolurian/gbg-texturetools' target='_blank'>https://github.com/zertolurian/gbg-texturetools</a><br><br>画像はすべてブラウザ内で処理され、外部に送信されることはありません。<br><br><h3 class=about-title>使い方</h3><ol><li>変換したい画像をアップロード</li><li>ドット絵の大きさや色合いなどの調整</li><li>変換したドット絵をダウンロード(画像として保存するならPNG、自動描画用のテクスチャデータとして保存するならCSV)</li></ol><h3 class=about-title>作者</h3>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><h3 class=about-title>Githubリポジトリ</h3><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br><h3 class=about-title>バージョン履歴</h3><strong>v1.0</strong> (2026/06/25)<br>初回リリース<br><strong>v1.1</strong> (2026/07/06)<br>・AGTD2用のエクストラ設定とCSVエンコード方式の追加（AGTD2対応の提案、協力をしてくれたZertさんに感謝）<br>・設定や下のアクションバーをすべてトップバーに統合<br>・全体を囲む大きなパネルの枠を削除<br>・選択された画像がはじプロのパレットの場合はディザリングをしないように変更<br>・通常の誤差拡散と端補正の誤差拡散で色味が微妙に変わることがあった問題を修正<br>・その他細かい修正や変更<br><strong>v1.2</strong> (2026/07/11)<br>・テクスチャノードンの設定画面のスクショからテクスチャを抽出できる機能「テクスチャ抽出モード」を追加（Import Textures From GBGのような機能）<br>・モバイル表示時、プレビューが画面外にあるときにミニプレビューの表示を追加<br>・プレビューの情報パネルに、変換後ドット絵の使用色数の表示とCSVサイズ（バイト数）の表示を追加<br>・使われている色をカラーパレットで確認できる機能を追加<br>・色差計算方法をCIEDE2000に切り替えられる機能を追加（従来のRGBユークリッドよりも自然な色合いになったりします）<br>・縮小時にピクセルを平均化するか選べる機能を追加（以前は常にオン）<br>・画面の横幅が広いときは情報パネルの情報を2列で表示するように変更<br>・テクスチャが複数枚のときのCSV保存メニューを変更<br>・AGTD2用設定がデフォルトでオンになるように変更<br>・その他細かい修正や変更を色々<br><br>※良識の範囲内でご使用ください。<br>※このツールはAIを使用して作成されました。<br>※このツールは一般個人によるものであり、任天堂株式会社およびその他の企業とは一切関係ありません。",
             palAll: "すべて選択",
             palClear: "すべて解除",
             palMono: "白黒・透明",
@@ -1799,11 +1474,19 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             npTitlePosX: "位置：X",
             npTitlePosY: "位置：Y",
             npTitlePosZ: "位置：Z",
+            viewColorsBtn: "使用色を確認",
+            usedPaletteTitle: "使用色",
+            miniPreviewLabel: "ミニプレビュー<br>（モバイル時）",
+            mpRight: "右下",
+            mpLeft: "左下",
+            mpHidden: "非表示",
         },
         en: {
-            title: "GBG Texture Converter <br><span style='font-size: 0.7em; font-weight: normal;'>～はじプロドット絵変換ツール～ v1.1</span>",
-            welcomeTitle: "Convert Images to GBG Textures",
-            welcomeSub: "You can easily create textures for Game Builder Garage",
+            title: "GBG Texture Converter <br><span style='font-size: 0.7em; font-weight: normal;'>～はじプロドット絵変換ツール～ v1.2</span>",
+            welcomeTitleNormal: "GBG Texture Conversion",
+            welcomeSubNormal: "You can convert images into pixel art for Game Builder Garage",
+            welcomeTitleExtract: "GBG Texture Extraction",
+            welcomeSubExtract: "You can extract pixel art from screenshots of the texture screen",
             themeLabel: "Theme",
             themeSys: "System",
             themeLight: "Light",
@@ -1812,23 +1495,31 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             langBtn: "日本語",
             selImg: "Select Image",
             selImgBtn: "Select Image",
-            drop: "Drag & drop an image here or click to browse",
+            drop: "Click to select an image, or drag and drop",
             imgHint: "(Supports JPG, PNG, HEIC, SVG, etc.)",
             settings: "Settings",
-            imgAdj: "3. Image Adjustments",
+            operationMode: "Mode",
+            modeNormal: "Texture conversion mode",
+            modeExtract: "Texture extraction mode",
+            colorMetric: "Color Difference Metric",
+            metricEuclidean: "RGB Euclidean (Fast)",
+            metricCiede2000: "CIEDE2000 (Perceptual)",
+            metricSub: "When the dithering setting is set to Floyd Steinberg, it is recommended to use RGB Euclidean; otherwise, it is recommended to use CIEDE2000.",
+            imgAdj: "Image Adjustments",
             hue: "Hue",
             sat: "Saturation",
             bri: "Brightness",
             con: "Contrast",
             reset: "Reset",
-            palSet: "4. Palette Settings",
+            palSet: "Palette Settings",
             palBtn: "Open Palette Settings",
-            fitMode: "1. Image Fit Mode",
+            fitMode: "Image Fit Mode",
             fitCon: "Scale Proportionally (Add Padding)",
             fitStr: "Scale to Fit (Stretch)",
-            texCount: "2. Number of Textures",
+            smoothResize: "Average pixels when scaling down",
+            texCount: "Number of Textures",
             texSub: "1 Texture = 64x64 pixels",
-            dither: "5. Dithering Settings",
+            dither: "Dithering Settings",
             dFloyd: "Floyd-Steinberg",
             dFloydMirror: "Floyd-Steinberg (Edge Correction)",
             dOrd4: "Ordered (4x4)",
@@ -1836,7 +1527,8 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             dRand: "Random",
             dNone: "None",
             checkerAlpha: "Make semi-transparent with checkerboard pattern",
-            extSet: "6. Extra Settings (AGTD2)",
+            clampError: "Clamp error within 0-255 range",
+            extSet: "Extra Settings (AGTD2)",
             agtd2Switch: "Enable settings and CSV encoding for AGTD2.",
             exSub: "Turn this on when using AGTD2 for automatic drawing<br>Turn this off when using AGTD v0.7-beta or earlier for automatic drawing",
             textureFaces: "Texture Faces",
@@ -1855,16 +1547,16 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             saveFormat: "Save Format",
             saveFileName: "File Name", 
             openSaveModal: "Save",
+            saveRange: "Save Range",
+            saveAll: "All",
+            saveSplit: "Split Individually",
             pngSplit: "Divided into individual sheets",
-            csvCombine: "Combine every 5 sheets",
-            copyTexture:"Copy Texture (Only When Copying)",
             copyClipboard:"Copy to clipboard",
             msgCopied: "Copied",
             rangeSpecify: "Specify Range",
             rangeStart: "Start",
             rangeEnd: "End",
             sheetSuffix: " sheet(s)",
-            saveHint: "If you select PNG, you can save the converted pixel art image.<br>If you select CSV, you can save the data for use with the Automatic Drawing Tool.",
             preview: "Preview",
             sheetSingle: "Sheet {0}",
             sheetRange: "Sheets {0} - {1}",
@@ -1872,15 +1564,17 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             origSize: "Original Size:",
             convSize: "Converted Size:",
             saveSize: "Export Size:",
+            csvByteSize: "CSV Size:",
+            perFileMax: "(max per file)",
             texCountInfo: "Texture Count:",
+            colorCountInfo: "Color Count:",
             msgTotalSheets: "Total: {0}",
             texWarning: "* You can only call 128 Texture Nodon at a time.",
             prevBefore: "Before (Original)",
             prevAfter: "After (Pixel Art)",
             showGrid: "Show 64x64 Grid Lines",
             seamlessCheck: "Loop Check (2x2)",
-            aboutTitle: "About this tool",
-            aboutText: "<span style='font-size: 16px; margin-top: 0;'>This tool converts images into pixel art (textures) formatted for Game Builder Garage.<br>Simply upload your favorite image to easily create pixel art in the style of GBG.<br>Converted pixel art can be saved as images, used as a reference to create textures, or saved as CSV data and imported into your GBG games using the GBG Texture Tools (such as AGTD2).<br><br>Detailed information on the GBG Texture Tools, instructions on how to use it, and relevant files can be found here (by Zert).<br><a href='https://github.com/zertolurian/gbg-texturetools' target='_blank'>https://github.com/zertolurian/gbg-texturetools</a><br><br>All images are processed within the browser and are never sent externally.</span><br><br><h3 class=about-title>How to Use</h3><ol><li>Upload the image you want to convert.</li><li>Adjust the size and colors of the pixel art.</li><li>Download the converted pixel art (PNG to save as an image, CSV to save as texture data for automatic drawing)</li></ol><h3 class=about-title>Author</h3>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><h3 class=about-title>Github Repository</h3><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br><h3 class=about-title>Version History</h3><strong>V1.0</strong><br>Initial release<br><strong>V1.1</strong><br>- Added extra settings and CSV encoding methods for AGTD2 (Thanks to Zert for suggesting and cooperating with the AGTD2 compatibility)<br>- Consolidated settings and the bottom action bar into the top bar<br>- Removed the large panel frame that surrounds the entire thing<br>- Changed to disable dithering when the selected image is a Game Builder Garage palette<br>- Fixed an issue where the color tone would sometimes differ slightly between standard Floyd-Steinberg and edge corrected Floyd-Steinberg<br>- Other minor corrections and changes<br><br>* Please use this tool within the bounds of common sense.<br>* This tool was made using AI.<br>* This is an unofficial, fan-made tool and is not affiliated with Nintendo Co., Ltd.</p>",
+            aboutText: "<h3 class=about-title>About this tool</h3>This tool converts images into pixel art (textures) formatted for Game Builder Garage.<br><br>In <strong>&quot;Texture Conversion Mode,&quot;</strong> you can upload your favorite images to easily create pixel art compatible with Game Builder Garage.<br><br>In <strong>&quot;Texture Extraction Mode,&quot;</strong> you can upload a screenshot of a Texture Nodon's settings screen to crop out the texture from the center and convert it into pixel art.<br><br>The converted and extracted pixel art can be saved as images, used as a reference to create textures, or saved as CSV data and imported into your GBG games using the GBG Texture Tools (such as AGTD2).<br><br>Detailed information on the GBG Texture Tools, instructions on how to use it, and relevant files can be found here (by Zert).<br><a href='https://github.com/zertolurian/gbg-texturetools' target='_blank'>https://github.com/zertolurian/gbg-texturetools</a><br><br>All images are processed within the browser and are never sent externally.<br><br><h3 class=about-title>How to Use</h3><ol><li>Upload the image you want to convert.</li><li>Adjust the size and colors of the pixel art.</li><li>Download the converted pixel art (PNG to save as an image, CSV to save as texture data for automatic drawing)</li></ol><h3 class=about-title>Author</h3>YOSSYくん<br><a href='https://x.com/yossy_kun_' target='_blank'>https://x.com/yossy_kun_</a><br><br><h3 class=about-title>Github Repository</h3><a href='https://github.com/yossy-kun/GBG-Texture-Converter' target='_blank'>https://github.com/yossy-kun/GBG-Texture-Converter</a><br><br><h3 class=about-title>Version History</h3><strong>V1.0</strong> (2026/06/25)<br>Initial release<br><strong>V1.1</strong> (2026/07/06)<br>- Added extra settings and CSV encoding methods for AGTD2 (Thanks to Zert for suggesting and cooperating with the AGTD2 compatibility)<br>- Consolidated settings and the bottom action bar into the top bar<br>- Removed the large panel frame that surrounds the entire thing<br>- Changed to disable dithering when the selected image is a Game Builder Garage palette<br>- Fixed an issue where the color tone would sometimes differ slightly between standard Floyd-Steinberg and edge corrected Floyd-Steinberg<br>- Other minor corrections and changes<br><strong>v1.2</strong> (2026/07/11)<br>- Added &quot;Texture Extraction Mode,&quot; a feature that allows you to extract textures from screenshots of the Texture Nodon's settings screen (similar to Import Textures From GBG)<br>- Added a mini-preview display for mobile views when the main preview is off-screen<br>- Added displays for the number of colors used and the CSV size (in bytes) of the converted pixel art to the preview information panel.<br>- Added a feature to view the colors used in a color palette.<br>- Added a feature to switch the color difference calculation method to CIEDE2000 (this can result in more natural-looking colors compared to the conventional RGB Euclidean method)<br>- Added an option to choose whether to average pixels when downscaling (previously always enabled)<br>- Changed the information panel to display information in two columns when the screen width is wide<br>- Changed the CSV save menu for cases with multiple textures<br>- Changed the default setting for AGTD2 to be enabled<br>- Various other minor corrections and changes<br><br>* Please use this tool within the bounds of common sense.<br>* This tool was made using AI.<br>* This is an unofficial, fan-made tool and is not affiliated with Nintendo Co., Ltd.</p>",
             palAll: "Select All",
             palClear: "Deselect All",
             palMono: "Monochrome",
@@ -1898,6 +1592,12 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             npTitlePosX: "Position: X",
             npTitlePosY: "Position: Y",
             npTitlePosZ: "Position: Z",
+            viewColorsBtn: "View the used colors",
+            usedPaletteTitle: "Used Colors",
+            miniPreviewLabel: "Mini Preview<br>(Mobile view)",
+            mpRight: "Bottom Right",
+            mpLeft: "Bottom Left",
+            mpHidden: "Hidden",
         }
     };
 
@@ -1931,8 +1631,9 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
 
         if (currentImage) {
             updatePreviewSizeDisplay();
+            updateColorCountDisplay();
+            updateCsvByteSizeDisplay();
         }
-
         updateTotalTexCount(); 
     }
 
@@ -2001,6 +1702,101 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             document.querySelectorAll(".custom-select-wrapper").forEach(w => w.classList.remove("open"));
         });
     });
+    
+    // =========================================
+    // 動作モード切り替え処理
+    // =========================================
+    function updateClampErrorVisibility() {
+        const operationModeSelect = document.getElementById('operationModeSelect');
+        const isExtract = operationModeSelect && (operationModeSelect.value === 'extract');
+        
+        const ditherModeSelect = document.getElementById('ditherModeSelect');
+        const ditherMode = ditherModeSelect ? ditherModeSelect.value : 'floyd_mirror';
+        
+        const colorMetricSelect = document.getElementById('colorMetricSelect');
+        const colorMetric = colorMetricSelect ? colorMetricSelect.value : 'euclidean';
+        
+        const clampErrorWrapper = document.getElementById('clampErrorWrapper');
+        if (clampErrorWrapper) {
+            // 抽出モードではなく、誤差拡散系かつRGBユークリッドの時のみ表示
+            if (!isExtract && 
+                (ditherMode === 'floyd_mirror' || ditherMode === 'floyd') && 
+                colorMetric === 'euclidean') {
+                clampErrorWrapper.style.display = 'block';
+            } else {
+                clampErrorWrapper.style.display = 'none';
+            }
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const modeSelect = document.getElementById('operationModeSelect');
+        if (modeSelect) {
+            modeSelect.addEventListener('change', function() {
+                const isExtract = (this.value === 'extract');
+                
+                // 抽出モード時は不要な設定を非表示
+                document.getElementById('fitModeFieldset').style.display = isExtract ? 'none' : 'flex';
+                document.getElementById('texCountFieldset').style.display = isExtract ? 'none' : 'flex';
+                document.getElementById('adjustFieldset').style.display = isExtract ? 'none' : 'flex';
+                
+                // ★追加：パレット設定の非表示切り替え
+                const paletteFieldset = document.getElementById('paletteFieldset');
+                if (paletteFieldset) {
+                    paletteFieldset.style.display = isExtract ? 'none' : 'flex';
+                }
+
+                // ★追加：ディザリング設定のスタイル切り替え
+                const ditherFieldset = document.getElementById('ditherFieldset');
+                if (ditherFieldset) {
+                    if (isExtract) {
+                        ditherFieldset.style.borderTop = 'none';
+                        ditherFieldset.style.paddingTop = '0';
+                    } else {
+                        ditherFieldset.style.borderTop = '';
+                        ditherFieldset.style.paddingTop = '';
+                    }
+                }
+                
+                // 色差計算方法の非表示処理
+                const colorMetricFieldset = document.getElementById('colorMetricFieldset');
+                if (colorMetricFieldset) {
+                    colorMetricFieldset.style.display = isExtract ? 'none' : 'flex';
+                }
+                
+                const ditherSelectWrapper = document.getElementById('ditherSelectWrapper');
+                if(ditherSelectWrapper) {
+                    ditherSelectWrapper.style.display = isExtract ? 'none' : 'block';
+                }
+
+                // クランプ設定の表示状態を更新
+                updateClampErrorVisibility();
+                updateMiniPreviewSize();
+
+                const welcomeTitleEl = document.getElementById('welcomeTitleEl');
+                const welcomeSubEl = document.getElementById('welcomeSubEl');
+
+                if (welcomeTitleEl && welcomeSubEl ) {
+                    if (isExtract) {
+                        welcomeTitleEl.setAttribute('data-i18n', 'welcomeTitleExtract');
+                        welcomeSubEl.setAttribute('data-i18n', 'welcomeSubExtract');
+                    } else {
+                        welcomeTitleEl.setAttribute('data-i18n', 'welcomeTitleNormal');
+                        welcomeSubEl.setAttribute('data-i18n', 'welcomeSubNormal');
+                    }
+                    updateLanguage(); // 表示を即時更新
+                }
+                
+                if (currentImage) {
+                    processImage();
+                    updateDownloadButtons();
+                }
+            });
+        }
+        
+        // 初期読み込み時にも表示状態を反映
+        updateClampErrorVisibility();
+    });
 
     // 「戻る」ボタンの処理
     document.getElementById('backToHomeBtn').addEventListener('click', () => {
@@ -2009,7 +1805,6 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         document.body.classList.remove('has-image-state');
         updateDownloadButtons();
         
-        // ▼ この1行を追加（一番上へスクロール）
         window.scrollTo({ top: 0 }); 
     });
 
@@ -2018,13 +1813,13 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             const overlay = document.getElementById('custom-alert-overlay');
             document.getElementById('custom-alert-message').textContent = message;
             overlay.style.display = 'flex';
-            lockScroll(); // ★変更
+            lockScroll(); 
             
             const okBtn = document.getElementById('custom-alert-ok');
             const handler = () => {
                 okBtn.removeEventListener('click', handler);
                 overlay.style.display = 'none';
-                unlockScroll(); // ★変更
+                unlockScroll(); 
                 resolve();
             };
             okBtn.addEventListener('click', handler);
@@ -2073,13 +1868,13 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         document.getElementById("numpad-title").textContent = t(titleTextKey);
         setInitialValue(input.value);
         numpadOverlay.style.display = "flex";
-        lockScroll(); // ★変更
+        lockScroll(); 
         setTimeout(() => numpadDisplay.focus(), 50);
     }
 
     function closeNumpad() { 
         numpadOverlay.style.display = "none"; 
-        unlockScroll(); // ★変更
+        unlockScroll(); 
         currentTargetInput = null; 
     }
     
@@ -2304,6 +2099,38 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         slider.addEventListener('change', updateSlider);
         updateSlider();
     }
+    function updateMiniPreviewSize() {
+        const floatingPreview = document.getElementById('floating-preview');
+        if (!floatingPreview) return;
+        
+        const modeSelect = document.getElementById('operationModeSelect');
+        const isExtract = modeSelect && modeSelect.value === 'extract';
+        
+        let countX = 1;
+        let countY = 1;
+        
+        // 抽出モード以外のときだけ枚数を取得
+        if (!isExtract) {
+            countX = parseInt(document.getElementById('countX').value) || 1;
+            countY = parseInt(document.getElementById('countY').value) || 1;
+        }
+
+        const maxSize = 128;
+        let targetWidth = maxSize;
+        let targetHeight = maxSize;
+
+        // 縦横の比率からサイズを計算（最大128px）
+        if (countX >= countY) {
+            targetWidth = maxSize;
+            targetHeight = Math.round(maxSize * (countY / countX));
+        } else {
+            targetHeight = maxSize;
+            targetWidth = Math.round(maxSize * (countX / countY));
+        }
+
+        floatingPreview.style.width = targetWidth + 'px';
+        floatingPreview.style.height = targetHeight + 'px';
+    }
 
     function updateTotalTexCount() {
         const countX = parseInt(document.getElementById('countX').value) || 1;
@@ -2323,6 +2150,7 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         } else {
             if (warningEl) warningEl.style.display = 'none';
         }
+        updateMiniPreviewSize();
     }
 
     ['countX', 'countY'].forEach(id => {
@@ -2346,8 +2174,8 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         { id: "ex_posx", min: -100, max: 100, titleKey: "npTitlePosX" },
         { id: "ex_posy", min: -100, max: 100, titleKey: "npTitlePosY" },
         { id: "ex_posz", min: -100, max: 100, titleKey: "npTitlePosZ" },
-        { id: "extraRangeStart", min: 1, max: 16, titleKey: "rangeStart" },
-        { id: "extraRangeEnd", min: 1, max: 16, titleKey: "rangeEnd" }
+        { id: "csvRangeStart", min: 1, max: 16, titleKey: "rangeStart" },
+        { id: "csvRangeEnd", min: 1, max: 16, titleKey: "rangeEnd" }
     ];
 
     allSliders.forEach(s => {
@@ -2361,29 +2189,39 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
     });
 
     // 範囲指定スライダーの連動
-    document.getElementById('extraRangeCb').addEventListener('change', function() {
-        document.getElementById('extraRangeContainer').style.display = this.checked ? 'flex' : 'none';
+    document.getElementById('csvSaveMethodSelect').addEventListener('change', function() {
+        const isRange = (this.value === 'range');
+        document.getElementById('csvRangeContainer').style.display = isRange ? 'flex' : 'none';
+        document.getElementById('csvAllOptions').style.display = isRange ? 'none' : 'block';
         updateDefaultFileName();
+        updateCsvByteSizeDisplay();
+    });
+
+    document.getElementById('csvSplitCb').addEventListener('change', function() {
+        updateDefaultFileName();
+        updateCsvByteSizeDisplay();
     });
     
-    document.getElementById('extraRangeStart').addEventListener('change', function() {
+    document.getElementById('csvRangeStart').addEventListener('change', function() {
         const start = parseInt(this.value);
-        const endSlider = document.getElementById('extraRangeEnd');
+        const endSlider = document.getElementById('csvRangeEnd');
         if (start > parseInt(endSlider.value)) {
             endSlider.value = start;
             endSlider.dispatchEvent(new Event('input'));
         }
         updateDefaultFileName();
+        updateCsvByteSizeDisplay();
     });
     
-    document.getElementById('extraRangeEnd').addEventListener('change', function() {
+    document.getElementById('csvRangeEnd').addEventListener('change', function() {
         const end = parseInt(this.value);
-        const startSlider = document.getElementById('extraRangeStart');
+        const startSlider = document.getElementById('csvRangeStart');
         if (end < parseInt(startSlider.value)) {
             startSlider.value = end;
             startSlider.dispatchEvent(new Event('input'));
         }
         updateDefaultFileName();
+        updateCsvByteSizeDisplay();
     });
 
     ['hueRotate', 'saturate', 'brightness', 'contrast'].forEach(id => {
@@ -2413,8 +2251,15 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
     });
 
     function updateDownloadButtons() {
-        const cx = parseInt(document.getElementById('countX').value) || 1;
-        const cy = parseInt(document.getElementById('countY').value) || 1;
+        let cx = parseInt(document.getElementById('countX').value) || 1;
+        let cy = parseInt(document.getElementById('countY').value) || 1;
+        
+        const operationModeSelect = document.getElementById('operationModeSelect');
+        if (operationModeSelect && (operationModeSelect.value === 'extract')) {
+            cx = 1;
+            cy = 1;
+        }
+        
         const total = cx * cy; 
         const isOneByOne = (cx === 1 && cy === 1);
         
@@ -2429,91 +2274,43 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         if (executeCopyBtn) executeCopyBtn.disabled = !hasImage;
 
         const splitPngCb = document.getElementById('splitPngCb');
-        const combineCsvCb = document.getElementById('combineCsvCb');
-        
         if (splitPngCb) {
             splitPngCb.disabled = !hasImage || isOneByOne;
             if (splitPngCb.disabled) splitPngCb.checked = false;
-        }
-        if (combineCsvCb) {
-            combineCsvCb.disabled = !hasImage || isOneByOne;
-            if (combineCsvCb.disabled) combineCsvCb.checked = false;
         }
 
         const saveFormatSelect = document.getElementById('saveFormatSelect');
         const pngOptions = document.getElementById('pngOptions');
         const csvOptions = document.getElementById('csvOptions');
         const scaleOptions = document.getElementById('scaleOptions');
-        const copyRangeContainer = document.getElementById('copyRangeContainer');
-        const copyRangeSelect = document.getElementById('copyRangeSelect');
-        const extraCsvOptions = document.getElementById('extraCsvOptions');
         
         if (saveFormatSelect && pngOptions && csvOptions) {
-            const isExtra = document.getElementById('enableExtraCb') && document.getElementById('enableExtraCb').checked;
-
             if (saveFormatSelect.value === 'png') {
                 pngOptions.style.display = isOneByOne ? 'none' : 'block';
                 csvOptions.style.display = 'none';
                 if (executeCopyBtn) executeCopyBtn.style.display = 'none';
                 if (scaleOptions) scaleOptions.style.display = 'block'; 
-                if (copyRangeContainer) copyRangeContainer.style.display = 'none';
-                if (extraCsvOptions) extraCsvOptions.style.display = 'none';
             } else {
                 pngOptions.style.display = 'none';
-                csvOptions.style.display = (isOneByOne || isExtra) ? 'none' : 'block';
+                csvOptions.style.display = isOneByOne ? 'none' : 'block';
                 if (executeCopyBtn) executeCopyBtn.style.display = 'block';
                 if (scaleOptions) scaleOptions.style.display = 'none'; 
                 
-                if (isExtra && total > 1) {
-                    if (extraCsvOptions) {
-                        extraCsvOptions.style.display = 'block';
-                        const startSlider = document.getElementById('extraRangeStart');
-                        const endSlider = document.getElementById('extraRangeEnd');
-                        if (startSlider.max != total) {
-                            startSlider.max = total;
-                            endSlider.max = total;
-                            startSlider.dispatchEvent(new Event('input'));
-                            endSlider.dispatchEvent(new Event('input'));
-                        }
+                if (total > 1) {
+                    const startSlider = document.getElementById('csvRangeStart');
+                    const endSlider = document.getElementById('csvRangeEnd');
+                    if (startSlider.max != total) {
+                        startSlider.max = total;
+                        endSlider.max = total;
+                        startSlider.dispatchEvent(new Event('input'));
+                        endSlider.dispatchEvent(new Event('input'));
                     }
-                } else {
-                    if (extraCsvOptions) extraCsvOptions.style.display = 'none';
-                }
-                
-                if (total > 1 && !isExtra) {
-                    if (copyRangeContainer) {
-                        copyRangeContainer.style.display = 'block';
-                        const currentVal = copyRangeSelect.value;
-                        copyRangeSelect.innerHTML = '';
-                        
-                        if (combineCsvCb && combineCsvCb.checked) {
-                            const maxBatches = Math.ceil(total / 5);
-                            for (let i = 0; i < maxBatches; i++) {
-                                const start = i * 5 + 1;
-                                const end = Math.min((i + 1) * 5, total);
-                                const option = document.createElement('option');
-                                option.value = i;
-                                option.textContent = t('sheetRange').replace('{0}', start).replace('{1}', end);
-                                if (i.toString() === currentVal) option.selected = true;
-                                copyRangeSelect.appendChild(option);
-                            }
-                        } else {
-                            for (let i = 0; i < total; i++) {
-                                const option = document.createElement('option');
-                                option.value = i;
-                                option.textContent = t('sheetSingle').replace('{0}', i + 1);
-                                if (i.toString() === currentVal) option.selected = true;
-                                copyRangeSelect.appendChild(option);
-                            }
-                        }
-                    }
-                } else {
-                    if (copyRangeContainer) copyRangeContainer.style.display = 'none';
                 }
             }
         }
         
         updateDefaultFileName();
+        updateCsvByteSizeDisplay();
     }
     
     function updateDefaultFileName() {
@@ -2521,15 +2318,20 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
 
         const saveFormatSelect = document.getElementById('saveFormatSelect');
         const splitPngCb = document.getElementById('splitPngCb');
-        const combineCsvCb = document.getElementById('combineCsvCb');
-        if(!saveFormatSelect || !splitPngCb || !combineCsvCb) return;
+        if(!saveFormatSelect || !splitPngCb) return;
 
         const format = saveFormatSelect.value;
         const isSplit = splitPngCb.checked;
-        const isCombine = combineCsvCb.checked;
         
         let cx = parseInt(document.getElementById('countX').value) || 1;
         let cy = parseInt(document.getElementById('countY').value) || 1;
+        
+        const operationModeSelect = document.getElementById('operationModeSelect');
+        if (operationModeSelect && (operationModeSelect.value === 'extract')) {
+            cx = 1;
+            cy = 1;
+        }
+        
         let total = cx * cy;
         let scale = parseInt(document.getElementById('scaleFactor').value) || 1;
         
@@ -2544,19 +2346,16 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                 defaultName += `_${w}x${h}`;
             }
         } else if (format === 'csv') {
-            const isExtra = document.getElementById('enableExtraCb') && document.getElementById('enableExtraCb').checked;
-            if (isExtra) {
-                if (total > 1 && document.getElementById('extraRangeCb') && document.getElementById('extraRangeCb').checked) {
-                    const start = document.getElementById('extraRangeStart').value;
-                    const end = document.getElementById('extraRangeEnd').value;
+            if (total > 1) {
+                const saveMethod = document.getElementById('csvSaveMethodSelect') ? document.getElementById('csvSaveMethodSelect').value : 'all';
+                if (saveMethod === 'range') {
+                    const start = document.getElementById('csvRangeStart').value;
+                    const end = document.getElementById('csvRangeEnd').value;
                     defaultName += `_${start}-${end}`;
-                }
-            } else if (total > 1) {
-                if (isCombine) {
-                    if (total <= 5) {
-                        defaultName += `_combined_1-${total}`;
-                    } else {
-                        defaultName += `_combined`;
+                } else if (saveMethod === 'all') {
+                    const isSplitCsv = document.getElementById('csvSplitCb') && document.getElementById('csvSplitCb').checked;
+                    if (!isSplitCsv) {
+                        defaultName += `_1-${total}`;
                     }
                 }
             }
@@ -2564,6 +2363,97 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         
         const inputEl = document.getElementById('saveFileNameInput');
         if (inputEl) inputEl.value = defaultName;
+    }
+
+    function updateCsvByteSizeDisplay() {
+        if (!currentImage) return;
+        
+        let countX = parseInt(document.getElementById('countX').value) || 1;
+        let countY = parseInt(document.getElementById('countY').value) || 1;
+        
+        const operationModeSelect = document.getElementById('operationModeSelect');
+        if (operationModeSelect && (operationModeSelect.value === 'extract')) {
+            countX = 1;
+            countY = 1;
+        }
+        
+        const total = countX * countY;
+        const isExtra = document.getElementById('enableExtraCb') && document.getElementById('enableExtraCb').checked;
+        
+        let byteText = "-";
+        const infoCsvByteSize = document.getElementById('infoCsvByteSize');
+        if (!infoCsvByteSize) return;
+
+        const w = offscreenCanvas.width;
+        const h = offscreenCanvas.height;
+        if (w === 0 || h === 0) {
+            infoCsvByteSize.textContent = byteText;
+            return;
+        }
+
+        try {
+            const data = offCtx.getImageData(0,0,w,h).data;
+            const BOM = "\ufeff";
+            
+            const saveMethod = document.getElementById('csvSaveMethodSelect') ? document.getElementById('csvSaveMethodSelect').value : 'all';
+            const isSplitCsv = document.getElementById('csvSplitCb') && document.getElementById('csvSplitCb').checked;
+            
+            let startIdx = 0, endIdx = total - 1;
+            if (saveMethod === 'range' && total >= 2) {
+                startIdx = parseInt(document.getElementById('csvRangeStart').value) - 1;
+                endIdx = parseInt(document.getElementById('csvRangeEnd').value) - 1;
+                if (startIdx > endIdx) {
+                    let tmp = startIdx; startIdx = endIdx; endIdx = tmp;
+                }
+            }
+
+            if (isExtra) {
+                if (saveMethod === 'all' && isSplitCsv && total >= 2) {
+                    let totalBytes = 0;
+                    for (let i = 0; i < total; i++) {
+                        const blobData = agtdBuildBlob_index4(i, i);
+                        const str = BOM + blobData.join(",");
+                        totalBytes += new Blob([str]).size;
+                    }
+                    byteText = `${totalBytes.toLocaleString()} Bytes`;
+                } else {
+                    const blobData = agtdBuildBlob_index4(startIdx, endIdx);
+                    const str = BOM + blobData.join(",");
+                    const bytes = new Blob([str]).size;
+                    byteText = `${bytes.toLocaleString()} Bytes`;
+                }
+            } else {
+                if (saveMethod === 'all' && isSplitCsv && total >= 2) {
+                    let totalBytes = 0;
+                    for (let v = 0; v < countY; v++) {
+                        for (let u = 0; u < countX; u++) {
+                            const grid = getCsvData(u, v, w, h, data);
+                            const str = BOM + grid.join(",");
+                            totalBytes += new Blob([str]).size;
+                        }
+                    }
+                    byteText = `${totalBytes.toLocaleString()} Bytes`;
+                } else {
+                    let allData = [];
+                    let i = 0;
+                    for (let v=0; v<countY; v++) {
+                        for (let u=0; u<countX; u++) {
+                            if (i >= startIdx && i <= endIdx) {
+                                allData.push(getCsvData(u, v, w, h, data).join(","));
+                            }
+                            i++;
+                        }
+                    }
+                    const str = BOM + allData.join(",\n");
+                    const bytes = new Blob([str]).size;
+                    byteText = `${bytes.toLocaleString()} Bytes`;
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+        
+        infoCsvByteSize.textContent = byteText;
     }
 
     updateDownloadButtons();
@@ -2580,6 +2470,78 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         document.getElementById('splitPngCb').addEventListener('change', updateDownloadButtons);
     }
 
+    // --- 色空間変換・色差計算用関数 ---
+function rgbToLab(r, g, b) {
+    let r_ = r / 255, g_ = g / 255, b_ = b / 255;
+    r_ = r_ > 0.04045 ? Math.pow((r_ + 0.055) / 1.055, 2.4) : r_ / 12.92;
+    g_ = g_ > 0.04045 ? Math.pow((g_ + 0.055) / 1.055, 2.4) : g_ / 12.92;
+    b_ = b_ > 0.04045 ? Math.pow((b_ + 0.055) / 1.055, 2.4) : b_ / 12.92;
+
+    let x = (r_ * 0.4124 + g_ * 0.3576 + b_ * 0.1805) * 100;
+    let y = (r_ * 0.2126 + g_ * 0.7152 + b_ * 0.0722) * 100;
+    let z = (r_ * 0.0193 + g_ * 0.1192 + b_ * 0.9505) * 100;
+
+    x = x / 95.047;
+    y = y / 100.000;
+    z = z / 108.883;
+
+    x = x > 0.008856 ? Math.pow(x, 1 / 3) : (7.787 * x) + (16 / 116);
+    y = y > 0.008856 ? Math.pow(y, 1 / 3) : (7.787 * y) + (16 / 116);
+    z = z > 0.008856 ? Math.pow(z, 1 / 3) : (7.787 * z) + (16 / 116);
+
+    return { l: (116 * y) - 16, a: 500 * (x - y), b: 200 * (y - z) };
+}
+
+function calculateCIEDE2000(lab1, lab2) {
+    const kL = 1, kC = 1, kH = 1;
+    const l1 = lab1.l, a1 = lab1.a, b1 = lab1.b;
+    const l2 = lab2.l, a2 = lab2.a, b2 = lab2.b;
+
+    const c1 = Math.sqrt(a1 * a1 + b1 * b1);
+    const c2 = Math.sqrt(a2 * a2 + b2 * b2);
+    const cBar = (c1 + c2) / 2;
+
+    const g = 0.5 * (1 - Math.sqrt(Math.pow(cBar, 7) / (Math.pow(cBar, 7) + Math.pow(25, 7))));
+    const a1Prime = a1 * (1 + g);
+    const a2Prime = a2 * (1 + g);
+
+    const c1Prime = Math.sqrt(a1Prime * a1Prime + b1 * b1);
+    const c2Prime = Math.sqrt(a2Prime * a2Prime + b2 * b2);
+    const cBarPrime = (c1Prime + c2Prime) / 2;
+
+    let h1Prime = Math.atan2(b1, a1Prime) * 180 / Math.PI;
+    if (h1Prime < 0) h1Prime += 360;
+    let h2Prime = Math.atan2(b2, a2Prime) * 180 / Math.PI;
+    if (h2Prime < 0) h2Prime += 360;
+
+    const hBarPrime = (Math.abs(h1Prime - h2Prime) > 180) ? (h1Prime + h2Prime + 360) / 2 : (h1Prime + h2Prime) / 2;
+    const t = 1 - 0.17 * Math.cos((hBarPrime - 30) * Math.PI / 180) + 0.24 * Math.cos(2 * hBarPrime * Math.PI / 180) + 0.32 * Math.cos((3 * hBarPrime + 6) * Math.PI / 180) - 0.20 * Math.cos((4 * hBarPrime - 63) * Math.PI / 180);
+
+    let deltaHPrime = h2Prime - h1Prime;
+    if (Math.abs(deltaHPrime) > 180) {
+        if (h2Prime <= h1Prime) deltaHPrime += 360;
+        else deltaHPrime -= 360;
+    }
+    const deltaH = 2 * Math.sqrt(c1Prime * c2Prime) * Math.sin(deltaHPrime / 2 * Math.PI / 180);
+
+    const deltaLPrime = l2 - l1;
+    const deltaCPrime = c2Prime - c1Prime;
+
+    const lBar = (l1 + l2) / 2;
+    const sL = 1 + (0.015 * Math.pow(lBar - 50, 2)) / Math.sqrt(20 + Math.pow(lBar - 50, 2));
+    
+    const sC = 1 + 0.045 * cBarPrime;
+    const sH = 1 + 0.015 * cBarPrime * t;
+
+    const rT = -2 * Math.sqrt(Math.pow(cBarPrime, 7) / (Math.pow(cBarPrime, 7) + Math.pow(25, 7))) * Math.sin(60 * Math.exp(-Math.pow((hBarPrime - 275) / 25, 2)) * Math.PI / 180);
+
+    const lTerm = deltaLPrime / (kL * sL);
+    const cTerm = deltaCPrime / (kC * sC);
+    const hTerm = deltaH / (kH * sH);
+
+    return Math.sqrt(lTerm * lTerm + cTerm * cTerm + hTerm * hTerm + rT * cTerm * hTerm);
+}
+
     const gbgColors = [
         "ffffffff", "edededff", "d9d9d9ff", "f3e6ffff", "dcb3ffff", "c685ffff", "e6fbffff", "ccf7ffff", "85ebffff", "f7ffe6ff", "e6ffb3ff", "d6ff85ff", "ffe6e6ff", "ffb3b3ff", "ff8585ff",
         "b5b5b5ff", "909090ff", "6c6c6cff", "8800ffff", "520099ff", "29004dff", "00d5ffff", "00aaccff", "006b80ff", "aaff00ff", "90d900ff", "558000ff", "ff0000ff", "cc0012ff", "800000ff",
@@ -2595,6 +2557,50 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
     let activeColors = new Array(gbgColors.length).fill(true);
     let tb_averageR = 0, tb_averageG = 0, tb_averageB = 0;
     let parsedActiveColors = []; 
+    let allParsedColors = []; // ★追加
+
+    // ★追加：全色（透明と空枠以外）のリストをあらかじめ作成
+    for (let i = 0; i < gbgColors.length; i++) {
+        if (!gbgColors[i].startsWith("-") && i !== 47) {
+            const hex = gbgColors[i];
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            const lab = rgbToLab(r, g, b);
+            allParsedColors.push({ r, g, b, lab, index: i });
+        }
+    }
+
+    // ★追加：パレット設定に関係なく、全ての色から最も近い色を返す関数
+    function getClosestAllColor(r, g, b) {
+        let minDist = Infinity; 
+        let closest = { r: 0, g: 0, b: 0, index: 32 };
+        
+        const metricSelect = document.getElementById('colorMetricSelect');
+        const isCIEDE2000 = metricSelect && metricSelect.value === 'ciede2000';
+        let targetLab = null;
+        
+        if (isCIEDE2000) {
+            targetLab = rgbToLab(r, g, b);
+        }
+        
+        for (let i = 0; i < allParsedColors.length; i++) {
+            const pc = allParsedColors[i];
+            let dist = 0;
+            
+            if (isCIEDE2000) {
+                dist = calculateCIEDE2000(targetLab, pc.lab);
+            } else {
+                dist = (r - pc.r) ** 2 + (g - pc.g) ** 2 + (b - pc.b) ** 2;
+            }
+            
+            if (dist < minDist) { 
+                minDist = dist; 
+                closest = pc; 
+            }
+        }
+        return closest;
+    }
 
     const paletteOverlay = document.getElementById('palette-overlay');
     const paletteContainer = document.getElementById('paletteContainer');
@@ -2637,25 +2643,26 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
     }
 
     function updateActiveColors() {
-        tb_averageR = 0; tb_averageG = 0; tb_averageB = 0;
-        let activeRGBs = [];
-        parsedActiveColors = []; 
-        for (let i = 0; i < gbgColors.length; i++) {
-            const cb = document.getElementById('color-cb-' + i);
-            if (cb) {
-                activeColors[i] = cb.checked;
-                if (cb.checked && !gbgColors[i].startsWith("-") && i !== 47) {
-                    const hex = gbgColors[i];
-                    const r = parseInt(hex.substring(0, 2), 16);
-                    const g = parseInt(hex.substring(2, 4), 16);
-                    const b = parseInt(hex.substring(4, 6), 16);
-                    
-                    activeRGBs.push({ r: r, g: g, b: b });
-                    
-                    parsedActiveColors.push({ r: r, g: g, b: b, index: i });
-                }
-            } else { activeColors[i] = false; }
-        }
+    tb_averageR = 0; tb_averageG = 0; tb_averageB = 0;
+    let activeRGBs = [];
+    parsedActiveColors = []; 
+    for (let i = 0; i < gbgColors.length; i++) {
+        const cb = document.getElementById('color-cb-' + i);
+        if (cb) {
+            activeColors[i] = cb.checked;
+            if (cb.checked && !gbgColors[i].startsWith("-") && i !== 47) {
+                const hex = gbgColors[i];
+                const r = parseInt(hex.substring(0, 2), 16);
+                const g = parseInt(hex.substring(2, 4), 16);
+                const b = parseInt(hex.substring(4, 6), 16);
+                
+                const lab = rgbToLab(r, g, b);
+                
+                activeRGBs.push({ r: r, g: g, b: b });
+                parsedActiveColors.push({ r: r, g: g, b: b, lab: lab, index: i });
+            }
+        } else { activeColors[i] = false; }
+    }
         let tb_colorCount = 0;
         for (let i = 1; i < activeRGBs.length; i++) {
             for (let j = 0; j < i; j++) {
@@ -2672,14 +2679,59 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
     updateActiveColors();
 
     let backupPaletteState = [];
-    document.getElementById('openPaletteBtn').addEventListener('click', () => {
-        backupPaletteState = [];
-        for (let i = 0; i < gbgColors.length; i++) {
-            const cb = document.getElementById('color-cb-' + i);
-            if (cb) backupPaletteState[i] = cb.checked;
+
+    function openPaletteModal(isReadOnly) {
+        const titleEl = document.querySelector('#palette-overlay .numpad-header h3');
+        const btnGroup = document.querySelector('.palette-btn-group');
+        const cancelBtn = document.getElementById('paletteCancelBtn');
+        const paletteTable = document.querySelector('.palette-table');
+
+        if (isReadOnly) {
+            titleEl.setAttribute('data-i18n', 'usedPaletteTitle');
+            titleEl.textContent = t('usedPaletteTitle');
+            btnGroup.style.display = 'none';
+            cancelBtn.style.visibility = 'hidden';
+            paletteTable.classList.add('read-only');
+            
+            for (let i = 0; i < gbgColors.length; i++) {
+                const cb = document.getElementById('color-cb-' + i);
+                if (cb) {
+                    cb.disabled = true;
+                    cb.parentElement.style.cursor = 'default';
+                    cb.checked = usedColorIndices.has(i);
+                }
+            }
+        } else {
+            titleEl.setAttribute('data-i18n', 'npTitlePalette');
+            titleEl.textContent = t('npTitlePalette');
+            btnGroup.style.display = 'flex';
+            cancelBtn.style.visibility = 'visible';
+            paletteTable.classList.remove('read-only');
+            
+            backupPaletteState = [];
+            for (let i = 0; i < gbgColors.length; i++) {
+                const cb = document.getElementById('color-cb-' + i);
+                if (cb) {
+                    cb.disabled = false;
+                    cb.parentElement.style.cursor = 'pointer';
+                    cb.checked = activeColors[i];
+                    backupPaletteState[i] = cb.checked;
+                }
+            }
         }
+        
+        paletteOverlay.dataset.mode = isReadOnly ? 'read' : 'edit';
+        
         paletteOverlay.style.display = 'flex';
-        lockScroll(); // ★変更
+        lockScroll();
+    }
+
+    document.getElementById('openPaletteBtn').addEventListener('click', () => {
+        openPaletteModal(false);
+    });
+
+    document.getElementById('viewUsedColorsBtn').addEventListener('click', () => {
+        openPaletteModal(true);
     });
     
     document.getElementById('paletteCancelBtn').addEventListener('click', () => {
@@ -2688,16 +2740,26 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             if (cb && backupPaletteState[i] !== undefined) { cb.checked = backupPaletteState[i]; }
         }
         paletteOverlay.style.display = 'none';
-        unlockScroll(); // ★変更
+        unlockScroll();
     });
     
     document.getElementById('paletteOkBtn').addEventListener('click', () => {
-        updateActiveColors(); processImage(); 
+        if (paletteOverlay.dataset.mode !== 'read') {
+            updateActiveColors(); 
+            processImage(); 
+        }
         paletteOverlay.style.display = 'none';
-        unlockScroll(); // ★変更
+        unlockScroll();
     });
+
     paletteOverlay.addEventListener('click', (e) => {
-        if (e.target === paletteOverlay) document.getElementById('paletteCancelBtn').click();
+        if (e.target === paletteOverlay) {
+            if (paletteOverlay.dataset.mode === 'read') {
+                document.getElementById('paletteOkBtn').click();
+            } else {
+                document.getElementById('paletteCancelBtn').click();
+            }
+        }
     });
 
     document.getElementById('selectAllBtn').addEventListener('click', () => {
@@ -2724,26 +2786,49 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
     ];
 
     function getClosestActiveColor(r, g, b) {
-        let minDist = Infinity; 
-        let closest = { r: 0, g: 0, b: 0, index: 32 };
-        
-        for (let i = 0; i < parsedActiveColors.length; i++) {
-            const pc = parsedActiveColors[i];
-            const dist = (r - pc.r) ** 2 + (g - pc.g) ** 2 + (b - pc.b) ** 2;
-            if (dist < minDist) { 
-                minDist = dist; 
-                closest = pc; 
-            }
-        }
-        return closest;
+    let minDist = Infinity; 
+    let closest = { r: 0, g: 0, b: 0, index: 32 };
+    
+    const metricSelect = document.getElementById('colorMetricSelect');
+    const isCIEDE2000 = metricSelect && metricSelect.value === 'ciede2000';
+    let targetLab = null;
+    
+    if (isCIEDE2000) {
+        targetLab = rgbToLab(r, g, b);
     }
     
+    for (let i = 0; i < parsedActiveColors.length; i++) {
+        const pc = parsedActiveColors[i];
+        let dist = 0;
+        
+        if (isCIEDE2000) {
+            dist = calculateCIEDE2000(targetLab, pc.lab);
+        } else {
+            dist = (r - pc.r) ** 2 + (g - pc.g) ** 2 + (b - pc.b) ** 2;
+        }
+        
+        if (dist < minDist) { 
+            minDist = dist; 
+            closest = pc; 
+        }
+    }
+    return closest;
+}
+    
     function getGbgColorIndex(r, g, b, a) {
-        if (a < 128 && activeColors[47]) return 47;
+        const operationModeSelect = document.getElementById('operationModeSelect');
+        const isExtract = operationModeSelect && (operationModeSelect.value === 'extract');
+
+        // 抽出モードの時はパレット設定に関わらず透明(47)を許可
+        if (a < 128 && (activeColors[47] || isExtract)) return 47;
+        
+        // 抽出モードなら全色、通常ならパレット内で選択された色から判定
+        if (isExtract) {
+            return getClosestAllColor(r, g, b).index;
+        }
         return getClosestActiveColor(r,g,b).index;
     }
 
-    // 元の色がパレット色と完全に一致しているかを判定する関数
     function isExactActiveColor(r, g, b, a) {
         if (a < 128 && activeColors[47]) return true;
         for (let i = 0; i < parsedActiveColors.length; i++) {
@@ -2908,7 +2993,131 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
 
     function processImage() {
         if (!currentImage) return;
-        
+
+        const operationModeSelect = document.getElementById('operationModeSelect');
+        const operationMode = (operationModeSelect && (operationModeSelect.value === 'extract')) ? 'extract' : 'normal';
+
+        if (operationMode === 'extract') {
+            const targetX = 64; 
+            const targetY = 64;
+            
+            const gridToggleContainer = document.getElementById('gridToggleContainer');
+            gridToggleContainer.style.display = 'block';
+
+            offscreenCanvas.width = targetX; 
+            offscreenCanvas.height = targetY;
+            originalCanvas.width = currentImage.naturalWidth;
+            originalCanvas.height = currentImage.naturalHeight;
+            originalCtx.clearRect(0, 0, originalCanvas.width, originalCanvas.height);
+            originalCtx.drawImage(currentImage, 0, 0);
+
+            const displayWidth = 256; 
+            const isSeamless = document.getElementById('seamlessCb') && document.getElementById('seamlessCb').checked;
+            
+            originalImg.style.width = displayWidth + 'px';
+            originalImg.style.height = 'auto'; 
+            
+            if (isSeamless) {
+                previewImg.style.display = 'none';
+                document.getElementById('seamlessGrid').style.display = 'grid';
+                document.getElementById('seamlessGrid').style.width = displayWidth + 'px';
+            } else {
+                previewImg.style.display = 'block';
+                previewImg.style.width = displayWidth + 'px';
+                previewImg.style.height = 'auto';
+                document.getElementById('seamlessGrid').style.display = 'none';
+            }
+
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = 512;
+            tempCanvas.height = 512;
+            const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true });
+            
+            tempCtx.drawImage(currentImage, -336, -154, 1280, 720);
+            const tempImage = tempCtx.getImageData(0, 0, 512, 512);
+            
+            const imageData = new ImageData(targetX, targetY);
+            const data = imageData.data;
+
+            for (let y = 0; y < 64; y++) {
+                for (let x = 0; x < 64; x++) {
+                    let avgR1 = 0, avgG1 = 0, avgB1 = 0;
+                    let avgR2 = 0, avgG2 = 0, avgB2 = 0;
+                    for (let u = 0; u < 2; u++) {
+                        for (let v = 0; v < 2; v++) {
+                            let pixel11 = x * 8 + u + 2 + (y * 8 + v + 2) * 512;
+                            let pixel21 = pixel11 + 2;
+                            let pixel12 = pixel11 + 2 * 512;
+                            let pixel22 = pixel12 + 2;
+                            avgR1 += (tempImage.data[pixel11 * 4 + 0] + tempImage.data[pixel22 * 4 + 0]) / 8;
+                            avgG1 += (tempImage.data[pixel11 * 4 + 1] + tempImage.data[pixel22 * 4 + 1]) / 8;
+                            avgB1 += (tempImage.data[pixel11 * 4 + 2] + tempImage.data[pixel22 * 4 + 2]) / 8;
+                            avgR2 += (tempImage.data[pixel12 * 4 + 0] + tempImage.data[pixel21 * 4 + 0]) / 8;
+                            avgG2 += (tempImage.data[pixel12 * 4 + 1] + tempImage.data[pixel21 * 4 + 1]) / 8;
+                            avgB2 += (tempImage.data[pixel12 * 4 + 2] + tempImage.data[pixel21 * 4 + 2]) / 8;
+                        }
+                    }
+                    let distR1 = avgR1 - avgR2;
+                    let distG1 = avgG1 - avgG2;
+                    let distB1 = avgB1 - avgB2;
+                    let dist1 = Math.sqrt(distR1 ** 2 + distG1 ** 2 + distB1 ** 2);
+                    let distA1, distA2;
+                    
+                    if ((x + y) % 2) {
+                        distA1 = Math.sqrt((avgR1 - 239) ** 2 + (avgG1 - 239) ** 2 + (avgB1 - 239) ** 2);
+                        distA2 = Math.sqrt((avgR2 - 255) ** 2 + (avgG2 - 255) ** 2 + (avgB2 - 255) ** 2);
+                    } else {
+                        distA1 = Math.sqrt((avgR1 - 255) ** 2 + (avgG1 - 255) ** 2 + (avgB1 - 255) ** 2);
+                        distA2 = Math.sqrt((avgR2 - 239) ** 2 + (avgG2 - 239) ** 2 + (avgB2 - 239) ** 2);
+                    }
+                    
+                    let cIdx = (y * 64 + x) * 4;
+                    if (dist1 > 6 && distA1 < 16 && distA2 < 16) {
+                        data[cIdx] = 0; data[cIdx+1] = 0; data[cIdx+2] = 0; data[cIdx+3] = 0;
+                    } else {
+                        let avgR = (avgR1 + avgR2) / 2;
+                        let avgG = (avgG1 + avgG2) / 2;
+                        let avgB = (avgB1 + avgB2) / 2;
+                        
+                        let closest = getClosestAllColor(avgR, avgG, avgB); // ★修正
+                        
+                        data[cIdx] = closest.r;
+                        data[cIdx+1] = closest.g;
+                        data[cIdx+2] = closest.b;
+                        data[cIdx+3] = 255;
+                    }
+                }
+            }
+
+            if (document.getElementById('checkerAlphaCb') && document.getElementById('checkerAlphaCb').checked) {
+                for (let y = 0; y < 64; y++) {
+                    for (let x = 0; x < 64; x++) {
+                        if ((x + y) % 2 === 0) {
+                            const idx = (y * 64 + x) * 4;
+                            data[idx + 3] = 0; 
+                        }
+                    }
+                }
+            }
+
+            offCtx.putImageData(imageData, 0, 0);
+
+            updatePreviewSizeDisplay();
+            updateSaveSizeDisplay();
+            updateColorCountDisplay(); 
+            updateCsvByteSizeDisplay();
+
+            const base64Url = offscreenCanvas.toDataURL('image/png');
+            previewImg.src = base64Url;
+            document.querySelectorAll('.seamless-item').forEach(img => img.src = base64Url);
+            
+            originalImg.src = originalCanvas.toDataURL('image/png');
+            originalImg.style.filter = 'none';
+            drawGrid();
+
+            return; 
+        }
+
         let countX = Math.max(1, parseInt(document.getElementById('countX').value) || 1);
         let countY = Math.max(1, parseInt(document.getElementById('countY').value) || 1);
         const targetX = countX * 64; const targetY = countY * 64;
@@ -2920,6 +3129,11 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         const fitMode = fitModeSelect ? fitModeSelect.value : 'contain';
         const ditherModeSelect = document.getElementById('ditherModeSelect');
         const ditherMode = ditherModeSelect ? ditherModeSelect.value : 'floyd_mirror';
+        
+        // CIEDE2000の場合は強制的にクランプを有効にする
+        const isCIEDE2000 = document.getElementById('colorMetricSelect') && document.getElementById('colorMetricSelect').value === 'ciede2000';
+        const isClampCbChecked = document.getElementById('clampErrorCb') && document.getElementById('clampErrorCb').checked;
+        const doClampError = isCIEDE2000 || isClampCbChecked;
 
         let origScale = Math.max(1, Math.max(currentImage.width / targetX, currentImage.height / targetY));
         const origW = Math.round(targetX * origScale); 
@@ -2958,8 +3172,8 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
 
         workCtx.filter = 'none';
         originalCtx.filter = 'none';
-        workCtx.imageSmoothingEnabled = false;       // 追加
-        originalCtx.imageSmoothingEnabled = false;   // 追加
+        workCtx.imageSmoothingEnabled = false;       
+        originalCtx.imageSmoothingEnabled = false;   
 
         if (fitMode === 'stretch') {
             workCtx.drawImage(currentImage, 0, 0, origW, origH);
@@ -2990,39 +3204,58 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         const ratioX = origW / targetX;
         const ratioY = origH / targetY;
 
+        // ▼▼ ここから追加・修正 ▼▼
+        const smoothResizeCb = document.getElementById('smoothResizeCb');
+        const doSmoothResize = smoothResizeCb ? smoothResizeCb.checked : true;
+
         for (let y = 0; y < targetY; y++) {
             for (let x = 0; x < targetX; x++) {
-                const startX = Math.floor(x * ratioX);
-                const endX = Math.max(startX + 1, Math.floor((x + 1) * ratioX));
-                const startY = Math.floor(y * ratioY);
-                const endY = Math.max(startY + 1, Math.floor((y + 1) * ratioY));
-
-                let r = 0, g = 0, b = 0, a = 0, count = 0;
-
-                for (let sy = startY; sy < endY; sy++) {
-                    for (let sx = startX; sx < endX; sx++) {
-                        const idx = (sy * origW + sx) * 4;
-                        const alpha = workData[idx + 3] / 255;
-                        r += workData[idx] * alpha;
-                        g += workData[idx + 1] * alpha;
-                        b += workData[idx + 2] * alpha;
-                        a += workData[idx + 3];
-                        count++;
-                    }
-                }
-
                 const dstIdx = (y * targetX + x) * 4;
-                if (count > 0 && a > 0) {
-                    const avgA = a / count;
-                    data[dstIdx] = Math.min(255, Math.round((r / count) / (avgA / 255)));
-                    data[dstIdx + 1] = Math.min(255, Math.round((g / count) / (avgA / 255)));
-                    data[dstIdx + 2] = Math.min(255, Math.round((b / count) / (avgA / 255)));
-                    data[dstIdx + 3] = Math.round(avgA);
+
+                if (doSmoothResize) {
+                    // 従来の平均化処理（ボックスフィルタリング）
+                    const startX = Math.floor(x * ratioX);
+                    const endX = Math.max(startX + 1, Math.floor((x + 1) * ratioX));
+                    const startY = Math.floor(y * ratioY);
+                    const endY = Math.max(startY + 1, Math.floor((y + 1) * ratioY));
+
+                    let r = 0, g = 0, b = 0, a = 0, count = 0;
+
+                    for (let sy = startY; sy < endY; sy++) {
+                        for (let sx = startX; sx < endX; sx++) {
+                            const idx = (sy * origW + sx) * 4;
+                            const alpha = workData[idx + 3] / 255;
+                            r += workData[idx] * alpha;
+                            g += workData[idx + 1] * alpha;
+                            b += workData[idx + 2] * alpha;
+                            a += workData[idx + 3];
+                            count++;
+                        }
+                    }
+
+                    if (count > 0 && a > 0) {
+                        const avgA = a / count;
+                        data[dstIdx] = Math.min(255, Math.round((r / count) / (avgA / 255)));
+                        data[dstIdx + 1] = Math.min(255, Math.round((g / count) / (avgA / 255)));
+                        data[dstIdx + 2] = Math.min(255, Math.round((b / count) / (avgA / 255)));
+                        data[dstIdx + 3] = Math.round(avgA);
+                    } else {
+                        data[dstIdx] = 0; data[dstIdx+1] = 0; data[dstIdx+2] = 0; data[dstIdx+3] = 0;
+                    }
                 } else {
-                    data[dstIdx] = 0; data[dstIdx+1] = 0; data[dstIdx+2] = 0; data[dstIdx+3] = 0;
+                    // ニアレストネイバー（中心点をサンプリング）
+                    const srcX = Math.min(origW - 1, Math.floor((x + 0.5) * ratioX));
+                    const srcY = Math.min(origH - 1, Math.floor((y + 0.5) * ratioY));
+                    const idx = (srcY * origW + srcX) * 4;
+                    
+                    data[dstIdx] = workData[idx];
+                    data[dstIdx + 1] = workData[idx + 1];
+                    data[dstIdx + 2] = workData[idx + 2];
+                    data[dstIdx + 3] = workData[idx + 3];
                 }
             }
         }
+        // ▲▲ ここまで追加・修正 ▲▲
 
         if (ditherMode === 'floyd_mirror') {
             const padX = Math.min(targetX, 128);
@@ -3079,30 +3312,23 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                     paddedData[idx+3] = 255;
 
                     if (errR !== 0 || errG !== 0 || errB !== 0) {
-                        if (x + 1 < fullW) {
-                            const tIdx = (y * fullW + x + 1) * 4;
+                        const applyErr = (tIdx, ratio) => {
                             if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
-                                paddedData[tIdx] += errR * (7/16); paddedData[tIdx+1] += errG * (7/16); paddedData[tIdx+2] += errB * (7/16);
+                                paddedData[tIdx] += errR * ratio; 
+                                paddedData[tIdx+1] += errG * ratio; 
+                                paddedData[tIdx+2] += errB * ratio;
+                                if (doClampError) {
+                                    paddedData[tIdx] = Math.max(0, Math.min(255, paddedData[tIdx]));
+                                    paddedData[tIdx+1] = Math.max(0, Math.min(255, paddedData[tIdx+1]));
+                                    paddedData[tIdx+2] = Math.max(0, Math.min(255, paddedData[tIdx+2]));
+                                }
                             }
-                        }
-                        if (x - 1 >= 0 && y + 1 < fullH) {
-                            const tIdx = ((y + 1) * fullW + x - 1) * 4;
-                            if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
-                                paddedData[tIdx] += errR * (3/16); paddedData[tIdx+1] += errG * (3/16); paddedData[tIdx+2] += errB * (3/16);
-                            }
-                        }
-                        if (y + 1 < fullH) {
-                            const tIdx = ((y + 1) * fullW + x) * 4;
-                            if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
-                                paddedData[tIdx] += errR * (5/16); paddedData[tIdx+1] += errG * (5/16); paddedData[tIdx+2] += errB * (5/16);
-                            }
-                        }
-                        if (x + 1 < fullW && y + 1 < fullH) {
-                            const tIdx = ((y + 1) * fullW + x + 1) * 4;
-                            if (paddedData[tIdx+3] >= 128 || !activeColors[47]) {
-                                paddedData[tIdx] += errR * (1/16); paddedData[tIdx+1] += errG * (1/16); paddedData[tIdx+2] += errB * (1/16);
-                            }
-                        }
+                        };
+                        
+                        if (x + 1 < fullW) applyErr((y * fullW + x + 1) * 4, 7/16);
+                        if (x - 1 >= 0 && y + 1 < fullH) applyErr(((y + 1) * fullW + x - 1) * 4, 3/16);
+                        if (y + 1 < fullH) applyErr(((y + 1) * fullW + x) * 4, 5/16);
+                        if (x + 1 < fullW && y + 1 < fullH) applyErr(((y + 1) * fullW + x + 1) * 4, 1/16);
                     }
                 }
             }
@@ -3119,13 +3345,12 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
             }
 
         } else {
-            const originalData = new Uint8ClampedArray(data); // 元の色を保持
-            const workData = new Float32Array(data); // 誤差蓄積用のFloat32Array（精度を端補正に合わせるため追加）
+            const originalData = new Uint8ClampedArray(data); 
+            const workData = new Float32Array(data); 
 
             for (let y = 0; y < targetY; y++) {
                 for (let x = 0; x < targetX; x++) {
                     const i = (y * targetX + x) * 4;
-                    // 計算中の誤差を含んだ値は workData から取得するように変更
                     const oldR = workData[i], oldG = workData[i+1], oldB = workData[i+2], oldA = workData[i+3];
                     const baseR = originalData[i], baseG = originalData[i+1], baseB = originalData[i+2], baseA = originalData[i+3];
 
@@ -3159,20 +3384,6 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                         
                         data[i] = closest.r; data[i+1] = closest.g; data[i+2] = closest.b; data[i+3] = 255;
                         
-                        if (ditherMode === 'tb_floyd' && !isExact && (errR !== 0 || errG !== 0 || errB !== 0)) {
-                            const dist = (xO, yO, rt) => {
-                                if (x+xO>=0 && x+xO<targetX && y+yO<targetY) {
-                                    const idx = ((y+yO)*targetX + x+xO)*4;
-                                    if (workData[idx+3]>=128 || !activeColors[47]) {
-                                        // Math.min/max の丸め処理をなくし、workDataにそのまま蓄積する
-                                        workData[idx] += errR*rt; 
-                                        workData[idx+1] += errG*rt; 
-                                        workData[idx+2] += errB*rt;
-                                    }
-                                }
-                            };
-                            dist(1,0,7/16); dist(-1,1,3/16); dist(0,1,5/16); dist(1,1,1/16);
-                        }
                     } else {
                         let closest;
                         let errR = 0, errG = 0, errB = 0;
@@ -3198,10 +3409,14 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                                 if (x+xO>=0 && x+xO<targetX && y+yO<targetY) {
                                     const idx = ((y+yO)*targetX + x+xO)*4;
                                     if (workData[idx+3]>=128 || !activeColors[47]) {
-                                        // Math.min/max の丸め処理をなくし、workDataにそのまま蓄積する
                                         workData[idx] += errR*rt; 
                                         workData[idx+1] += errG*rt; 
                                         workData[idx+2] += errB*rt;
+                                        if (doClampError) {
+                                            workData[idx] = Math.max(0, Math.min(255, workData[idx]));
+                                            workData[idx+1] = Math.max(0, Math.min(255, workData[idx+1]));
+                                            workData[idx+2] = Math.max(0, Math.min(255, workData[idx+2]));
+                                        }
                                     }
                                 }
                             };
@@ -3224,6 +3439,8 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         }
 
         offCtx.putImageData(imageData, 0, 0);
+        updateColorCountDisplay(); 
+        updateCsvByteSizeDisplay();
         
         const base64Url = offscreenCanvas.toDataURL('image/png');
         previewImg.src = base64Url;
@@ -3235,11 +3452,12 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
     }
 
     document.getElementById('checkerAlphaCb').addEventListener('change', processImage);
+    document.getElementById('clampErrorCb').addEventListener('change', processImage); // ←これを追加
 
     async function handleFile(file) {
-        if (!file) return;
-        let currentFile = file; fileName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-        document.getElementById('imageInfo').style.display = 'block';
+    if (!file) return;
+    let currentFile = file; fileName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+    document.getElementById('imageInfo').style.display = 'grid'; // ← gridに変更！
         
         const ext = file.name.split('.').pop().toLowerCase();
         if (ext === 'heic' || ext === 'heif') {
@@ -3275,13 +3493,75 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         document.getElementById('infoSaveSize').textContent = `${offscreenCanvas.width * scale} × ${offscreenCanvas.height * scale} px`;
     }
 
+    let usedColorIndices = new Set();
+    
+    function updateColorCountDisplay() {
+        const operationModeSelect = document.getElementById('operationModeSelect');
+        const operationMode = (operationModeSelect && (operationModeSelect.value === 'extract')) ? 'extract' : 'normal';
+        let countX_val = parseInt(document.getElementById('countX').value) || 1;
+        let countY_val = parseInt(document.getElementById('countY').value) || 1;
+        
+        if (operationMode === 'extract') {
+            countX_val = 1;
+            countY_val = 1;
+        }
+        
+        let w_val = countX_val * 64;
+        let h_val = countY_val * 64;
+        
+        const finalImageData = offCtx.getImageData(0, 0, w_val, h_val);
+        const finalData = finalImageData.data;
+
+        usedColorIndices.clear(); 
+        let maxColorsInSingleSheet = 0; // 1枚あたりの最大色数を保持する変数
+        
+        for (let v = 0; v < countY_val; v++) {
+            for (let u = 0; u < countX_val; u++) {
+                const sheetColors = new Set(); // 1枚のテクスチャ内の色をカウント用
+                
+                for (let y = 0; y < 64; y++) {
+                    for (let x = 0; x < 64; x++) {
+                        const idx = ((v * 64 + y) * w_val + (u * 64 + x)) * 4;
+                        const r = finalData[idx];
+                        const g = finalData[idx+1];
+                        const b = finalData[idx+2];
+                        const a = finalData[idx+3];
+                        
+                        const cIdx = getGbgColorIndex(r, g, b, a);
+                        usedColorIndices.add(cIdx); // 全体の色として登録
+                        sheetColors.add(cIdx);      // 1枚ごとの色として登録
+                    }
+                }
+                
+                // 現在のシートの色数が、これまでの最大を上回っていたら更新
+                if (sheetColors.size > maxColorsInSingleSheet) {
+                    maxColorsInSingleSheet = sheetColors.size;
+                }
+            }
+        }
+        
+        const infoColorCountEl = document.getElementById('infoColorCount');
+        if (infoColorCountEl) {
+            const unit = currentLang === 'ja' ? t('colorUnit') : '';
+            const totalSheets = countX_val * countY_val;
+            
+            if (totalSheets > 1) {
+                // 翻訳辞書の "(1ファイル最大)" などの閉じカッコ ")" の前に数字をねじ込む
+                const maxText = t('perFileMax').replace(')', `: ${maxColorsInSingleSheet}${unit})`);
+                infoColorCountEl.textContent = `${usedColorIndices.size}${unit} ${maxText}`;
+            } else {
+                // テクスチャが1枚だけのときは全体の色数のみシンプルに表示
+                infoColorCountEl.textContent = `${usedColorIndices.size}${unit}`;
+            }
+        }
+    }
+
     const imageInput = document.getElementById('imageInput');
     const dropZone = document.getElementById('dropZone');
     imageInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
     
     imageInput.addEventListener('click', (e) => { e.target.value = ''; });
     
-    // 画面全体へのドラッグ＆ドロップ対応
     document.body.addEventListener('dragover', (e) => { 
         e.preventDefault(); 
         document.body.classList.add('dragover-active'); 
@@ -3302,7 +3582,6 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         }
     });
 
-    // トップバーの「画像を選択」ボタンの処理
     document.getElementById('selectImageBtn').addEventListener('click', () => {
         document.getElementById('imageInput').click();
     });
@@ -3315,13 +3594,26 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
     });
     
     document.getElementById('fitModeSelect').addEventListener('change', processImage);
+    document.getElementById('smoothResizeCb').addEventListener('change', processImage);
     const ditherModeSelect = document.getElementById('ditherModeSelect');
-    ditherModeSelect.addEventListener('change', processImage);
+    ditherModeSelect.addEventListener('change', () => {
+        updateClampErrorVisibility();
+        processImage();
+    });
     ditherModeSelect.addEventListener('click', () => {
         if (ditherModeSelect.value === 'tb_random') {
             processImage();
         }
     });
+
+    // 色差計算方法の変更を検知して画像を再処理
+    const colorMetricSelect = document.getElementById('colorMetricSelect');
+    if (colorMetricSelect) {
+        colorMetricSelect.addEventListener('change', () => {
+            updateClampErrorVisibility();
+            processImage();
+        });
+    }
 
     // =========================================
     // 保存・コピー処理群
@@ -3340,12 +3632,20 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                 grid[x+y*64+1] = cIdx; colorCount[cIdx]++;
             }
         }
-        let maxC = -1, maxI = 0;
-        for (let i=0; i<colorCount.length; i++) {
+        
+        // ▼ GTB_AGTD2.html と同じアルゴリズムで背景色(最も使われている色)を判定するように修正
+        let maxC = Math.max(...colorCount);
+        let maxI = 0;
+        for (let i = 0; i < colorCount.length; i++) {
             if (gbgColors[i].startsWith("-")) continue;
-            if (colorCount[i]>maxC) { maxC = colorCount[i]; maxI = i; }
+            if (colorCount[i] === maxC) { 
+                maxI = i; 
+                break; 
+            }
         }
-        grid[0] = maxI; return grid;
+        
+        grid[0] = maxI; 
+        return grid;
     }
     
     async function handleDownloadPngAll() {
@@ -3397,129 +3697,6 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         }
     }
 
-    async function handleDownloadCsvSingle() {
-        const currentFileName = getSaveFileName();
-        
-        const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
-        const sX = w/64, sY = h/64; 
-        const totalFiles = sX * sY;
-
-        if (totalFiles >= 2) {
-            const zip = new JSZip();
-            for (let v=0; v<sY; v++) {
-                for (let u=0; u<sX; u++) {
-                    const grid = getCsvData(u, v, w, h, data);
-                    zip.file(`${currentFileName}_${u+1}-${v+1}.csv`, "\ufeff" + grid.join(","));
-                }
-            }
-            const zipBlob = await zip.generateAsync({type: "blob"});
-            const link = document.createElement("a");
-            link.download = `${currentFileName}.zip`;
-            link.href = URL.createObjectURL(zipBlob);
-            link.click();
-            URL.revokeObjectURL(link.href);
-        } else {
-            const grid = getCsvData(0, 0, w, h, data);
-            const blob = new Blob(["\ufeff", grid.join(",")], { type: "text/csv" });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a"); link.href = url;
-            link.download = `${currentFileName}.csv`;
-            link.click(); URL.revokeObjectURL(url);
-        }
-    }
-
-    async function handleDownloadCsvCombined() {
-        const currentFileName = getSaveFileName();
-
-        const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
-        const sX = w/64, sY = h/64; let allData = [];
-        for (let v=0; v<sY; v++) {
-            for (let u=0; u<sX; u++) { allData.push(getCsvData(u, v, w, h, data).join(",")); }
-        }
-        
-        const totalFiles = Math.ceil(allData.length / 5);
-
-        if (totalFiles >= 2) {
-            const zip = new JSZip();
-            for (let i=0; i<allData.length; i+=5) {
-                const text = allData.slice(i, i+5).join(",\n");
-                const end = Math.min(i+5, allData.length);
-                const fileNameStr = (i+1===end) ? `${currentFileName}_${i+1}.csv` : `${currentFileName}_${i+1}-${end}.csv`;
-                zip.file(fileNameStr, "\ufeff" + text);
-            }
-            const zipBlob = await zip.generateAsync({type: "blob"});
-            const link = document.createElement("a");
-            link.download = `${currentFileName}.zip`;
-            link.href = URL.createObjectURL(zipBlob);
-            link.click();
-            URL.revokeObjectURL(link.href);
-        } else {
-            const text = allData.slice(0, 5).join(",\n");
-            const blob = new Blob(["\ufeff", text], { type: "text/csv" });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a"); link.href = url;
-            link.download = `${currentFileName}.csv`;
-            link.click(); URL.revokeObjectURL(url);
-        }
-    }
-
-    async function handleCopyCsvSingle() {
-        const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
-        const sX = w/64, sY = h/64; 
-        let allData = [];
-        for (let v=0; v<sY; v++) {
-            for (let u=0; u<sX; u++) { 
-                allData.push(getCsvData(u, v, w, h, data).join(",")); 
-            }
-        }
-        
-        let textToCopy = "";
-        const copyRangeContainer = document.getElementById('copyRangeContainer');
-        
-        if (copyRangeContainer && copyRangeContainer.style.display !== 'none') {
-            const index = parseInt(document.getElementById('copyRangeSelect').value) || 0;
-            textToCopy = allData[index];
-        } else {
-            textToCopy = allData[0];
-        }
-
-        try {
-            await navigator.clipboard.writeText(textToCopy);
-            return true; 
-        } catch (e) { 
-            showCustomAlert("Copy failed"); 
-            return false; 
-        }
-    }
-
-    async function handleCopyCsvCombined() {
-        const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
-        const sX = w/64, sY = h/64; let allData = [];
-        for (let v=0; v<sY; v++) {
-            for (let u=0; u<sX; u++) { allData.push(getCsvData(u, v, w, h, data).join(",")); }
-        }
-        
-        let textToCopy = "";
-        const copyRangeContainer = document.getElementById('copyRangeContainer');
-        
-        if (copyRangeContainer && copyRangeContainer.style.display !== 'none') {
-            const batchIndex = parseInt(document.getElementById('copyRangeSelect').value) || 0;
-            const start = batchIndex * 5;
-            const end = start + 5;
-            textToCopy = allData.slice(start, end).join(",\n");
-        } else {
-            textToCopy = allData.join(",\n");
-        }
-
-        try {
-            await navigator.clipboard.writeText(textToCopy);
-            return true; 
-        } catch (e) { 
-            showCustomAlert("Copy failed"); 
-            return false; 
-        }
-    }
-
     // =========================================
     // 新しい実行ボタンのクリックイベント
     // =========================================
@@ -3534,60 +3711,88 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
                 await handleDownloadPngAll();
             }
         } else {
-            if (isExtra) {
-                const currentFileName = getSaveFileName();
-                const countX = parseInt(document.getElementById('countX').value) || 1;
-                const countY = parseInt(document.getElementById('countY').value) || 1;
-                const total = countX * countY;
-                const isRangeSpecified = document.getElementById('extraCsvOptions').style.display !== 'none' && document.getElementById('extraRangeCb').checked;
+            const currentFileName = getSaveFileName();
+            let countX = parseInt(document.getElementById('countX').value) || 1;
+            let countY = parseInt(document.getElementById('countY').value) || 1;
+            const operationModeSelect = document.getElementById('operationModeSelect');
+            if (operationModeSelect && (operationModeSelect.value === 'extract')) {
+                countX = 1;
+                countY = 1;
+            }
+            
+            const total = countX * countY;
+            
+            const saveMethod = document.getElementById('csvSaveMethodSelect') ? document.getElementById('csvSaveMethodSelect').value : 'all';
+            const isSplit = document.getElementById('csvSplitCb') && document.getElementById('csvSplitCb').checked && saveMethod === 'all';
 
-                if (total >= 2 && !isRangeSpecified) {
-                    // 範囲指定オフかつ複数枚の場合はZIPでまとめる
-                    const zip = new JSZip();
+            if (total >= 2 && isSplit) {
+                const zip = new JSZip();
+                let i = 0;
+                for (let v = 0; v < countY; v++) {
+                    for (let u = 0; u < countX; u++) {
+                        let textData = "";
+                        if (isExtra) {
+                            const blobData = agtdBuildBlob_index4(i, i);
+                            textData = "\ufeff" + blobData.join(",");
+                        } else {
+                            const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
+                            const grid = getCsvData(u, v, w, h, data);
+                            textData = "\ufeff" + grid.join(",");
+                        }
+                        zip.file(`${currentFileName}_${u+1}-${v+1}.csv`, textData);
+                        i++;
+                    }
+                }
+                const zipBlob = await zip.generateAsync({type: "blob"});
+                const link = document.createElement("a");
+                link.download = `${currentFileName}.zip`;
+                link.href = URL.createObjectURL(zipBlob);
+                link.click();
+                URL.revokeObjectURL(link.href);
+            } else {
+                let startIdx = 0;
+                let endIdx = Infinity;
+                
+                if (saveMethod === 'range' && total >= 2) {
+                    startIdx = parseInt(document.getElementById('csvRangeStart').value) - 1;
+                    endIdx = parseInt(document.getElementById('csvRangeEnd').value) - 1;
+                    if(startIdx > endIdx) { let t = startIdx; startIdx = endIdx; endIdx = t; }
+                } else if (saveMethod === 'all' || total === 1) {
+                    startIdx = 0;
+                    endIdx = total - 1; 
+                }
+                
+                let textData = "";
+                if (isExtra) {
+                    const blobData = agtdBuildBlob_index4(startIdx, endIdx);
+                    textData = "\ufeff" + blobData.join(",");
+                } else {
+                    const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
+                    let allData = [];
                     let i = 0;
-                    for (let v = 0; v < countY; v++) {
-                        for (let u = 0; u < countX; u++) {
-                            const blobData = agtdBuildBlob_index4(i, i); // 対象の1枚だけを指定
-                            zip.file(`${currentFileName}_${u+1}-${v+1}.csv`, "\ufeff" + blobData.join(","));
+                    for (let v=0; v<countY; v++) {
+                        for (let u=0; u<countX; u++) {
+                            if (i >= startIdx && i <= endIdx) {
+                                allData.push(getCsvData(u, v, w, h, data).join(","));
+                            }
                             i++;
                         }
                     }
-                    const zipBlob = await zip.generateAsync({type: "blob"});
-                    const link = document.createElement("a");
-                    link.download = `${currentFileName}.zip`;
-                    link.href = URL.createObjectURL(zipBlob);
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                } else {
-                    // 範囲指定オン、または1枚のみの場合は単一CSVで保存
-                    let startIdx = 0;
-                    let endIdx = Infinity;
-                    
-                    if (isRangeSpecified) {
-                        startIdx = parseInt(document.getElementById('extraRangeStart').value) - 1;
-                        endIdx = parseInt(document.getElementById('extraRangeEnd').value) - 1;
-                    }
-                    
-                    const blobData = agtdBuildBlob_index4(startIdx, endIdx);
-                    const blob = new Blob(["\ufeff", blobData.join(",")], { type: "text/csv" });
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement("a"); link.href = url;
-                    
-                    let outFileName = currentFileName;
-                    if (!outFileName.toLowerCase().endsWith('.csv')) {
-                        outFileName += '.csv';
-                    }
-                    
-                    link.download = outFileName;
-                    link.click(); 
-                    URL.revokeObjectURL(url);
+                    textData = "\ufeff" + allData.join(",\n");
                 }
-            } else {
-                if (document.getElementById('combineCsvCb').checked) {
-                    await handleDownloadCsvCombined();
-                } else {
-                    await handleDownloadCsvSingle();
+                
+                const blob = new Blob([textData], { type: "text/csv" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a"); link.href = url;
+                
+                let outFileName = currentFileName;
+                if (!outFileName.toLowerCase().endsWith('.csv')) {
+                    outFileName += '.csv';
                 }
+                
+                link.download = outFileName;
+                link.click(); 
+                URL.revokeObjectURL(url);
             }
         }
     });
@@ -3597,30 +3802,57 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         if (btn.disabled) return; 
         
         const isExtra = document.getElementById('enableExtraCb') && document.getElementById('enableExtraCb').checked;
-        let success = false;
+        let countX = parseInt(document.getElementById('countX').value) || 1;
+        let countY = parseInt(document.getElementById('countY').value) || 1;
+        
+        const operationModeSelect = document.getElementById('operationModeSelect');
+        if (operationModeSelect && (operationModeSelect.value === 'extract')) {
+            countX = 1;
+            countY = 1;
+        }
+        
+        const total = countX * countY;
+        
+        const saveMethod = document.getElementById('csvSaveMethodSelect') ? document.getElementById('csvSaveMethodSelect').value : 'all';
 
+        let startIdx = 0;
+        let endIdx = Infinity;
+        
+        if (saveMethod === 'range' && total >= 2) {
+            startIdx = parseInt(document.getElementById('csvRangeStart').value) - 1;
+            endIdx = parseInt(document.getElementById('csvRangeEnd').value) - 1;
+            if(startIdx > endIdx) { let t = startIdx; startIdx = endIdx; endIdx = t; }
+        } else if (saveMethod === 'all' || total === 1) {
+            startIdx = 0;
+            endIdx = total - 1; 
+        }
+
+        let textToCopy = "";
         if (isExtra) {
-            let startIdx = 0;
-            let endIdx = Infinity;
-            
-            if (document.getElementById('extraCsvOptions').style.display !== 'none' && document.getElementById('extraRangeCb').checked) {
-                startIdx = parseInt(document.getElementById('extraRangeStart').value) - 1;
-                endIdx = parseInt(document.getElementById('extraRangeEnd').value) - 1;
-            }
-            
             const blobData = agtdBuildBlob_index4(startIdx, endIdx);
-            try {
-                await navigator.clipboard.writeText(blobData.join(","));
-                success = true; 
-            } catch (e) { 
-                showCustomAlert("Copy failed"); 
-            }
+            textToCopy = blobData.join(","); // BOMを削除
         } else {
-            if (document.getElementById('combineCsvCb').checked) {
-                success = await handleCopyCsvCombined();
-            } else {
-                success = await handleCopyCsvSingle();
+            const w = offscreenCanvas.width, h = offscreenCanvas.height, data = offCtx.getImageData(0,0,w,h).data;
+            let allData = [];
+            let i = 0;
+            for (let v=0; v<countY; v++) {
+                for (let u=0; u<countX; u++) {
+                    if (i >= startIdx && i <= endIdx) {
+                        allData.push(getCsvData(u, v, w, h, data).join(","));
+                    }
+                    i++;
+                }
             }
+            textToCopy = allData.join(",\n"); // BOMを削除
+        }
+        
+        let success = false;
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+            success = true; 
+        } catch (e) { 
+            showCustomAlert("Copy failed"); 
+            success = false; 
         }
 
         if (success) {
@@ -3646,22 +3878,22 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         isFileNameEdited = false;
         updateDownloadButtons();
         saveOverlay.style.display = 'flex';
-        lockScroll(); // ★変更
+        lockScroll();
     });
     
     document.getElementById('saveCancelBtn').addEventListener('click', () => {
         saveOverlay.style.display = 'none';
-        unlockScroll(); // ★変更
+        unlockScroll();
     });
     
     saveOverlay.addEventListener('click', (e) => {
         if (e.target === saveOverlay) {
             saveOverlay.style.display = 'none';
-            unlockScroll(); // ★変更
+            unlockScroll();
         }
     });
 
-// =========================================
+    // =========================================
     // 言語・テーマ設定メニューの開閉
     // =========================================
     const settingsMenuBtn = document.getElementById('settingsMenuBtn');
@@ -3672,12 +3904,120 @@ body:not(.has-image-state) .action-buttons-wrap { display: none !important; }
         settingsDropdown.classList.toggle('open');
     });
 
-    // メニューの外側をクリックしたら閉じる
     document.addEventListener('click', (e) => {
         if (!settingsDropdown.contains(e.target) && e.target !== settingsMenuBtn) {
             settingsDropdown.classList.remove('open');
         }
     });
+    // =========================================
+// スマホ用ミニプレビューの表示制御と自動同期
+// =========================================
+document.addEventListener("DOMContentLoaded", () => {
+    const floatingPreview = document.getElementById('floating-preview');
+    const floatingImg = document.getElementById('floating-preview-img');
+    const mainPreviewBox = document.querySelector('.panel-preview');
+    const previewImg = document.getElementById('previewImg');
+    const previewWrapper = document.getElementById('previewWrapper');
+    
+    // ① ミニプレビューをタップしたときのスクロール処理 (変換後ドット絵へ移動)
+    floatingPreview.addEventListener('click', () => {
+        if (previewWrapper) {
+            const y = previewWrapper.getBoundingClientRect().top + window.pageYOffset - 160;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+    });
+
+    // ② 画面スクロールに応じてミニプレビューを表示／非表示にする
+    const checkScroll = () => {
+        if (window.innerWidth > 767) return;
+        
+        const currentSetting = localStorage.getItem('gbg-mini-preview') || 'right';
+        if (!document.body.classList.contains('has-image-state') || currentSetting === 'hidden') {
+            hideFloatingPreview();
+            return;
+        }
+
+        if (mainPreviewBox) {
+            const rect = mainPreviewBox.getBoundingClientRect();
+            if (rect.bottom < 220) {
+                showFloatingPreview();
+            } else {
+                hideFloatingPreview();
+            }
+        }
+    };
+
+    const showFloatingPreview = () => {
+        if (!floatingPreview.classList.contains('visible') && floatingPreview.style.display !== 'block') {
+            floatingImg.src = previewImg.src;
+            floatingPreview.style.display = 'block';
+            void floatingPreview.offsetWidth;
+            floatingPreview.classList.add('visible');
+        }
+    };
+
+    const hideFloatingPreview = () => {
+        if (floatingPreview.classList.contains('visible')) {
+            floatingPreview.classList.remove('visible');
+            setTimeout(() => {
+                if (!floatingPreview.classList.contains('visible')) {
+                    floatingPreview.style.display = 'none';
+                }
+            }, 200);
+        }
+    };
+    
+    const miniPreviewSelect = document.getElementById('miniPreviewSelect');
+    const savedMiniPreview = localStorage.getItem('gbg-mini-preview') || 'right';
+    
+    const applyMiniPreviewSetting = (val) => {
+        if (val === 'left') {
+            floatingPreview.classList.add('pos-left');
+            floatingPreview.classList.remove('pos-right');
+        } else {
+            floatingPreview.classList.add('pos-right');
+            floatingPreview.classList.remove('pos-left');
+        }
+        checkScroll();
+    };
+
+    if (miniPreviewSelect) {
+        miniPreviewSelect.value = savedMiniPreview;
+        Array.from(miniPreviewSelect.options).forEach(opt => {
+            if (opt.value === savedMiniPreview) opt.selected = true;
+        });
+        
+        miniPreviewSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            localStorage.setItem('gbg-mini-preview', val);
+            applyMiniPreviewSetting(val);
+        });
+    }
+    applyMiniPreviewSetting(savedMiniPreview);
+
+    window.addEventListener('scroll', checkScroll, { passive: true });
+
+    // ③ メイン画像の変更を監視して、自動的にミニプレビューと同期する
+    if (previewImg && floatingImg) {
+        const imageObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+                    floatingImg.src = previewImg.src;
+                }
+            });
+        });
+        imageObserver.observe(previewImg, { attributes: true });
+    }
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 767) {
+            floatingPreview.classList.remove('visible');
+            floatingPreview.style.display = 'none';
+        } else {
+            checkScroll();
+        }
+    });
+});
 </script>
 
 </body>
