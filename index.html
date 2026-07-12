@@ -845,7 +845,7 @@ body.dark-mode #floating-preview { background: #1b1b1d; border-color: #444; box-
                         <input type="checkbox" id="checkerAlphaCb">
                     </label>
                 </div>
-                <div>
+                <div id="smoothResizeWrapper">
                     <label class="checkbox-label">
                         <span style="font-size: 15px;" data-i18n="smoothResize">縮小時にピクセルを平均化する</span>
                         <input type="checkbox" id="smoothResizeCb" checked>
@@ -1767,6 +1767,12 @@ body.dark-mode #floating-preview { background: #1b1b1d; border-color: #444; box-
                 const ditherSelectWrapper = document.getElementById('ditherSelectWrapper');
                 if(ditherSelectWrapper) {
                     ditherSelectWrapper.style.display = isExtract ? 'none' : 'block';
+                }
+
+                // ★ここを追加：抽出モードの時は「縮小時にピクセルを平均化する」を非表示にする
+                const smoothResizeWrapper = document.getElementById('smoothResizeWrapper');
+                if (smoothResizeWrapper) {
+                    smoothResizeWrapper.style.display = isExtract ? 'none' : 'block';
                 }
 
                 // クランプ設定の表示状態を更新
